@@ -16,7 +16,6 @@ namespace IoTHelpers.Modules
 
     public class PushButton : GpioModule
     {
-        private readonly GpioPin buttonPin;
         private readonly DispatcherTimer timer;
 
         private readonly GpioPinValue normalPinValue;
@@ -29,7 +28,7 @@ namespace IoTHelpers.Modules
         public event EventHandler Released;
         public event EventHandler Click;
 
-        public PushButton(int buttonPinNumber, ButtonType type)
+        public PushButton(int pinNumber, ButtonType type) : base(pinNumber)
         {
             if (type == ButtonType.PullUp)
             {
@@ -44,13 +43,7 @@ namespace IoTHelpers.Modules
                 lastPinValue = GpioPinValue.High;
             }
 
-            buttonPin = Controller.OpenPin(buttonPinNumber);
-
-            // Shows an error if the pin wasn't initialized properly
-            if (buttonPin == null)
-                throw new ArgumentException("There were problems initializing the GPIO button pin.");
-
-            buttonPin.SetDriveMode(GpioPinDriveMode.Input);
+            Pin.SetDriveMode(GpioPinDriveMode.Input);
 
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(100);
@@ -60,7 +53,7 @@ namespace IoTHelpers.Modules
 
         private void CheckButtonStatus(object sender, object e)
         {
-            var currentPinValue = buttonPin.Read();
+            var currentPinValue = Pin.Read();
 
             // If same values of last read, exits. 
             if (currentPinValue == lastPinValue)
@@ -89,8 +82,8 @@ namespace IoTHelpers.Modules
             timer.Stop();
             timer.Tick -= CheckButtonStatus;
 
-            if (buttonPin != null)
-                buttonPin.Dispose();
+            if (Pin != null)
+                Pin.Dispose();
         }
     }
 }

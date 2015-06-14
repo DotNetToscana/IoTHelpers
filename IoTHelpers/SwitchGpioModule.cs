@@ -10,8 +10,6 @@ namespace IoTHelpers.Modules
 {
     public class SwitchGpioModule : GpioModule
     {
-        public GpioPin Pin { get; }
-
         public GpioPinValue OnValue { get; }
 
         public GpioPinValue OffValue { get; }
@@ -21,14 +19,8 @@ namespace IoTHelpers.Modules
         { }
 
         public SwitchGpioModule(GpioController controller, int pinNumber, GpioPinValue onValue = GpioPinValue.High)
-            : base(controller)
+            : base(controller, pinNumber)
         {
-            Pin = Controller.OpenPin(pinNumber);
-
-            // Shows an error if the pin wasn't initialized properly
-            if (Pin == null)
-                throw new ArgumentException($"There were problems initializing the GPIO {GetType().Name} pin.");
-
             if (onValue == GpioPinValue.High)
             {
                 OnValue = GpioPinValue.High;

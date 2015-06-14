@@ -26,7 +26,6 @@ namespace RaspberryDemo
         private ActiveBuzzer buzzer;
         private Relay relay;
         private Laser laser;
-        //private DHT11HumiditySensor temperature;
 
         private int ledStatus = 0;
 
@@ -46,17 +45,16 @@ namespace RaspberryDemo
             connection = new RemoteConnection();
             connection.OnLedEvent(LedEvent);
 
-            led = new MulticolorLed(redPinNumber: 22, bluePinNumber: 27, greenPinNumber: 18);
-            relay = new Relay(relayPinNumber: 24);
+            led = new MulticolorLed(redPinNumber: 22, greenPinNumber: 18, bluePinNumber: 27);
+            relay = new Relay(pinNumber: 24);
 
-            button = new PushButton(buttonPinNumber: 5, type: ButtonType.PullDown);
+            button = new PushButton(pinNumber: 5, type: ButtonType.PullDown);
             button.Pressed += ButtonPressed;
             button.Click += ChangeColor;
             button.Released += ButtonReleased;
 
-            buzzer = new ActiveBuzzer(buzzerPinNumber: 12);
-            //temperature = new DHT11HumiditySensor(temperaturePinNumber: 6);
-            laser = new Laser(laserPinNumber: 6);
+            buzzer = new ActiveBuzzer(pinNumber: 12);
+            laser = new Laser(pinNumber: 6);
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)

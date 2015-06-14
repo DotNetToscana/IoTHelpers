@@ -115,6 +115,8 @@
   <ItemGroup>
     <Compile Include="Extensions\StopwatchExtensions.cs" />
     <Compile Include="Modules\Laser.cs" />
+    <Compile Include="Modules\TiltSwitch.cs" />
+    <Compile Include="Modules\ObstacleAvoidanceSensor.cs" />
     <Compile Include="Modules\Relay.cs" />
     <Compile Include="SwitchGpioModule.cs" />
     <Compile Include="Modules\ActiveBuzzer.cs" />
