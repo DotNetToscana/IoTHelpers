@@ -10,8 +10,6 @@ namespace IoTHelpers.Modules
 {
     public class ActiveBuzzer : SwitchGpioModule
     {
-        private const int BUZZER_PIN = 12;
-
         public ActiveBuzzer(int buzzerPinNumber, GpioPinValue onValue = GpioPinValue.High)
             : base(buzzerPinNumber, onValue)
         { }   

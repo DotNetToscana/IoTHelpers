@@ -29,8 +29,6 @@ namespace IoTHelpers.Modules
         public event EventHandler Released;
         public event EventHandler Click;
 
-        private const int BUTTON_PIN = 5;
-
         public PushButton(int buttonPinNumber, ButtonType type)
         {
             if (type == ButtonType.PullUp)

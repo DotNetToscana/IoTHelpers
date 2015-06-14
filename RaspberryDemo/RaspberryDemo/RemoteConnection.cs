@@ -15,8 +15,7 @@ namespace RaspberryDemo
 {
     public class RemoteConnection : IDisposable
     {
-        //public const string ServiceUrl = "http://localhost:37309/";
-        public const string SERVICE_URL = "http://iotserviceweb.azurewebsites.net/";
+        public const string SERVICE_URL = "";
 
         private const string HUB_NAME = "SensorHub";
         private const string ADD_DEVICE_METHOD = "AddDevice";

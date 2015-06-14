@@ -14,10 +14,6 @@ namespace IoTHelpers.Modules
         private readonly SwitchGpioModule bluePin;
         private readonly SwitchGpioModule greenPin;
 
-        private const int REDLED_PIN = 22;
-        private const int GREENLED_PIN = 18;
-        private const int BLUELED_PIN = 27;
-
         public MulticolorLed(int redPinNumber,  int greenPinNumber, int bluePinNumber)
         {
             redPin = new SwitchGpioModule(Controller, redPinNumber);

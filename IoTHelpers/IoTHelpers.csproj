@@ -115,7 +115,6 @@
   <ItemGroup>
     <Compile Include="Extensions\StopwatchExtensions.cs" />
     <Compile Include="Modules\Laser.cs" />
-    <Compile Include="Modules\DHT11HumiditySensor.cs" />
     <Compile Include="Modules\Relay.cs" />
     <Compile Include="SwitchGpioModule.cs" />
     <Compile Include="Modules\ActiveBuzzer.cs" />
@@ -123,7 +122,6 @@
     <Compile Include="GpioModule.cs" />
     <Compile Include="Extensions\GpioExtensions.cs" />
     <Compile Include="Modules\MulticolorLed.cs" />
-    <Compile Include="Modules\PushButton2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
