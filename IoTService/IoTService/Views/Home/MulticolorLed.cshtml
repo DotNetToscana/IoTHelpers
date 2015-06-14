@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "Multicolor Led";
+}
+
+<h2>Multicolor Led</h2>
+
+<div class="row">
+    <div class="col-xs-4 well-lg">
+        <input type="checkbox" data-toggle="toggle" data-onstyle="danger" data-off="Red" data-on="Red" data-size="large" id="red">
+    </div>
+    <div class="col-xs-4 well-lg">
+        <input type="checkbox" data-toggle="toggle" data-onstyle="success" data-off="Green" data-on="Green" data-size="large" id="green">
+    </div>
+    <div class="col-xs-4 well-lg">
+        <input type="checkbox" data-toggle="toggle" data-onstyle="primary" data-off="Blue" data-on="Blue" data-size="large" id="blue">
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("input[type='checkbox']").bootstrapToggle();
+
+            $("input[type='checkbox']").change(function (e) {
+                var rgb =
+                    {
+                        red: $("#red").prop('checked'),
+                        green: $("#green").prop('checked'),
+                        blue: $("#blue").prop('checked')
+                    };
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.HttpRouteUrl("SetLed", null)',
+                    data: JSON.stringify(rgb),
+                    contentType: "application/json; charset=utf-8"
+                });
+            });
+        });
+    </script>
+}
+
+
+
+
