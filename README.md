@@ -1,4 +1,4 @@
-# IoTHelpers
+# IoT Helpers
 
 Windows 10 Core IoT Helpers to use with common sensors kit
 ---------------------------------------------------------
