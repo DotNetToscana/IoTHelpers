@@ -25,6 +25,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -146,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\SensorController.cs" />
@@ -265,7 +267,6 @@
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\TestClientReferences.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\TestClientDialogs.cshtml" />
-    <None Include="Properties\PublishProfiles\iotserviceweb.pubxml" />
     <Content Include="Scripts\bootstrap-toggle.min.js.map" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Icon.png" />
