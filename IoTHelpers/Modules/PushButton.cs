@@ -22,27 +22,27 @@ namespace IoTHelpers.Modules
         private readonly GpioPinValue pressedPinValue;
 
         private GpioPinValue lastPinValue;
-        private bool isPressed;
+
+        public bool IsPressed { get; private set; } = false;
 
         public event EventHandler Pressed;
         public event EventHandler Released;
         public event EventHandler Click;
 
-        public PushButton(int pinNumber, ButtonType type) : base(pinNumber)
+        public PushButton(int pinNumber, ButtonType type = ButtonType.PullDown) : base(pinNumber)
         {
             if (type == ButtonType.PullUp)
             {
                 normalPinValue = GpioPinValue.Low;
                 pressedPinValue = GpioPinValue.High;
-                lastPinValue = GpioPinValue.Low;
             }
             else
             {
                 normalPinValue = GpioPinValue.High;
                 pressedPinValue = GpioPinValue.Low;
-                lastPinValue = GpioPinValue.High;
             }
 
+            lastPinValue = normalPinValue;
             Pin.SetDriveMode(GpioPinDriveMode.Input);
 
             timer = new DispatcherTimer();
@@ -55,23 +55,23 @@ namespace IoTHelpers.Modules
         {
             var currentPinValue = Pin.Read();
 
-            // If same values of last read, exits. 
+            // If same value of last read, exits. 
             if (currentPinValue == lastPinValue)
                 return;
 
             // Checks the pin value.
             if (currentPinValue == pressedPinValue)
             {
-                isPressed = true;
+                IsPressed = true;
                 Pressed?.Invoke(this, EventArgs.Empty);
             }
             else if (currentPinValue == normalPinValue)
             {
                 Released?.Invoke(this, EventArgs.Empty);
-                if (isPressed)
+                if (IsPressed)
                     Click?.Invoke(this, EventArgs.Empty);
 
-                isPressed = false;
+                IsPressed = false;
             }
 
             lastPinValue = currentPinValue;
@@ -82,8 +82,7 @@ namespace IoTHelpers.Modules
             timer.Stop();
             timer.Tick -= CheckButtonStatus;
 
-            if (Pin != null)
-                Pin.Dispose();
+            base.Dispose();
         }
     }
 }

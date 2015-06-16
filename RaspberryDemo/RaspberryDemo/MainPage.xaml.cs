@@ -48,7 +48,7 @@ namespace RaspberryDemo
             led = new MulticolorLed(redPinNumber: 22, greenPinNumber: 18, bluePinNumber: 27);
             relay = new Relay(pinNumber: 24);
 
-            button = new PushButton(pinNumber: 5, type: ButtonType.PullDown);
+            button = new PushButton(pinNumber: 5);
             button.Pressed += ButtonPressed;
             button.Click += ChangeColor;
             button.Released += ButtonReleased;

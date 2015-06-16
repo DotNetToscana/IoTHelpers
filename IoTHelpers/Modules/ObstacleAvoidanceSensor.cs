@@ -26,7 +26,7 @@ namespace IoTHelpers.Modules
         {
             noObstaclePinValue = GpioPinValue.High;
             obstacleDetectedPinValue = GpioPinValue.Low;
-            lastPinValue = GpioPinValue.High;
+            lastPinValue = noObstaclePinValue;
 
             Pin.SetDriveMode(GpioPinDriveMode.Input);
 
@@ -40,7 +40,7 @@ namespace IoTHelpers.Modules
         {
             var currentPinValue = Pin.Read();
 
-            // If same values of last read, exits. 
+            // If same value of last read, exits. 
             if (currentPinValue == lastPinValue)
                 return;
 
@@ -64,8 +64,7 @@ namespace IoTHelpers.Modules
             timer.Stop();
             timer.Tick -= CheckStatus;
 
-            if (Pin != null)
-                Pin.Dispose();
+            base.Dispose();
         }
     }
 }

@@ -41,6 +41,9 @@ namespace IoTHelpers
         }
 
         public virtual void Dispose()
-        { }
+        {
+            if (Pin != null)
+                Pin.Dispose();
+        }
     }
 }

@@ -60,8 +60,7 @@ namespace IoTHelpers.Modules
 
         public override void Dispose()
         {
-            if (Pin != null)
-                Pin.Dispose();
+            base.Dispose();
         }
     }
 }
