@@ -29,7 +29,7 @@ namespace IoTHelpers.Gpio.Modules
         public event EventHandler Released;
         public event EventHandler Click;
 
-        public PushButton(int pinNumber, ButtonType type = ButtonType.PullDown) : base(pinNumber)
+        public PushButton(int pinNumber, ButtonType type = ButtonType.PullDown) : base(pinNumber, GpioPinDriveMode.Input)
         {
             if (type == ButtonType.PullUp)
             {
@@ -43,7 +43,6 @@ namespace IoTHelpers.Gpio.Modules
             }
 
             lastPinValue = normalPinValue;
-            Pin.SetDriveMode(GpioPinDriveMode.Input);
 
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(100);

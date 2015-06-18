@@ -18,12 +18,10 @@ namespace IoTHelpers.Gpio.Modules
 
         public event EventHandler Tilt;
 
-        public TiltSwith(int pinNumber) : base(pinNumber)
+        public TiltSwith(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input)
         {
             tiltedPinValue = GpioPinValue.Low;
             lastPinValue = GpioPinValue.High;
-
-            Pin.SetDriveMode(GpioPinDriveMode.Input);
 
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(100);

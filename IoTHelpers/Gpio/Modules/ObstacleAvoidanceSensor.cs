@@ -22,13 +22,11 @@ namespace IoTHelpers.Gpio.Modules
         public event EventHandler ObstacleDetected;
         public event EventHandler ObstacleRemoved;
 
-        public ObstacleAdvoidanceSensor(int pinNumber) : base(pinNumber)
+        public ObstacleAdvoidanceSensor(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input)
         {
             noObstaclePinValue = GpioPinValue.High;
             obstacleDetectedPinValue = GpioPinValue.Low;
             lastPinValue = noObstaclePinValue;
-
-            Pin.SetDriveMode(GpioPinDriveMode.Input);
 
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(100);

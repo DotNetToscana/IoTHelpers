@@ -22,12 +22,10 @@ namespace IoTHelpers.Gpio.Modules
 
         private int noTouchCount = 0;
 
-        public MetalTouchSensor(int pinNumber) : base(pinNumber)
+        public MetalTouchSensor(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input)
         {
             noTouchPinValue = GpioPinValue.Low;
             touchDetectedPinValue = GpioPinValue.High;
-
-            Pin.SetDriveMode(GpioPinDriveMode.Input);
 
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(400);

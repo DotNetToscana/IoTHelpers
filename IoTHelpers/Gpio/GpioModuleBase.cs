@@ -9,7 +9,7 @@ namespace IoTHelpers.Gpio
 {
     public abstract class GpioModuleBase : IDisposable
     {
-        protected  GpioController Controller { get; }
+        protected GpioController Controller { get; }
 
         public GpioModuleBase()
             : this(GpioController.GetDefault())
@@ -21,7 +21,7 @@ namespace IoTHelpers.Gpio
 
             // Shows an error if there is no GPIO controller
             if (Controller == null)
-                throw new ArgumentException("No GPIO controller found");
+                throw new ArgumentException("No GPIO controller found.");
         }        
 
         public virtual void Dispose()
