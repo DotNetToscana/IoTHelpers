@@ -1,5 +1,4 @@
-﻿using IoTHelpers.Modules;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,6 +15,7 @@ using Windows.UI.Xaml.Navigation;
 using System.Diagnostics;
 using Windows.UI;
 using RaspberryDemo.Models;
+using IoTHelpers.Gpio.Modules;
 
 namespace RaspberryDemo
 {

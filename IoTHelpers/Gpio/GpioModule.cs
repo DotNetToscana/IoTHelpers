@@ -5,33 +5,26 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
 
-namespace IoTHelpers
+namespace IoTHelpers.Gpio
 {
-    public abstract class GpioModule : IDisposable
+    public abstract class GpioModule : GpioModuleBase
     {
-        protected  GpioController Controller { get; }
-
         public GpioPin Pin { get; }
 
-        public GpioModule()
-            : this(GpioController.GetDefault())
+        protected GpioModule()
+            : base(GpioController.GetDefault())
         { }
 
-        protected GpioModule(GpioController controller)
-        {
-            Controller = controller;
-
-            // Shows an error if there is no GPIO controller
-            if (Controller == null)
-                throw new ArgumentException("No GPIO controller found");
-        }
+        protected GpioModule(GpioController controller) 
+            : base(controller)
+        { }        
 
         protected GpioModule(int pinNumber)
             : this(GpioController.GetDefault(), pinNumber)
         { }
 
         protected GpioModule(GpioController controller, int pinNumber)
-            : this(controller)
+            : base(controller)
         {
             Pin = Controller.OpenPin(pinNumber);
 
@@ -40,10 +33,12 @@ namespace IoTHelpers
                 throw new ArgumentException($"There were problems initializing the GPIO {GetType().Name} pin.");
         }
 
-        public virtual void Dispose()
+        public override void Dispose()
         {
             if (Pin != null)
                 Pin.Dispose();
+
+            base.Dispose();
         }
     }
 }

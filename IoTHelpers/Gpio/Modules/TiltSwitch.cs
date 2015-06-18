@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Windows.Devices.Gpio;
 using Windows.UI.Xaml;
 
-namespace IoTHelpers.Modules
+namespace IoTHelpers.Gpio.Modules
 {
     public class TiltSwith : GpioModule
     {

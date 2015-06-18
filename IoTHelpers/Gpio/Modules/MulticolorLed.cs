@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
-using IoTHelpers.Extensions;
 
-namespace IoTHelpers.Modules
+namespace IoTHelpers.Gpio.Modules
 {
-    public class MulticolorLed : GpioModule
+    public class MulticolorLed : GpioModuleBase
     {
         private readonly SwitchGpioModule redPin;
         private readonly SwitchGpioModule bluePin;
@@ -84,6 +83,8 @@ namespace IoTHelpers.Modules
 
             if (bluePin != null)
                 bluePin.Dispose();
+
+            base.Dispose();
         }
     }
 }

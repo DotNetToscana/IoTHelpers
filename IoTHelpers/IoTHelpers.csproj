@@ -113,18 +113,18 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Extensions\StopwatchExtensions.cs" />
-    <Compile Include="Modules\Laser.cs" />
-    <Compile Include="Modules\MetalTouchSensor.cs" />
-    <Compile Include="Modules\TiltSwitch.cs" />
-    <Compile Include="Modules\ObstacleAvoidanceSensor.cs" />
-    <Compile Include="Modules\Relay.cs" />
-    <Compile Include="SwitchGpioModule.cs" />
-    <Compile Include="Modules\ActiveBuzzer.cs" />
-    <Compile Include="Modules\PushButton.cs" />
-    <Compile Include="GpioModule.cs" />
-    <Compile Include="Extensions\GpioExtensions.cs" />
-    <Compile Include="Modules\MulticolorLed.cs" />
+    <Compile Include="Gpio\GpioModuleBase.cs" />
+    <Compile Include="Gpio\Modules\Laser.cs" />
+    <Compile Include="Gpio\Modules\MetalTouchSensor.cs" />
+    <Compile Include="Gpio\Modules\TiltSwitch.cs" />
+    <Compile Include="Gpio\Modules\ObstacleAvoidanceSensor.cs" />
+    <Compile Include="Gpio\Modules\Relay.cs" />
+    <Compile Include="Gpio\SwitchGpioModule.cs" />
+    <Compile Include="Gpio\Modules\ActiveBuzzer.cs" />
+    <Compile Include="Gpio\Modules\PushButton.cs" />
+    <Compile Include="Gpio\GpioModule.cs" />
+    <Compile Include="Gpio\Extensions\GpioExtensions.cs" />
+    <Compile Include="Gpio\Modules\MulticolorLed.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

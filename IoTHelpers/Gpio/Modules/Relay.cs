@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
-using IoTHelpers.Extensions;
 
-namespace IoTHelpers.Modules
+namespace IoTHelpers.Gpio.Modules
 {
-    public class ActiveBuzzer : SwitchGpioModule
+    public class Relay : SwitchGpioModule
     {
-        public ActiveBuzzer(int pinNumber, GpioPinValue onValue = GpioPinValue.High)
+        public Relay(int pinNumber, GpioPinValue onValue = GpioPinValue.High)
             : base(pinNumber, onValue)
         { }   
     }

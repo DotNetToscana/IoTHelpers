@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
-using IoTHelpers.Extensions;
 
-namespace IoTHelpers.Modules
+namespace IoTHelpers.Gpio.Modules
 {
     public class Laser : SwitchGpioModule
     {
