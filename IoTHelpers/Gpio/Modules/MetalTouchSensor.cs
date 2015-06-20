@@ -20,15 +20,17 @@ namespace IoTHelpers.Gpio.Modules
         public event EventHandler TouchDetected;
         public event EventHandler TouchRemoved;
 
-        private int noTouchCount = 0;
+        private List<GpioPinValue> reads = new List<GpioPinValue>(10);
 
         public MetalTouchSensor(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input)
         {
+            Pin.DebounceTimeout = TimeSpan.FromMilliseconds(10);
+
             noTouchPinValue = GpioPinValue.Low;
             touchDetectedPinValue = GpioPinValue.High;
 
             timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(400);
+            timer.Interval = TimeSpan.FromMilliseconds(20);
             timer.Tick += CheckStatus;
             timer.Start();
         }
@@ -36,22 +38,30 @@ namespace IoTHelpers.Gpio.Modules
         private void CheckStatus(object sender, object e)
         {
             var currentPinValue = Pin.Read();
-            System.Diagnostics.Debug.WriteLine(currentPinValue);
+            //System.Diagnostics.Debug.WriteLine(currentPinValue);
 
-            // Normalizes the data to avoid dirty reads.
-            if (currentPinValue == noTouchPinValue && IsInContact && noTouchCount++ == 6)
+            if (reads.Count == 10)
             {
-                noTouchCount = 0;
-                IsInContact = false;
-                TouchRemoved?.Invoke(this, EventArgs.Empty);
+                if (reads.Contains(GpioPinValue.High))
+                {
+                    if (!IsInContact)
+                        TouchDetected?.Invoke(this, EventArgs.Empty);
+
+                    IsInContact = true;
+                }
+                else if (reads.Count(r => r == GpioPinValue.Low) > 6)
+                {
+                    if (IsInContact)
+                        TouchRemoved?.Invoke(this, EventArgs.Empty);
+
+                    IsInContact = false;
+                }
+
+                reads.Clear();
             }
-            else if (currentPinValue == touchDetectedPinValue)
+            else
             {
-                if (noTouchCount == 0 && !IsInContact)
-                    TouchDetected?.Invoke(this, EventArgs.Empty);
-
-                noTouchCount = 0;
-                IsInContact = true;
+                reads.Add(currentPinValue);
             }
         }
 
