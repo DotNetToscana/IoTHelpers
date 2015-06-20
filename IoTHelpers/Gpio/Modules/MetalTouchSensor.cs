@@ -42,14 +42,14 @@ namespace IoTHelpers.Gpio.Modules
 
             if (reads.Count == 10)
             {
-                if (reads.Contains(GpioPinValue.High))
+                if (reads.Contains(touchDetectedPinValue))
                 {
                     if (!IsInContact)
                         TouchDetected?.Invoke(this, EventArgs.Empty);
 
                     IsInContact = true;
                 }
-                else if (reads.Count(r => r == GpioPinValue.Low) > 6)
+                else if (reads.Count(r => r == noTouchPinValue) > 6)
                 {
                     if (IsInContact)
                         TouchRemoved?.Invoke(this, EventArgs.Empty);
