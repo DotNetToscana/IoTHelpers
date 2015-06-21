@@ -45,12 +45,12 @@ namespace IoTHelpers.Gpio.Modules
                 return;
 
             // Checks the pin value.
-            if (currentPinValue == flameExtinguishedPinValue)
+            if (currentPinValue == flameDetectedPinValue)
             {
                 IsFlameDetected = true;
                 RaiseEventHelper.CheckRaiseEventOnUIThread(this, FlameDetected, RaiseEventsOnUIThread);
             }
-            else if (currentPinValue == flameDetectedPinValue)
+            else if (currentPinValue == flameExtinguishedPinValue)
             {
                 IsFlameDetected = false;
                 RaiseEventHelper.CheckRaiseEventOnUIThread(this, FlameExtinguished, RaiseEventsOnUIThread);

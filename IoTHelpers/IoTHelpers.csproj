@@ -114,6 +114,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Gpio\Modules\FlameSensor.cs" />
+    <Compile Include="Gpio\Modules\PhotoInterrupter.cs" />
     <Compile Include="Helpers\RaiseEventHelper.cs" />
     <Compile Include="Gpio\GpioModuleBase.cs" />
     <Compile Include="Gpio\Modules\Laser.cs" />
