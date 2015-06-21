@@ -1,9 +1,13 @@
-﻿using System;
+﻿using IoTHelpers.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Devices.Gpio;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 
 namespace IoTHelpers.Gpio.Modules
@@ -16,7 +20,7 @@ namespace IoTHelpers.Gpio.Modules
 
     public class PushButton : GpioModule
     {
-        private readonly DispatcherTimer timer;
+        private readonly Timer timer;
 
         private readonly GpioPinValue normalPinValue;
         private readonly GpioPinValue pressedPinValue;
@@ -24,6 +28,8 @@ namespace IoTHelpers.Gpio.Modules
         private GpioPinValue lastPinValue;
 
         public bool IsPressed { get; private set; } = false;
+
+        public bool RaiseEventsOnUIThread { get; set; } = false;
 
         public event EventHandler Pressed;
         public event EventHandler Released;
@@ -44,13 +50,10 @@ namespace IoTHelpers.Gpio.Modules
 
             lastPinValue = normalPinValue;
 
-            timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(100);
-            timer.Tick += CheckButtonStatus;
-            timer.Start();
+            timer = new Timer(CheckButtonState, null, 0, 100);
         }
 
-        private void CheckButtonStatus(object sender, object e)
+        private void CheckButtonState(object state)
         {
             var currentPinValue = Pin.Read();
 
@@ -62,13 +65,13 @@ namespace IoTHelpers.Gpio.Modules
             if (currentPinValue == pressedPinValue)
             {
                 IsPressed = true;
-                Pressed?.Invoke(this, EventArgs.Empty);
+                RaiseEventHelper.CheckRaiseEventOnUIThread(this, Pressed, RaiseEventsOnUIThread);
             }
             else if (currentPinValue == normalPinValue)
             {
-                Released?.Invoke(this, EventArgs.Empty);
+                RaiseEventHelper.CheckRaiseEventOnUIThread(this, Released, RaiseEventsOnUIThread);
                 if (IsPressed)
-                    Click?.Invoke(this, EventArgs.Empty);
+                    RaiseEventHelper.CheckRaiseEventOnUIThread(this, Click, RaiseEventsOnUIThread);
 
                 IsPressed = false;
             }
@@ -78,9 +81,7 @@ namespace IoTHelpers.Gpio.Modules
 
         public override void Dispose()
         {
-            timer.Stop();
-            timer.Tick -= CheckButtonStatus;
-
+            timer.Dispose();
             base.Dispose();
         }
     }

@@ -113,11 +113,15 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Gpio\Modules\FlameSensor.cs" />
+    <Compile Include="Helpers\RaiseEventHelper.cs" />
     <Compile Include="Gpio\GpioModuleBase.cs" />
     <Compile Include="Gpio\Modules\Laser.cs" />
     <Compile Include="Gpio\Modules\MetalTouchSensor.cs" />
     <Compile Include="Gpio\Modules\InfraredTransmitter.cs" />
     <Compile Include="Gpio\Modules\InfraredReceiver.cs" />
+    <Compile Include="Gpio\Modules\KnockSensor.cs" />
+    <Compile Include="Gpio\Modules\ShockSwitch.cs" />
     <Compile Include="Gpio\Modules\TiltSwitch.cs" />
     <Compile Include="Gpio\Modules\ObstacleAvoidanceSensor.cs" />
     <Compile Include="Gpio\Modules\Relay.cs" />

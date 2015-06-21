@@ -1,16 +1,20 @@
-﻿using System;
+﻿using IoTHelpers.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Devices.Gpio;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 
 namespace IoTHelpers.Gpio.Modules
 {
     public class MetalTouchSensor : GpioModule
     {
-        private readonly DispatcherTimer timer;
+        private readonly Timer timer;
 
         private readonly GpioPinValue noTouchPinValue;
         private readonly GpioPinValue touchDetectedPinValue;
@@ -19,6 +23,8 @@ namespace IoTHelpers.Gpio.Modules
 
         public event EventHandler TouchDetected;
         public event EventHandler TouchRemoved;
+
+        public bool RaiseEventsOnUIThread { get; set; } = false;
 
         private List<GpioPinValue> reads = new List<GpioPinValue>(10);
 
@@ -29,13 +35,10 @@ namespace IoTHelpers.Gpio.Modules
             noTouchPinValue = GpioPinValue.Low;
             touchDetectedPinValue = GpioPinValue.High;
 
-            timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(20);
-            timer.Tick += CheckStatus;
-            timer.Start();
+            timer = new Timer(CheckState, null, 0, 20);
         }
 
-        private void CheckStatus(object sender, object e)
+        private void CheckState(object state)
         {
             var currentPinValue = Pin.Read();
             //System.Diagnostics.Debug.WriteLine(currentPinValue);
@@ -45,14 +48,14 @@ namespace IoTHelpers.Gpio.Modules
                 if (reads.Contains(touchDetectedPinValue))
                 {
                     if (!IsInContact)
-                        TouchDetected?.Invoke(this, EventArgs.Empty);
+                        RaiseEventHelper.CheckRaiseEventOnUIThread(this, TouchDetected, RaiseEventsOnUIThread);
 
                     IsInContact = true;
                 }
                 else if (reads.Count(r => r == noTouchPinValue) > 6)
                 {
                     if (IsInContact)
-                        TouchRemoved?.Invoke(this, EventArgs.Empty);
+                        RaiseEventHelper.CheckRaiseEventOnUIThread(this, TouchRemoved, RaiseEventsOnUIThread);
 
                     IsInContact = false;
                 }
@@ -67,9 +70,7 @@ namespace IoTHelpers.Gpio.Modules
 
         public override void Dispose()
         {
-            timer.Stop();
-            timer.Tick -= CheckStatus;
-
+            timer.Dispose();
             base.Dispose();
         }
     }

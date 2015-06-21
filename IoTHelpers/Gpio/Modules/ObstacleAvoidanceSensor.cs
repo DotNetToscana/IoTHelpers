@@ -1,16 +1,20 @@
-﻿using System;
+﻿using IoTHelpers.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Devices.Gpio;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 
 namespace IoTHelpers.Gpio.Modules
 {
     public class ObstacleAdvoidanceSensor : GpioModule
     {
-        private readonly DispatcherTimer timer;
+        private readonly Timer timer;
 
         private readonly GpioPinValue noObstaclePinValue;
         private readonly GpioPinValue obstacleDetectedPinValue;
@@ -22,19 +26,18 @@ namespace IoTHelpers.Gpio.Modules
         public event EventHandler ObstacleDetected;
         public event EventHandler ObstacleRemoved;
 
+        public bool RaiseEventsOnUIThread { get; set; } = false;
+
         public ObstacleAdvoidanceSensor(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input)
         {
             noObstaclePinValue = GpioPinValue.High;
             obstacleDetectedPinValue = GpioPinValue.Low;
             lastPinValue = noObstaclePinValue;
 
-            timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(100);
-            timer.Tick += CheckStatus;
-            timer.Start();
+            timer = new Timer(CheckState, null, 0, 100);
         }
 
-        private void CheckStatus(object sender, object e)
+        private void CheckState(object state)
         {
             var currentPinValue = Pin.Read();
 
@@ -46,12 +49,12 @@ namespace IoTHelpers.Gpio.Modules
             if (currentPinValue == obstacleDetectedPinValue)
             {
                 HasObstacle = true;
-                ObstacleDetected?.Invoke(this, EventArgs.Empty);
+                RaiseEventHelper.CheckRaiseEventOnUIThread(this, ObstacleDetected, RaiseEventsOnUIThread);
             }
             else if (currentPinValue == noObstaclePinValue)
             {
                 HasObstacle = false;
-                ObstacleRemoved?.Invoke(this, EventArgs.Empty);
+                RaiseEventHelper.CheckRaiseEventOnUIThread(this, ObstacleRemoved, RaiseEventsOnUIThread);
             }
 
             lastPinValue = currentPinValue;
@@ -59,9 +62,7 @@ namespace IoTHelpers.Gpio.Modules
 
         public override void Dispose()
         {
-            timer.Stop();
-            timer.Tick -= CheckStatus;
-
+            timer.Dispose();
             base.Dispose();
         }
     }

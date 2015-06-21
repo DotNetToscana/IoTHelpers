@@ -12,40 +12,38 @@ using Windows.UI.Xaml;
 
 namespace IoTHelpers.Gpio.Modules
 {
-    public class TiltSwith : GpioModule
+    public class ShockSwitch : GpioModule
     {
-        private readonly Timer timer;
-
-        private readonly GpioPinValue tiltedPinValue;
+        private readonly GpioPinValue shockedPinValue;
 
         private GpioPinValue lastPinValue;
 
         public bool RaiseEventsOnUIThread { get; set; } = false;
 
-        public event EventHandler Tilt;
+        public event EventHandler Shaked;
 
-        public TiltSwith(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input)
+        public ShockSwitch(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input)
         {
-            tiltedPinValue = GpioPinValue.Low;
-            lastPinValue = GpioPinValue.Low;
+            shockedPinValue = GpioPinValue.Low;
+            lastPinValue = GpioPinValue.High;
 
-            timer = new Timer(CheckState, null, 0, 100);
+            Pin.ValueChanged += Pin_ValueChanged;
         }
 
-        private void CheckState(object state)
+        private void Pin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
         {
             var currentPinValue = Pin.Read();
 
             // Checks the pin value.
-            if (currentPinValue != lastPinValue && currentPinValue == tiltedPinValue)
-                RaiseEventHelper.CheckRaiseEventOnUIThread(this, Tilt, RaiseEventsOnUIThread);
+            if (currentPinValue != lastPinValue && currentPinValue == shockedPinValue)
+                RaiseEventHelper.CheckRaiseEventOnUIThread(this, Shaked, RaiseEventsOnUIThread);
 
             lastPinValue = currentPinValue;
         }
 
         public override void Dispose()
         {
-            timer.Dispose();
+            Pin.ValueChanged -= Pin_ValueChanged;
             base.Dispose();
         }
     }
