@@ -73,46 +73,46 @@ namespace IoTHelpers.Gpio.Modules
             bluePin.TurnOn();
         }
         
-        public void SetColor(LEDColor color)
+        public void SetColor(LEDColors color)
         {
             switch(color)
             {
-                case LEDColor.Black:
+                case LEDColors.Black:
                     redPin.TurnOff();
                     greenPin.TurnOff();
                     bluePin.TurnOff();
                     break;
-                case LEDColor.Red:
+                case LEDColors.Red:
                     redPin.TurnOn();
                     greenPin.TurnOff();
                     bluePin.TurnOff();
                     break;
-                case LEDColor.Green:
+                case LEDColors.Green:
                     redPin.TurnOff();
                     greenPin.TurnOn();
                     bluePin.TurnOff();
                     break;
-                case LEDColor.Blue:
+                case LEDColors.Blue:
                     redPin.TurnOff();
                     greenPin.TurnOff();
                     bluePin.TurnOn();
                     break;
-                case LEDColor.LightBlue:
+                case LEDColors.LightBlue:
                     redPin.TurnOn();
                     greenPin.TurnOff();
                     bluePin.TurnOn();
                     break;
-                case LEDColor.Yellow:
+                case LEDColors.Yellow:
                     redPin.TurnOn();
                     greenPin.TurnOn();
                     bluePin.TurnOff();
                     break;
-                case LEDColor.Purple:
+                case LEDColors.Purple:
                     redPin.TurnOff();
                     greenPin.TurnOn();
                     bluePin.TurnOn();
                     break;
-                case LEDColor.White:
+                case LEDColors.White:
                     redPin.TurnOn();
                     greenPin.TurnOn();
                     bluePin.TurnOn();
