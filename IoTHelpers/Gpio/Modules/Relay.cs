@@ -9,8 +9,8 @@ namespace IoTHelpers.Gpio.Modules
 {
     public class Relay : SwitchGpioModule
     {
-        public Relay(int pinNumber, GpioPinValue onValue = GpioPinValue.High)
-            : base(pinNumber, onValue)
+        public Relay(int pinNumber, LogicValue logicValue = LogicValue.Positive)
+            : base(pinNumber, logicValue)
         { }   
     }
 }

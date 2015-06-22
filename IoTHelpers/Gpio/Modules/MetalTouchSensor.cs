@@ -16,9 +16,6 @@ namespace IoTHelpers.Gpio.Modules
     {
         private readonly Timer timer;
 
-        private readonly GpioPinValue noTouchPinValue;
-        private readonly GpioPinValue touchDetectedPinValue;
-
         public bool IsInContact { get; private set; } = false;
 
         public event EventHandler TouchDetected;
@@ -28,12 +25,9 @@ namespace IoTHelpers.Gpio.Modules
 
         private List<GpioPinValue> reads = new List<GpioPinValue>(10);
 
-        public MetalTouchSensor(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input)
+        public MetalTouchSensor(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input, LogicValue.Positive)
         {
             Pin.DebounceTimeout = TimeSpan.FromMilliseconds(10);
-
-            noTouchPinValue = GpioPinValue.Low;
-            touchDetectedPinValue = GpioPinValue.High;
 
             timer = new Timer(CheckState, null, 0, 20);
         }
@@ -45,14 +39,14 @@ namespace IoTHelpers.Gpio.Modules
 
             if (reads.Count == 10)
             {
-                if (reads.Contains(touchDetectedPinValue))
+                if (reads.Contains(ActualHighPinValue))
                 {
                     if (!IsInContact)
                         RaiseEventHelper.CheckRaiseEventOnUIThread(this, TouchDetected, RaiseEventsOnUIThread);
 
                     IsInContact = true;
                 }
-                else if (reads.Count(r => r == noTouchPinValue) > 6)
+                else if (reads.Count(r => r == ActualLowPinValue) > 6)
                 {
                     if (IsInContact)
                         RaiseEventHelper.CheckRaiseEventOnUIThread(this, TouchRemoved, RaiseEventsOnUIThread);

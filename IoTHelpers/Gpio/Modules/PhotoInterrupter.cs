@@ -16,9 +16,6 @@ namespace IoTHelpers.Gpio.Modules
     {
         private readonly Timer timer;
 
-        private readonly GpioPinValue interruptedPinValue;
-        private readonly GpioPinValue passThroughPinValue;
-
         private GpioPinValue lastPinValue;
 
         public bool PhotoPassThrough { get; private set; } = true;
@@ -28,11 +25,9 @@ namespace IoTHelpers.Gpio.Modules
 
         public bool RaiseEventsOnUIThread { get; set; } = false;
 
-        public PhotoInterrupter(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input)
+        public PhotoInterrupter(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input, LogicValue.Positive)
         {
-            interruptedPinValue = GpioPinValue.High;
-            passThroughPinValue = GpioPinValue.Low;
-            lastPinValue = passThroughPinValue;
+            lastPinValue = ActualLowPinValue;
 
             timer = new Timer(CheckState, null, 0, 100);
         }
@@ -47,15 +42,15 @@ namespace IoTHelpers.Gpio.Modules
                 return;
 
             // Checks the pin value.
-            if (currentPinValue == passThroughPinValue)
-            {
-                PhotoPassThrough = true;
-                RaiseEventHelper.CheckRaiseEventOnUIThread(this, PassThrough, RaiseEventsOnUIThread);
-            }
-            else if (currentPinValue == interruptedPinValue)
+            if (currentPinValue == ActualHighPinValue)
             {
                 PhotoPassThrough = false;
                 RaiseEventHelper.CheckRaiseEventOnUIThread(this, Interrupted, RaiseEventsOnUIThread);
+            }
+            else if (currentPinValue == ActualLowPinValue)
+            {
+                PhotoPassThrough = true;
+                RaiseEventHelper.CheckRaiseEventOnUIThread(this, PassThrough, RaiseEventsOnUIThread);
             }
 
             lastPinValue = currentPinValue;

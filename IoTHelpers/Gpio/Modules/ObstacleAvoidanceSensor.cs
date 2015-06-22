@@ -16,9 +16,6 @@ namespace IoTHelpers.Gpio.Modules
     {
         private readonly Timer timer;
 
-        private readonly GpioPinValue noObstaclePinValue;
-        private readonly GpioPinValue obstacleDetectedPinValue;
-
         private GpioPinValue lastPinValue;
 
         public bool HasObstacle { get; private set; } = false;
@@ -28,11 +25,9 @@ namespace IoTHelpers.Gpio.Modules
 
         public bool RaiseEventsOnUIThread { get; set; } = false;
 
-        public ObstacleAdvoidanceSensor(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input)
+        public ObstacleAdvoidanceSensor(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input, LogicValue.Negative)
         {
-            noObstaclePinValue = GpioPinValue.High;
-            obstacleDetectedPinValue = GpioPinValue.Low;
-            lastPinValue = noObstaclePinValue;
+            lastPinValue = ActualLowPinValue;
 
             timer = new Timer(CheckState, null, 0, 100);
         }
@@ -46,12 +41,12 @@ namespace IoTHelpers.Gpio.Modules
                 return;
 
             // Checks the pin value.
-            if (currentPinValue == obstacleDetectedPinValue)
+            if (currentPinValue == ActualHighPinValue)
             {
                 HasObstacle = true;
                 RaiseEventHelper.CheckRaiseEventOnUIThread(this, ObstacleDetected, RaiseEventsOnUIThread);
             }
-            else if (currentPinValue == noObstaclePinValue)
+            else if (currentPinValue == ActualLowPinValue)
             {
                 HasObstacle = false;
                 RaiseEventHelper.CheckRaiseEventOnUIThread(this, ObstacleRemoved, RaiseEventsOnUIThread);

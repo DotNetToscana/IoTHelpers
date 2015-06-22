@@ -16,20 +16,17 @@ namespace IoTHelpers.Gpio.Modules
     {
         private readonly Timer timer;
 
-        private readonly GpioPinValue tiltedPinValue;
-
         private GpioPinValue lastPinValue;
 
         public bool RaiseEventsOnUIThread { get; set; } = false;
 
         public event EventHandler Tilt;
 
-        public TiltSwith(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input)
+        public TiltSwith(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input, LogicValue.Negative)
         {
-            tiltedPinValue = GpioPinValue.Low;
-            lastPinValue = GpioPinValue.Low;
+            lastPinValue = ActualHighPinValue;
 
-            timer = new Timer(CheckState, null, 0, 100);
+            timer = new Timer(CheckState, null, 0, 40);
         }
 
         private void CheckState(object state)
@@ -37,7 +34,7 @@ namespace IoTHelpers.Gpio.Modules
             var currentPinValue = Pin.Read();
 
             // Checks the pin value.
-            if (currentPinValue != lastPinValue && currentPinValue == tiltedPinValue)
+            if (currentPinValue != lastPinValue && currentPinValue == ActualHighPinValue)
                 RaiseEventHelper.CheckRaiseEventOnUIThread(this, Tilt, RaiseEventsOnUIThread);
 
             lastPinValue = currentPinValue;

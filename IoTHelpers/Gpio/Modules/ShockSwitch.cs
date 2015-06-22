@@ -14,18 +14,15 @@ namespace IoTHelpers.Gpio.Modules
 {
     public class ShockSwitch : GpioModule
     {
-        private readonly GpioPinValue shockedPinValue;
-
         private GpioPinValue lastPinValue;
 
         public bool RaiseEventsOnUIThread { get; set; } = false;
 
         public event EventHandler Shaked;
 
-        public ShockSwitch(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input)
+        public ShockSwitch(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input, LogicValue.Negative)
         {
-            shockedPinValue = GpioPinValue.Low;
-            lastPinValue = GpioPinValue.High;
+            lastPinValue = ActualLowPinValue;
 
             Pin.ValueChanged += Pin_ValueChanged;
         }
@@ -35,7 +32,7 @@ namespace IoTHelpers.Gpio.Modules
             var currentPinValue = Pin.Read();
 
             // Checks the pin value.
-            if (currentPinValue != lastPinValue && currentPinValue == shockedPinValue)
+            if (currentPinValue != lastPinValue && currentPinValue == ActualHighPinValue)
                 RaiseEventHelper.CheckRaiseEventOnUIThread(this, Shaked, RaiseEventsOnUIThread);
 
             lastPinValue = currentPinValue;

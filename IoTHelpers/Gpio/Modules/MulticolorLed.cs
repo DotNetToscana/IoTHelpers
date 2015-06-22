@@ -13,11 +13,11 @@ namespace IoTHelpers.Gpio.Modules
         private readonly SwitchGpioModule bluePin;
         private readonly SwitchGpioModule greenPin;
 
-        public MulticolorLed(int redPinNumber,  int greenPinNumber, int bluePinNumber)
+        public MulticolorLed(int redPinNumber,  int greenPinNumber, int bluePinNumber, LogicValue logicValue = LogicValue.Positive)
         {
-            redPin = new SwitchGpioModule(Controller, redPinNumber);
-            greenPin = new SwitchGpioModule(Controller, greenPinNumber);
-            bluePin = new SwitchGpioModule(Controller, bluePinNumber);
+            redPin = new SwitchGpioModule(Controller, redPinNumber, logicValue);
+            greenPin = new SwitchGpioModule(Controller, greenPinNumber, logicValue);
+            bluePin = new SwitchGpioModule(Controller, bluePinNumber, logicValue);
         }
 
         public bool Red

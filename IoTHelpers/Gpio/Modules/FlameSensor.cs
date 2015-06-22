@@ -14,9 +14,6 @@ namespace IoTHelpers.Gpio.Modules
     {
         private readonly Timer timer;
 
-        private readonly GpioPinValue flameDetectedPinValue;
-        private readonly GpioPinValue flameExtinguishedPinValue;
-
         private GpioPinValue lastPinValue;
 
         public bool RaiseEventsOnUIThread { get; set; } = false;
@@ -26,11 +23,9 @@ namespace IoTHelpers.Gpio.Modules
         public event EventHandler FlameDetected;
         public event EventHandler FlameExtinguished;
 
-        public FlameSensor(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input)
+        public FlameSensor(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input, LogicValue.Positive)
         {
-            flameDetectedPinValue = GpioPinValue.High;
-            flameExtinguishedPinValue = GpioPinValue.Low;
-            lastPinValue = flameExtinguishedPinValue;
+            lastPinValue = ActualLowPinValue;
 
             timer = new Timer(CheckState, null, 0, 100);
         }
@@ -45,12 +40,12 @@ namespace IoTHelpers.Gpio.Modules
                 return;
 
             // Checks the pin value.
-            if (currentPinValue == flameDetectedPinValue)
+            if (currentPinValue == ActualHighPinValue)
             {
                 IsFlameDetected = true;
                 RaiseEventHelper.CheckRaiseEventOnUIThread(this, FlameDetected, RaiseEventsOnUIThread);
             }
-            else if (currentPinValue == flameExtinguishedPinValue)
+            else if (currentPinValue == ActualLowPinValue)
             {
                 IsFlameDetected = false;
                 RaiseEventHelper.CheckRaiseEventOnUIThread(this, FlameExtinguished, RaiseEventsOnUIThread);

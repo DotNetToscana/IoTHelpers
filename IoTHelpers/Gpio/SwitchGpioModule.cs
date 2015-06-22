@@ -9,37 +9,21 @@ namespace IoTHelpers.Gpio
 {
     public class SwitchGpioModule : GpioModule
     {
-        public GpioPinValue OnValue { get; }
-
-        public GpioPinValue OffValue { get; }
-
-        public SwitchGpioModule(int pinNumber, GpioPinValue onValue = GpioPinValue.High)
-            : this(GpioController.GetDefault(), pinNumber, onValue)
+        public SwitchGpioModule(int pinNumber, LogicValue logicValue = LogicValue.Positive)
+            : this(GpioController.GetDefault(), pinNumber, logicValue)
         { }
 
-        public SwitchGpioModule(GpioController controller, int pinNumber, GpioPinValue onValue = GpioPinValue.High)
-            : base(controller, pinNumber)
+        public SwitchGpioModule(GpioController controller, int pinNumber, LogicValue logicValue = LogicValue.Positive)
+            : base(controller, pinNumber, GpioPinDriveMode.Output, logicValue)
         {
-            if (onValue == GpioPinValue.High)
-            {
-                OnValue = GpioPinValue.High;
-                OffValue = GpioPinValue.Low;
-            }
-            else
-            {
-                OnValue = GpioPinValue.Low;
-                OffValue = GpioPinValue.High;
-            }
-
-            // Tests and initializes the pin.           
-            Pin.SetDriveMode(GpioPinDriveMode.Output);
             this.TurnOff();
         }
 
+
         public virtual bool IsOn
         {
-            get { return Pin.Read() == OnValue; }
-            set { Pin.Write(value ? OnValue : OffValue); }
+            get { return Pin.Read() ==  ActualHighPinValue; }
+            set { Pin.Write(value ? ActualHighPinValue : ActualLowPinValue); }
         }
 
         public virtual void TurnOn()

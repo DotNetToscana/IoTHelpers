@@ -22,9 +22,6 @@ namespace IoTHelpers.Gpio.Modules
     {
         private readonly Timer timer;
 
-        private readonly GpioPinValue normalPinValue;
-        private readonly GpioPinValue pressedPinValue;
-
         private GpioPinValue lastPinValue;
 
         public bool IsPressed { get; private set; } = false;
@@ -35,20 +32,9 @@ namespace IoTHelpers.Gpio.Modules
         public event EventHandler Released;
         public event EventHandler Click;
 
-        public PushButton(int pinNumber, ButtonType type = ButtonType.PullDown) : base(pinNumber, GpioPinDriveMode.Input)
+        public PushButton(int pinNumber, ButtonType type = ButtonType.PullDown) : base(pinNumber, GpioPinDriveMode.Input, type == ButtonType.PullUp ? LogicValue.Positive : LogicValue.Negative)
         {
-            if (type == ButtonType.PullUp)
-            {
-                normalPinValue = GpioPinValue.Low;
-                pressedPinValue = GpioPinValue.High;
-            }
-            else
-            {
-                normalPinValue = GpioPinValue.High;
-                pressedPinValue = GpioPinValue.Low;
-            }
-
-            lastPinValue = normalPinValue;
+            lastPinValue = ActualLowPinValue;
 
             timer = new Timer(CheckButtonState, null, 0, 100);
         }
@@ -62,12 +48,12 @@ namespace IoTHelpers.Gpio.Modules
                 return;
 
             // Checks the pin value.
-            if (currentPinValue == pressedPinValue)
+            if (currentPinValue == ActualHighPinValue)
             {
                 IsPressed = true;
                 RaiseEventHelper.CheckRaiseEventOnUIThread(this, Pressed, RaiseEventsOnUIThread);
             }
-            else if (currentPinValue == normalPinValue)
+            else if (currentPinValue == ActualLowPinValue)
             {
                 RaiseEventHelper.CheckRaiseEventOnUIThread(this, Released, RaiseEventsOnUIThread);
                 if (IsPressed)

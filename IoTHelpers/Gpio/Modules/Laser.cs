@@ -9,8 +9,8 @@ namespace IoTHelpers.Gpio.Modules
 {
     public class Laser : SwitchGpioModule
     {
-        public Laser(int pinNumber, GpioPinValue onValue = GpioPinValue.High)
-            : base(pinNumber, onValue)
+        public Laser(int pinNumber, LogicValue logicValue = LogicValue.Positive)
+            : base(pinNumber, logicValue)
         { }   
     }
 }

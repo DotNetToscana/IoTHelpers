@@ -14,17 +14,13 @@ namespace IoTHelpers.Gpio.Modules
     {
         private readonly Timer timer;
 
-        private readonly GpioPinValue dataReceivedPinValue;
-
         public event EventHandler DataReceived;
 
         public bool RaiseEventsOnUIThread { get; set; } = false;
 
-        public InfraredReceiver(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input)
+        public InfraredReceiver(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input, LogicValue.Negative)
         {
-            dataReceivedPinValue = GpioPinValue.Low;
-
-            timer = new Timer(CheckState, null, 0, 100);
+            timer = new Timer(CheckState, null, 0, 40);
         }
 
         private void CheckState(object state)
@@ -32,7 +28,7 @@ namespace IoTHelpers.Gpio.Modules
             var currentPinValue = Pin.Read();
 
             // Checks the pin value.
-            if (currentPinValue == dataReceivedPinValue)
+            if (currentPinValue == ActualHighPinValue)
                 RaiseEventHelper.CheckRaiseEventOnUIThread(this, DataReceived, RaiseEventsOnUIThread);
         }
 

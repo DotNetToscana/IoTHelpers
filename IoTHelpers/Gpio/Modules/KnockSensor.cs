@@ -14,18 +14,15 @@ namespace IoTHelpers.Gpio.Modules
 {
     public class KnockSensor : GpioModule
     {
-        private readonly GpioPinValue knockedPinValue;
-
         private GpioPinValue lastPinValue;
 
         public bool RaiseEventsOnUIThread { get; set; } = false;
 
         public event EventHandler Knocked;
 
-        public KnockSensor(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input)
+        public KnockSensor(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input, LogicValue.Positive)
         {
-            knockedPinValue = GpioPinValue.Low;
-            lastPinValue = GpioPinValue.High;
+            lastPinValue = ActualLowPinValue;
 
             Pin.ValueChanged += Pin_ValueChanged;
         }
@@ -33,10 +30,13 @@ namespace IoTHelpers.Gpio.Modules
         private void Pin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
         {
             var currentPinValue = Pin.Read();
+            //System.Diagnostics.Debug.WriteLine(currentPinValue);
 
             // Checks the pin value.
-            if (currentPinValue != lastPinValue && currentPinValue == knockedPinValue)
+            if (currentPinValue != lastPinValue && currentPinValue == ActualHighPinValue)
                 RaiseEventHelper.CheckRaiseEventOnUIThread(this, Knocked, RaiseEventsOnUIThread);
+
+            lastPinValue = currentPinValue;
         }
 
         public override void Dispose()
