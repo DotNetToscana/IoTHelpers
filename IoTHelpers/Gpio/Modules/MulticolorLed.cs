@@ -73,46 +73,53 @@ namespace IoTHelpers.Gpio.Modules
             bluePin.TurnOn();
         }
         
-        public void SetColor(LEDColors color)
+        public void SetColor(LedColor color)
         {
             switch(color)
             {
-                case LEDColors.Black:
+                case LedColor.Black:
                     redPin.TurnOff();
                     greenPin.TurnOff();
                     bluePin.TurnOff();
                     break;
-                case LEDColors.Red:
+
+                case LedColor.Red:
                     redPin.TurnOn();
                     greenPin.TurnOff();
                     bluePin.TurnOff();
                     break;
-                case LEDColors.Green:
+
+                case LedColor.Green:
                     redPin.TurnOff();
                     greenPin.TurnOn();
                     bluePin.TurnOff();
                     break;
-                case LEDColors.Blue:
+
+                case LedColor.Blue:
                     redPin.TurnOff();
                     greenPin.TurnOff();
                     bluePin.TurnOn();
                     break;
-                case LEDColors.LightBlue:
+
+                case LedColor.LightBlue:
                     redPin.TurnOn();
                     greenPin.TurnOff();
                     bluePin.TurnOn();
                     break;
-                case LEDColors.Yellow:
+
+                case LedColor.Yellow:
                     redPin.TurnOn();
                     greenPin.TurnOn();
                     bluePin.TurnOff();
                     break;
-                case LEDColors.Purple:
+
+                case LedColor.Purple:
                     redPin.TurnOff();
                     greenPin.TurnOn();
                     bluePin.TurnOn();
                     break;
-                case LEDColors.White:
+
+                case LedColor.White:
                     redPin.TurnOn();
                     greenPin.TurnOn();
                     bluePin.TurnOn();
@@ -135,7 +142,7 @@ namespace IoTHelpers.Gpio.Modules
         }
     }
     
-    public enum LEDColors
+    public enum LedColor
     {
         Black,
         Red,
