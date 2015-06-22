@@ -72,6 +72,53 @@ namespace IoTHelpers.Gpio.Modules
             greenPin.TurnOff();
             bluePin.TurnOn();
         }
+        
+        public void SetColor(LEDColors color)
+        {
+            switch(color)
+            {
+                case LEDColors.Black:
+                    redPin.TurnOff();
+                    greenPin.TurnOff();
+                    bluePin.TurnOff();
+                    break;
+                case LEDColors.Red:
+                    redPin.TurnOn();
+                    greenPin.TurnOff();
+                    bluePin.TurnOff();
+                    break;
+                case LEDColors.Green:
+                    redPin.TurnOff();
+                    greenPin.TurnOn();
+                    bluePin.TurnOff();
+                    break;
+                case LEDColors.Blue:
+                    redPin.TurnOff();
+                    greenPin.TurnOff();
+                    bluePin.TurnOn();
+                    break;
+                case LEDColors.LightBlue:
+                    redPin.TurnOn();
+                    greenPin.TurnOff();
+                    bluePin.TurnOn();
+                    break;
+                case LEDColors.Yellow:
+                    redPin.TurnOn();
+                    greenPin.TurnOn();
+                    bluePin.TurnOff();
+                    break;
+                case LEDColors.Purple:
+                    redPin.TurnOff();
+                    greenPin.TurnOn();
+                    bluePin.TurnOn();
+                    break;
+                case LEDColors.White:
+                    redPin.TurnOn();
+                    greenPin.TurnOn();
+                    bluePin.TurnOn();
+                    break;
+            }
+        }
 
         public override void Dispose()
         {
@@ -86,6 +133,18 @@ namespace IoTHelpers.Gpio.Modules
 
             base.Dispose();
         }
+    }
+    
+    public enum LEDColors
+    {
+        Black,
+        Red,
+        Green,
+        Blue,
+        Yellow,
+        LightBlue,
+        Purple,
+        White
     }
 }
 
