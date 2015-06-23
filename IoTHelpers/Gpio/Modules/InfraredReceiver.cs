@@ -14,6 +14,8 @@ namespace IoTHelpers.Gpio.Modules
     {
         private readonly Timer timer;
 
+        private GpioPinValue lastPinValue;
+
         public event EventHandler DataReceived;
 
         public bool RaiseEventsOnUIThread { get; set; } = false;
@@ -28,8 +30,10 @@ namespace IoTHelpers.Gpio.Modules
             var currentPinValue = Pin.Read();
 
             // Checks the pin value.
-            if (currentPinValue == ActualHighPinValue)
+            if (currentPinValue != lastPinValue && currentPinValue == ActualHighPinValue)
                 RaiseEventHelper.CheckRaiseEventOnUIThread(this, DataReceived, RaiseEventsOnUIThread);
+
+            lastPinValue = currentPinValue;
         }
 
         public override void Dispose()

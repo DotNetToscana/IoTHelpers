@@ -33,7 +33,7 @@ namespace IoTHelpers.Gpio.Modules
         private void CheckState(object state)
         {
             var currentPinValue = Pin.Read();
-            System.Diagnostics.Debug.WriteLine(currentPinValue);
+            //System.Diagnostics.Debug.WriteLine(currentPinValue);
 
             // If same value of last read, exits. 
             if (currentPinValue == lastPinValue)

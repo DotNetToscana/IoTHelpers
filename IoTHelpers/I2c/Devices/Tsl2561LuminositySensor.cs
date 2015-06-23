@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IoTHelpers.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,19 +7,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.I2c;
 
-namespace IoTHelpers.I2c.Modules
+namespace IoTHelpers.I2c.Devices
 {
-    public class Tsl2561LightSensor : I2cDeviceBase
+    public class Tsl2561LuminositySensor : I2cDeviceBase
     {
         // TSL Address Constants 
         public const int TSL2561_ADDR_0 = 0x29;    // address with '0' shorted on board  
         public const int TSL2561_ADDR = 0x39;      // default address  
         public const int TSL2561_ADDR_1 = 0x49;    // address with '1' shorted on board  
-        
+
         // TSL Commands 
         private const int TSL2561_CMD = 0x80;
         private const int TSL2561_CMD_CLEAR = 0xC0;
-        
+
         // TSL Registers 
         private const int TSL2561_REG_CONTROL = 0x00;
         private const int TSL2561_REG_TIMING = 0x01;
@@ -35,13 +36,31 @@ namespace IoTHelpers.I2c.Modules
 
         private Timer timer;
 
-        public double CurrentLux { get; set; }
+        private double lastLux;
 
-        public Tsl2561LightSensor(int slaveAddress = TSL2561_ADDR, I2cBusSpeed busSpeed = I2cBusSpeed.FastMode, I2cSharingMode sharingMode = I2cSharingMode.Shared, string i2cControllerName = I2C_CONTROLLER_NAME)
+        public double CurrentLux { get; private set; }
+
+        public bool RaiseEventsOnUIThread { get; set; } = false;
+
+        private TimeSpan readInterval = TimeSpan.FromMilliseconds(3000);
+        public TimeSpan ReadInterval
+        {
+            get { return readInterval; }
+            set
+            {
+                readInterval = value;
+                if (timer != null)
+                    timer.Change((int)readInterval.TotalMilliseconds, (int)readInterval.TotalMilliseconds);
+            }
+        }
+
+        public event EventHandler LuxChanged;
+
+        public Tsl2561LuminositySensor(int slaveAddress = TSL2561_ADDR, I2cBusSpeed busSpeed = I2cBusSpeed.FastMode, I2cSharingMode sharingMode = I2cSharingMode.Shared, string i2cControllerName = I2C_CONTROLLER_NAME)
             : base(slaveAddress, busSpeed, sharingMode, i2cControllerName)
         { }
 
-        protected override async Task InitializeSensorAsync()
+        protected override Task InitializeSensorAsync()
         {
             // Set the TSL Timing
             ms = (uint)this.SetTiming(false, 2);
@@ -49,8 +68,9 @@ namespace IoTHelpers.I2c.Modules
             // Powerup the TSL sensor
             this.PowerUp();
 
-            await Task.Delay(3000);
-            timer = new Timer(ReadSensor, null, 0, 3000);
+            timer = new Timer(ReadSensor, null, 0, (int)readInterval.TotalMilliseconds);
+
+            return Task.FromResult<object>(null);
         }
 
         private void ReadSensor(object state)
@@ -59,10 +79,10 @@ namespace IoTHelpers.I2c.Modules
             var data = this.GetData();
             CurrentLux = this.GetLux(gain, ms, data[0], data[1]);
 
-            var strLux = string.Format("{0:0.00}", CurrentLux);
-            var strInfo = "Luminosity: " + strLux + " lux";
-            //System.Diagnostics.Debug.WriteLine("Data1: " + data[0] + ", Data2: " + data[1]);
-            System.Diagnostics.Debug.WriteLine(strInfo);
+            if (CurrentLux != lastLux)
+                RaiseEventHelper.CheckRaiseEventOnUIThread(this, LuxChanged, RaiseEventsOnUIThread);
+
+            lastLux = CurrentLux;
         }
 
         // TSL2561 Sensor Power up
@@ -104,8 +124,7 @@ namespace IoTHelpers.I2c.Modules
             else
                 timing &= (~0x10);
 
-            // Set integration time (0 to 3) 
-
+            // Set integration time (0 to 3)
             timing &= ~0x03;
             timing |= (time & 0x03);
 
@@ -199,6 +218,7 @@ namespace IoTHelpers.I2c.Modules
 
         public override void Dispose()
         {
+            // Powerdown the TSL sensor
             this.PowerDown();
 
             if (timer != null)
