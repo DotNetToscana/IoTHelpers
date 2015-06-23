@@ -10,37 +10,36 @@ using Windows.UI.Xaml;
 
 namespace IoTHelpers.Gpio.Modules
 {
-    public class InfraredReceiver : GpioModule
+    public class MercurySwitch : GpioModule
     {
-        private readonly Timer timer;
-
         private GpioPinValue lastPinValue;
 
-        public event EventHandler DataReceived;
+        public event EventHandler Switched;
 
         public bool RaiseEventsOnUIThread { get; set; } = false;
 
-        public InfraredReceiver(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input, LogicValue.Negative)
+        public MercurySwitch(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input, LogicValue.Negative)
         {
             lastPinValue = ActualLowPinValue;
 
-            timer = new Timer(CheckState, null, 0, 40);
+            Pin.ValueChanged += Pin_ValueChanged;
         }
 
-        private void CheckState(object state)
+        private void Pin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
         {
             var currentPinValue = Pin.Read();
+            //System.Diagnostics.Debug.WriteLine(currentPinValue);
 
             // Checks the pin value.
             if (currentPinValue != lastPinValue && currentPinValue == ActualHighPinValue)
-                RaiseEventHelper.CheckRaiseEventOnUIThread(this, DataReceived, RaiseEventsOnUIThread);
+                RaiseEventHelper.CheckRaiseEventOnUIThread(this, Switched, RaiseEventsOnUIThread);
 
             lastPinValue = currentPinValue;
         }
 
         public override void Dispose()
         {
-            timer.Dispose();
+            Pin.ValueChanged -= Pin_ValueChanged;
             base.Dispose();
         }
     }
