@@ -13,10 +13,10 @@ namespace IoTHelpers.I2c
         // I2C Controller name
         public const string I2C_CONTROLLER_NAME = "I2C1";
 
-        public I2cConnectionSettings Settings { get; set; }
+        public I2cConnectionSettings Settings { get; }
 
         // I2C Device
-        public I2cDevice Device { get; set; }
+        public I2cDevice Device { get; private set; }
 
         private string deviceSelector;
 
