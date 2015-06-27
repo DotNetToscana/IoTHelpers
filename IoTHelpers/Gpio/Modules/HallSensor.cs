@@ -21,7 +21,7 @@ namespace IoTHelpers.Gpio.Modules
 
         public bool RaiseEventsOnUIThread { get; set; } = false;
 
-        public HallSensor(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input, LogicValue.Positive)
+        public HallSensor(int pinNumber, LogicValue logicValue = LogicValue.Positive) : base(pinNumber, GpioPinDriveMode.Input, logicValue)
         {
             lastPinValue = ActualLowPinValue;
 

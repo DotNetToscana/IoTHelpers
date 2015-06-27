@@ -20,7 +20,7 @@ namespace IoTHelpers.Gpio.Modules
 
         public event EventHandler Shaked;
 
-        public ShockSwitch(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input, LogicValue.Negative)
+        public ShockSwitch(int pinNumber, LogicValue logicValue = LogicValue.Negative) : base(pinNumber, GpioPinDriveMode.Input, logicValue)
         {
             lastPinValue = ActualLowPinValue;
 

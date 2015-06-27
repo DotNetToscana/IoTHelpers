@@ -23,7 +23,7 @@ namespace IoTHelpers.Gpio.Modules
         public event EventHandler FlameDetected;
         public event EventHandler FlameExtinguished;
 
-        public FlameSensor(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input, LogicValue.Positive)
+        public FlameSensor(int pinNumber, LogicValue logicValue = LogicValue.Positive) : base(pinNumber, GpioPinDriveMode.Input, logicValue)
         {
             lastPinValue = ActualLowPinValue;
 

@@ -21,7 +21,7 @@ namespace IoTHelpers.Gpio.Modules
 
         public bool RaiseEventsOnUIThread { get; set; } = false;
 
-        public Sr501PirMotionDetector(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input, LogicValue.Positive)
+        public Sr501PirMotionDetector(int pinNumber, LogicValue logicValue = LogicValue.Positive) : base(pinNumber, GpioPinDriveMode.Input, logicValue)
         {
             lastPinValue = ActualLowPinValue;
 

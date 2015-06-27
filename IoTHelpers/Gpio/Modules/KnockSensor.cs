@@ -20,7 +20,7 @@ namespace IoTHelpers.Gpio.Modules
 
         public event EventHandler Knocked;
 
-        public KnockSensor(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input, LogicValue.Positive)
+        public KnockSensor(int pinNumber, LogicValue logicValue = LogicValue.Positive) : base(pinNumber, GpioPinDriveMode.Input, logicValue)
         {
             lastPinValue = ActualLowPinValue;
 

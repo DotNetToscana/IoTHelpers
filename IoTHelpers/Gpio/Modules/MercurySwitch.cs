@@ -18,7 +18,7 @@ namespace IoTHelpers.Gpio.Modules
 
         public bool RaiseEventsOnUIThread { get; set; } = false;
 
-        public MercurySwitch(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input, LogicValue.Negative)
+        public MercurySwitch(int pinNumber, LogicValue logicValue = LogicValue.Negative) : base(pinNumber, GpioPinDriveMode.Input, logicValue)
         {
             lastPinValue = ActualLowPinValue;
 

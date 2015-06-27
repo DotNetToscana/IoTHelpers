@@ -25,7 +25,7 @@ namespace IoTHelpers.Gpio.Modules
 
         private List<GpioPinValue> reads = new List<GpioPinValue>(10);
 
-        public MetalTouchSensor(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input, LogicValue.Positive)
+        public MetalTouchSensor(int pinNumber, LogicValue logicValue = LogicValue.Positive) : base(pinNumber, GpioPinDriveMode.Input, logicValue)
         {
             Pin.DebounceTimeout = TimeSpan.FromMilliseconds(10);
 

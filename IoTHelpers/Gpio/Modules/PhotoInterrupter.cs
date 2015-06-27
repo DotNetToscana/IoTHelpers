@@ -25,7 +25,7 @@ namespace IoTHelpers.Gpio.Modules
 
         public bool RaiseEventsOnUIThread { get; set; } = false;
 
-        public PhotoInterrupter(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input, LogicValue.Positive)
+        public PhotoInterrupter(int pinNumber, LogicValue logicValue = LogicValue.Positive) : base(pinNumber, GpioPinDriveMode.Input, logicValue)
         {
             lastPinValue = ActualLowPinValue;
 

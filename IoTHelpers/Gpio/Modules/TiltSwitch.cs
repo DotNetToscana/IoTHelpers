@@ -22,7 +22,7 @@ namespace IoTHelpers.Gpio.Modules
 
         public event EventHandler Tilt;
 
-        public TiltSwith(int pinNumber) : base(pinNumber, GpioPinDriveMode.Input, LogicValue.Negative)
+        public TiltSwith(int pinNumber, LogicValue logicValue = LogicValue.Negative) : base(pinNumber, GpioPinDriveMode.Input, logicValue)
         {
             lastPinValue = ActualHighPinValue;
 
