@@ -15,7 +15,7 @@ namespace IoTHelpers.Gpio.Modules
         private GpioPinValue lastPinValue;
 
         public event EventHandler MotionDetected;
-        public event EventHandler MotionStoppped;
+        public event EventHandler MotionStopped;
 
         private bool IsMotionDetected { get; set; }
 
@@ -46,7 +46,7 @@ namespace IoTHelpers.Gpio.Modules
             else if (currentPinValue == ActualLowPinValue)
             {
                 IsMotionDetected = true;
-                RaiseEventHelper.CheckRaiseEventOnUIThread(this, MotionStoppped, RaiseEventsOnUIThread);
+                RaiseEventHelper.CheckRaiseEventOnUIThread(this, MotionStopped, RaiseEventsOnUIThread);
             }
 
             lastPinValue = currentPinValue;
