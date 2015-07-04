@@ -138,6 +138,7 @@
     <Compile Include="Gpio\GpioModule.cs" />
     <Compile Include="Gpio\Extensions\GpioExtensions.cs" />
     <Compile Include="Gpio\Modules\MulticolorLed.cs" />
+    <Compile Include="I2c\Devices\Adxl345Accelerometer.cs" />
     <Compile Include="I2c\I2cDeviceBase.cs" />
     <Compile Include="I2c\Devices\Tsl2561LuminositySensor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

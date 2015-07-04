@@ -75,7 +75,7 @@ namespace IoTHelpers.I2c.Devices
 
         private void ReadSensor(object state)
         {
-            // Retrive luminosity.
+            // Retrive luminosity value.
             var data = this.GetData();
             CurrentLux = this.GetLux(gain, ms, data[0], data[1]);
 
