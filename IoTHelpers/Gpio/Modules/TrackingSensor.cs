@@ -12,18 +12,18 @@ using Windows.UI.Xaml;
 
 namespace IoTHelpers.Gpio.Modules
 {
-    public class ObstacleAdvoidanceSensor : GpioModule
+    public class TrackingSensor : GpioModule
     {
         private GpioPinValue lastPinValue;
 
-        public bool HasObstacle { get; private set; } = false;
+        public bool IsWhiteLineDetected { get; private set; } = false;
 
-        public event EventHandler ObstacleDetected;
-        public event EventHandler ObstacleRemoved;
+        public event EventHandler WhiteLineDetected;
+        public event EventHandler BlackLineDetected;
 
         public bool RaiseEventsOnUIThread { get; set; } = false;
 
-        public ObstacleAdvoidanceSensor(int pinNumber, LogicValue logicValue = LogicValue.Negative) : base(pinNumber, GpioPinDriveMode.Input, logicValue)
+        public TrackingSensor(int pinNumber, LogicValue logicValue = LogicValue.Negative) : base(pinNumber, GpioPinDriveMode.Input, logicValue)
         {
             lastPinValue = ActualLowPinValue;
 
@@ -33,7 +33,7 @@ namespace IoTHelpers.Gpio.Modules
         private void Pin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
         {
             var currentPinValue = Pin.Read();
-            //System.Diagnostics.Debug.WriteLine(currentPinValue);
+            System.Diagnostics.Debug.WriteLine(currentPinValue);
 
             // If same value of last read, exits. 
             if (currentPinValue == lastPinValue)
@@ -42,13 +42,13 @@ namespace IoTHelpers.Gpio.Modules
             // Checks the pin value.
             if (currentPinValue == ActualHighPinValue)
             {
-                HasObstacle = true;
-                RaiseEventHelper.CheckRaiseEventOnUIThread(this, ObstacleDetected, RaiseEventsOnUIThread);
+                IsWhiteLineDetected = true;
+                RaiseEventHelper.CheckRaiseEventOnUIThread(this, WhiteLineDetected, RaiseEventsOnUIThread);
             }
             else if (currentPinValue == ActualLowPinValue)
             {
-                HasObstacle = false;
-                RaiseEventHelper.CheckRaiseEventOnUIThread(this, ObstacleRemoved, RaiseEventsOnUIThread);
+                IsWhiteLineDetected = false;
+                RaiseEventHelper.CheckRaiseEventOnUIThread(this, BlackLineDetected, RaiseEventsOnUIThread);
             }
 
             lastPinValue = currentPinValue;

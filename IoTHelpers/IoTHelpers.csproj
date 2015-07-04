@@ -114,7 +114,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Gpio\Modules\FlameSensor.cs" />
+    <Compile Include="Gpio\Modules\ReedSwitch.cs" />
     <Compile Include="Gpio\Modules\HallSensor.cs" />
+    <Compile Include="Gpio\Modules\TwoColorLed.cs" />
+    <Compile Include="Gpio\Modules\TrackingSensor.cs" />
     <Compile Include="Gpio\Modules\Sr501PirMotionDetector.cs" />
     <Compile Include="Gpio\Modules\MercurySwitch.cs" />
     <Compile Include="Gpio\Modules\PhotoInterrupter.cs" />

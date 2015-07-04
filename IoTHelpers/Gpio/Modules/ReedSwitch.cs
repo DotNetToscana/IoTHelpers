@@ -5,25 +5,23 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
 using Windows.Devices.Gpio;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 
 namespace IoTHelpers.Gpio.Modules
 {
-    public class ObstacleAdvoidanceSensor : GpioModule
+    public class ReedSwitch : GpioModule
     {
         private GpioPinValue lastPinValue;
 
-        public bool HasObstacle { get; private set; } = false;
+        public event EventHandler MagneticFieldDetected;
+        public event EventHandler MagneticFieldRemoved;
 
-        public event EventHandler ObstacleDetected;
-        public event EventHandler ObstacleRemoved;
+        public bool IsInMagneticFieldRange { get; private set; } = false;
 
         public bool RaiseEventsOnUIThread { get; set; } = false;
 
-        public ObstacleAdvoidanceSensor(int pinNumber, LogicValue logicValue = LogicValue.Negative) : base(pinNumber, GpioPinDriveMode.Input, logicValue)
+        public ReedSwitch(int pinNumber, LogicValue logicValue = LogicValue.Positive) : base(pinNumber, GpioPinDriveMode.Input, logicValue)
         {
             lastPinValue = ActualLowPinValue;
 
@@ -42,13 +40,13 @@ namespace IoTHelpers.Gpio.Modules
             // Checks the pin value.
             if (currentPinValue == ActualHighPinValue)
             {
-                HasObstacle = true;
-                RaiseEventHelper.CheckRaiseEventOnUIThread(this, ObstacleDetected, RaiseEventsOnUIThread);
+                IsInMagneticFieldRange = true;
+                RaiseEventHelper.CheckRaiseEventOnUIThread(this, MagneticFieldDetected, RaiseEventsOnUIThread);
             }
             else if (currentPinValue == ActualLowPinValue)
             {
-                HasObstacle = false;
-                RaiseEventHelper.CheckRaiseEventOnUIThread(this, ObstacleRemoved, RaiseEventsOnUIThread);
+                IsInMagneticFieldRange = false;
+                RaiseEventHelper.CheckRaiseEventOnUIThread(this, MagneticFieldRemoved, RaiseEventsOnUIThread);
             }
 
             lastPinValue = currentPinValue;
