@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNet.SignalR.Client.Transports;
-using RaspberryDemo.Models;
+using RemoteControl.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +11,11 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 
-namespace RaspberryDemo
+namespace RemoteControl
 {
     public class RemoteConnection : IDisposable
     {
-        public const string SERVICE_URL = "";
+        private const string SERVICE_URL = "";
 
         private const string HUB_NAME = "SensorHub";
         private const string ADD_DEVICE_METHOD = "AddDevice";
@@ -33,6 +33,9 @@ namespace RaspberryDemo
 
         public RemoteConnection()
         {
+			if (string.IsNullOrWhiteSpace(SERVICE_URL))
+				throw new Exception("Service URL not specified.");
+
             hubConnection = new HubConnection(SERVICE_URL);
             hubProxy = hubConnection.CreateHubProxy(HUB_NAME);
         }
@@ -41,10 +44,10 @@ namespace RaspberryDemo
         {
             await hubConnection.Start();
 
-            // Registra il device.
+            // Register the device.
             await hubProxy.Invoke(ADD_DEVICE_METHOD);
 
-            // Registra gli eventi che sono ricevuti tramite SignalR.
+            // Register SignalR events.
             hubProxy.On<Rgb>(SET_LED_EVENT, async (rgb) =>
                 {
                     var dispatcher = CoreApplication.MainView?.CoreWindow?.Dispatcher;

@@ -8,13 +8,13 @@ using Windows.Devices.Gpio;
 
 namespace IoTHelpers.Boards
 {
-	public class RaspberryBoard : Board
+	public class RaspberryPiBoard : Board
 	{
-		private static readonly Lazy<RaspberryBoard> board = new Lazy<RaspberryBoard>(() =>
+		private static readonly Lazy<RaspberryPiBoard> board = new Lazy<RaspberryPiBoard>(() =>
 		{
 			try
 			{
-				var board = new RaspberryBoard();
+				var board = new RaspberryPiBoard();
 				return board;
 			}
 			catch
@@ -23,7 +23,7 @@ namespace IoTHelpers.Boards
 			}
 		});
 
-		public static RaspberryBoard GetDefault() => board.Value;
+		public static RaspberryPiBoard GetDefault() => board.Value;
 
 		public SwitchGpioModule PowerLed { get; private set; }
 
@@ -32,7 +32,7 @@ namespace IoTHelpers.Boards
 		public const int PowerLedNumber = 35;
 		public const int GreenLedNumber = 47;
 
-		protected RaspberryBoard()
+		protected RaspberryPiBoard()
 		{
 			var controller = GpioController.GetDefault();
 

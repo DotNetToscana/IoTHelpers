@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RaspberryDemo.Models
+namespace RemoteControl.Models
 {
     public class Rgb
     {

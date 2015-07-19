@@ -269,7 +269,6 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\TestClientDialogs.cshtml" />
     <Content Include="Scripts\bootstrap-toggle.min.js.map" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
-    <Content Include="Icon.png" />
     <Content Include="Scripts\bootstrap-slider.js" />
     <Content Include="Scripts\bootstrap-toggle.js" />
     <Content Include="Scripts\bootstrap-toggle.min.js" />
