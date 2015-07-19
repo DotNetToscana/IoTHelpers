@@ -11,8 +11,8 @@
     <AssemblyName>IoTHelpers</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.10069.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10069.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion>10.0.10166.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.10166.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -113,6 +113,9 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Boards\Board.cs" />
+    <Compile Include="Boards\RaspberryBoard.cs" />
+    <Compile Include="Helpers\SynchronousWaiter.cs" />
     <Compile Include="Gpio\Modules\FlameSensor.cs" />
     <Compile Include="Gpio\Modules\ReedSwitch.cs" />
     <Compile Include="Gpio\Modules\HallSensor.cs" />
@@ -157,8 +160,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <SDKReference Include="WindowsIoT, Version=10.0.10069.0">
-      <Name>Windows IoT Extension SDK</Name>
+    <SDKReference Include="WindowsIoT, Version=10.0.10166.0">
+      <Name>Windows IoT Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
   <ItemGroup />

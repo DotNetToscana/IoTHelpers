@@ -20,7 +20,7 @@ namespace IoTHelpers.I2c.Devices
 
     public class Adxl345Accelerometer : I2cDeviceBase
     {
-        // TSL Address Constants 
+        // Address Constants 
         public const byte ACCEL_I2C_ADDR = 0x53;            /* 7-bit I2C address of the ADXL345 with SDO pulled low */
 
         private const byte ACCEL_REG_POWER_CONTROL = 0x2D;  /* Address of the Power Control register */

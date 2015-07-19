@@ -19,32 +19,19 @@ namespace IoTHelpers.Gpio
             this.TurnOff();
         }
 
-
         public virtual bool IsOn
         {
             get { return Pin.Read() ==  ActualHighPinValue; }
             set { Pin.Write(value ? ActualHighPinValue : ActualLowPinValue); }
         }
 
-        public virtual void TurnOn()
-        {
-            IsOn = true;
-        }
+		public virtual void TurnOn() => IsOn = true;
 
-        public virtual void TurnOff()
-        {
-            IsOn = false;
-        }
+		public virtual void TurnOff() => IsOn = false;
 
-        public virtual void Toogle()
-        {
-            IsOn = !IsOn;
-        }
+		public virtual void Toogle() => IsOn = !IsOn;
 
-        public override void Dispose()
-        {
-            base.Dispose();
-        }
+		public override void Dispose() => base.Dispose();
     }
 }
 
