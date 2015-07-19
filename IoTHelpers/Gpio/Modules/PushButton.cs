@@ -12,31 +12,31 @@ using Windows.UI.Xaml;
 
 namespace IoTHelpers.Gpio.Modules
 {
-    public enum ButtonType
-    {
-        PullDown = 0,
-        PullUp = 1
-    }
+	public enum ButtonType
+	{
+		PullDown = 0,
+		PullUp = 1
+	}
 
-    public class PushButton : GpioModule
-    {
-        private GpioPinValue lastPinValue;
+	public class PushButton : GpioModule
+	{
+		private GpioPinValue lastPinValue;
 
-        public bool IsPressed { get; private set; } = false;
+		public bool IsPressed { get; private set; } = false;
 
-        public bool RaiseEventsOnUIThread { get; set; } = false;
+		public bool RaiseEventsOnUIThread { get; set; } = false;
 
-        public event EventHandler Pressed;
-        public event EventHandler Released;
-        public event EventHandler Click;
+		public event EventHandler Pressed;
+		public event EventHandler Released;
+		public event EventHandler Click;
 
-        public PushButton(int pinNumber, ButtonType type = ButtonType.PullDown) : base(pinNumber, GpioPinDriveMode.Input, type == ButtonType.PullUp ? LogicValue.Positive : LogicValue.Negative)
-        {
-            lastPinValue = ActualLowPinValue;
+		public PushButton(int pinNumber, ButtonType type = ButtonType.PullDown) : base(pinNumber, GpioPinDriveMode.Input, type == ButtonType.PullUp ? LogicValue.Positive : LogicValue.Negative)
+		{
+			lastPinValue = ActualLowPinValue;
 
 			Pin.DebounceTimeout = TimeSpan.FromMilliseconds(20);
 			Pin.ValueChanged += Pin_ValueChanged;
-        }
+		}
 
 		private void Pin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
 		{
@@ -64,10 +64,10 @@ namespace IoTHelpers.Gpio.Modules
 			lastPinValue = currentPinValue;
 		}
 
-        public override void Dispose()
-        {
+		public override void Dispose()
+		{
 			Pin.ValueChanged -= Pin_ValueChanged;
-            base.Dispose();
-        }
-    }
+			base.Dispose();
+		}
+	}
 }
