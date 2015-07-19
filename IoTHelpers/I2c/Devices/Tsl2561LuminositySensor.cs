@@ -12,9 +12,9 @@ namespace IoTHelpers.I2c.Devices
     public class Tsl2561LuminositySensor : I2cDeviceBase
     {
         // TSL Address Constants 
-        public const int TSL2561_ADDR_0 = 0x29;    // address with '0' shorted on board  
-        public const int TSL2561_ADDR = 0x39;      // default address  
-        public const int TSL2561_ADDR_1 = 0x49;    // address with '1' shorted on board  
+        public const int DefaultI2cAddress = 0x39;      // default address  
+        public const int TSL2561_ADDR_0 = 0x29;         // address with '0' shorted on board  
+        public const int TSL2561_ADDR_1 = 0x49;         // address with '1' shorted on board  
 
         // TSL Commands 
         private const int TSL2561_CMD = 0x80;
@@ -56,7 +56,7 @@ namespace IoTHelpers.I2c.Devices
 
         public event EventHandler LuxChanged;
 
-        public Tsl2561LuminositySensor(int slaveAddress = TSL2561_ADDR, I2cBusSpeed busSpeed = I2cBusSpeed.FastMode, I2cSharingMode sharingMode = I2cSharingMode.Shared, string i2cControllerName = I2C_CONTROLLER_NAME)
+        public Tsl2561LuminositySensor(int slaveAddress = DefaultI2cAddress, I2cBusSpeed busSpeed = I2cBusSpeed.FastMode, I2cSharingMode sharingMode = I2cSharingMode.Shared, string i2cControllerName = RaspberryPiI2cControllerName)
             : base(slaveAddress, busSpeed, sharingMode, i2cControllerName)
         { }
 

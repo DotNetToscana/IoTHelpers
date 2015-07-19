@@ -11,7 +11,8 @@ namespace IoTHelpers.I2c
     public class I2cDeviceBase : IDisposable
     {
         // I2C Controller name
-        public const string I2C_CONTROLLER_NAME = "I2C1";
+        public const string RaspberryPiI2cControllerName = "I2C1";
+        public const string MinnowBoardMaxI2cControllerName = "I2C5";
 
         public I2cConnectionSettings Settings { get; }
 
@@ -20,7 +21,7 @@ namespace IoTHelpers.I2c
 
         private string deviceSelector;
 
-        public I2cDeviceBase(int slaveAddress, I2cBusSpeed busSpeed = I2cBusSpeed.FastMode, I2cSharingMode sharingMode = I2cSharingMode.Shared, string i2cControllerName = I2C_CONTROLLER_NAME)
+        public I2cDeviceBase(int slaveAddress, I2cBusSpeed busSpeed = I2cBusSpeed.FastMode, I2cSharingMode sharingMode = I2cSharingMode.Shared, string i2cControllerName = RaspberryPiI2cControllerName)
         {
             // Initialize I2C device
             Settings = new I2cConnectionSettings(slaveAddress)

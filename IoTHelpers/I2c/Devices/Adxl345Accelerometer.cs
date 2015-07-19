@@ -21,7 +21,7 @@ namespace IoTHelpers.I2c.Devices
     public class Adxl345Accelerometer : I2cDeviceBase
     {
         // Address Constants 
-        public const byte ACCEL_I2C_ADDR = 0x53;            /* 7-bit I2C address of the ADXL345 with SDO pulled low */
+        public const byte DefaultI2cAddress = 0x53;         /* 7-bit I2C address of the ADXL345 with SDO pulled low */
 
         private const byte ACCEL_REG_POWER_CONTROL = 0x2D;  /* Address of the Power Control register */
         private const byte ACCEL_REG_DATA_FORMAT = 0x31;    /* Address of the Data Format register   */
@@ -55,7 +55,7 @@ namespace IoTHelpers.I2c.Devices
 
         public event EventHandler AccelerationChanged;
 
-        public Adxl345Accelerometer(int slaveAddress = ACCEL_I2C_ADDR, I2cBusSpeed busSpeed = I2cBusSpeed.FastMode, I2cSharingMode sharingMode = I2cSharingMode.Shared, string i2cControllerName = I2C_CONTROLLER_NAME)
+        public Adxl345Accelerometer(int slaveAddress = DefaultI2cAddress, I2cBusSpeed busSpeed = I2cBusSpeed.FastMode, I2cSharingMode sharingMode = I2cSharingMode.Shared, string i2cControllerName = RaspberryPiI2cControllerName)
             : base(slaveAddress, busSpeed, sharingMode, i2cControllerName)
         { }
 
