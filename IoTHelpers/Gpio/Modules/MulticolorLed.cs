@@ -101,7 +101,7 @@ namespace IoTHelpers.Gpio.Modules
                     bluePin.TurnOn();
                     break;
 
-                case LedColor.LightBlue:
+                case LedColor.Violet:
                     redPin.TurnOn();
                     greenPin.TurnOff();
                     bluePin.TurnOn();
@@ -149,7 +149,7 @@ namespace IoTHelpers.Gpio.Modules
         Green,
         Blue,
         Yellow,
-        LightBlue,
+        Violet,
         Purple,
         White
     }

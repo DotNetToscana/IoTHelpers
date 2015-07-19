@@ -20,8 +20,6 @@ namespace IoTHelpers.Gpio.Modules
 
     public class PushButton : GpioModule
     {
-        private readonly Timer timer;
-
         private GpioPinValue lastPinValue;
 
         public bool IsPressed { get; private set; } = false;
@@ -36,38 +34,39 @@ namespace IoTHelpers.Gpio.Modules
         {
             lastPinValue = ActualLowPinValue;
 
-            timer = new Timer(CheckButtonState, null, 0, 100);
+			Pin.DebounceTimeout = TimeSpan.FromMilliseconds(20);
+			Pin.ValueChanged += Pin_ValueChanged;
         }
 
-        private void CheckButtonState(object state)
-        {
-            var currentPinValue = Pin.Read();
+		private void Pin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
+		{
+			var currentPinValue = Pin.Read();
 
-            // If same value of last read, exits. 
-            if (currentPinValue == lastPinValue)
-                return;
+			// If same value of last read, exits. 
+			if (currentPinValue == lastPinValue)
+				return;
 
-            // Checks the pin value.
-            if (currentPinValue == ActualHighPinValue)
-            {
-                IsPressed = true;
-                RaiseEventHelper.CheckRaiseEventOnUIThread(this, Pressed, RaiseEventsOnUIThread);
-            }
-            else if (currentPinValue == ActualLowPinValue)
-            {
-                RaiseEventHelper.CheckRaiseEventOnUIThread(this, Released, RaiseEventsOnUIThread);
-                if (IsPressed)
-                    RaiseEventHelper.CheckRaiseEventOnUIThread(this, Click, RaiseEventsOnUIThread);
+			// Checks the pin value.
+			if (currentPinValue == ActualHighPinValue)
+			{
+				IsPressed = true;
+				RaiseEventHelper.CheckRaiseEventOnUIThread(this, Pressed, RaiseEventsOnUIThread);
+			}
+			else if (currentPinValue == ActualLowPinValue)
+			{
+				RaiseEventHelper.CheckRaiseEventOnUIThread(this, Released, RaiseEventsOnUIThread);
+				if (IsPressed)
+					RaiseEventHelper.CheckRaiseEventOnUIThread(this, Click, RaiseEventsOnUIThread);
 
-                IsPressed = false;
-            }
+				IsPressed = false;
+			}
 
-            lastPinValue = currentPinValue;
-        }
+			lastPinValue = currentPinValue;
+		}
 
         public override void Dispose()
         {
-            timer.Dispose();
+			Pin.ValueChanged -= Pin_ValueChanged;
             base.Dispose();
         }
     }

@@ -17,23 +17,23 @@ using Windows.UI.Xaml.Navigation;
 
 namespace MotionDetector
 {
-    public sealed partial class MainPage : Page
-    {
-        private MulticolorLed led;
-        private Sr501PirMotionDetector pir;
+	public sealed partial class MainPage : Page
+	{
+		private MulticolorLed led;
+		private Sr501PirMotionDetector pir;
 
-        public MainPage()
-        {
-            InitializeComponent();
+		public MainPage()
+		{
+			InitializeComponent();
 			Unloaded += MainPage_Unloaded;
 
-            led = new MulticolorLed(redPinNumber: 27, greenPinNumber: 22, bluePinNumber: 23);
+			led = new MulticolorLed(redPinNumber: 27, greenPinNumber: 22, bluePinNumber: 23);
 
-            pir = new Sr501PirMotionDetector(5);
-            pir.RaiseEventsOnUIThread = true;
-            pir.MotionDetected += pir_MotionDetected;
-            pir.MotionStopped += pir_MotionStopped;
-        }
+			pir = new Sr501PirMotionDetector(5);
+			pir.RaiseEventsOnUIThread = true;
+			pir.MotionDetected += pir_MotionDetected;
+			pir.MotionStopped += pir_MotionStopped;
+		}
 
 		protected override void OnNavigatedTo(NavigationEventArgs e)
 		{
@@ -47,24 +47,32 @@ namespace MotionDetector
 			base.OnNavigatedTo(e);
 		}
 
-        private void pir_MotionDetected(object sender, EventArgs e)
-        {
+		private void pir_MotionDetected(object sender, EventArgs e)
+		{
 			// Starts the alarm.
-            led.TurnRed();
-            alarm.Play();
-        }
+			led.TurnRed();
+			alarm.Play();
+		}
 
 		private void pir_MotionStopped(object sender, EventArgs e)
-        {
+		{
 			// Stops the alarm.
-            led.TurnOff();
-            alarm.Stop();
-        }
+			led.TurnOff();
+			alarm.Stop();
+		}
 
 		private void MainPage_Unloaded(object sender, RoutedEventArgs e)
 		{
-			pir.Dispose();
-			led.Dispose();
+			// Cleanup.
+			if (pir != null)
+			{
+				pir.MotionDetected -= pir_MotionDetected;
+				pir.MotionStopped -= pir_MotionStopped;
+				pir.Dispose();
+			}
+
+			if (led != null)
+				led.Dispose();
 		}
 	}
 }
