@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace IoTHelpers.Boards
 {
-	public abstract class Board : IDisposable
-	{
-		public virtual void Dispose()
-		{ }
-	}
+    public abstract class Board : IDisposable
+    {
+        public virtual void Dispose()
+        { }
+    }
 }
