@@ -10,7 +10,7 @@ The **IoTHelpers** library is available on [NuGet](http://www.nuget.org/packages
 
     Install-Package IoTHelpers
     
-Note that the current NuGet packages hasn't been yet updated to RTM version of Windows 10 IoT Core. While we'are working on it, please include the **IoTHelpers** project in your solution.
+Note that the current NuGet packages hasn't been yet updated to RTM version of Windows 10 IoT Core. While we'are working on it, please include the **IoTHelpers** project source directly in your solution.
     
 **Usage**
 
