@@ -9,8 +9,7 @@ This library allows to easily interact with GPIO, I2C and SPI in Windows 10 IoT 
 The **IoTHelpers** library is available on [NuGet](http://www.nuget.org/packages/IoTHelpers/). Just search *IoTHelpers* in the **Package Manager GUI** or run the following command in the **Package Manager Console**:
 
     Install-Package IoTHelpers
-    
-Note that the current NuGet packages hasn't been yet updated to RTM version of Windows 10 IoT Core. While we'are working on it, please include the **IoTHelpers** project source directly in your solution.
+
     
 **Usage**
 
