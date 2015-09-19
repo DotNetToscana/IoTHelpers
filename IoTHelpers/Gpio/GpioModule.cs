@@ -53,6 +53,7 @@ namespace IoTHelpers.Gpio
                 ActualLowPinValue = GpioPinValue.High;
             }
 
+            Pin.Write(ActualLowPinValue);
             Pin.SetDriveMode(driveMode);
         }
 

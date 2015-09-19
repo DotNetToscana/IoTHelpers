@@ -15,9 +15,7 @@ namespace IoTHelpers.Gpio
 
         public SwitchGpioModule(GpioController controller, int pinNumber, LogicValue logicValue = LogicValue.Positive)
             : base(controller, pinNumber, GpioPinDriveMode.Output, logicValue)
-        {
-            this.TurnOff();
-        }
+        { }
 
         public virtual bool IsOn
         {
