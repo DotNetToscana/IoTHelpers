@@ -26,7 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{D1B76346
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlankApp", "Samples\BlankApp\BlankApp.csproj", "{D9CC0018-0712-4F1C-86E7-BFFFDC652C71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UltrasonicDistance", "UltrasonicDistance\UltrasonicDistance.csproj", "{65A675F7-E70A-487A-AE5F-8A6B9C56A358}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UltrasonicDistance", "Samples\UltrasonicDistance\UltrasonicDistance.csproj", "{65A675F7-E70A-487A-AE5F-8A6B9C56A358}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -128,7 +128,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IoTHelpers\IoTHelpers.csproj">
+    <ProjectReference Include="..\..\IoTHelpers\IoTHelpers.csproj">
       <Project>{0b764853-9f9d-4c13-b922-40d3899dc10a}</Project>
       <Name>IoTHelpers</Name>
     </ProjectReference>
