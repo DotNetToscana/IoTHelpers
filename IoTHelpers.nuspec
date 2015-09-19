@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>IoTHelpers</id>
-        <version>0.3.9.1</version>
+        <version>0.4.0.0</version>
         <title>IoT Helpers for Windows 10 IoT Core</title>
         <authors>Marco Minerva,Marco Dal Pino</authors>
         <owners>Marco Minerva</owners>
