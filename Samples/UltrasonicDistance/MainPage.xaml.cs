@@ -18,7 +18,7 @@ namespace UltrasonicDistance
 {
     public sealed partial class MainPage : Page
     {
-        private Sr04UltrasonicModule ultrasonic;
+        private Sr04UltrasonicDistanceSensor ultrasonic;
         private MulticolorLed led;
 
         public MainPage()
@@ -26,7 +26,7 @@ namespace UltrasonicDistance
             this.InitializeComponent();
             Unloaded += MainPage_Unloaded;
 
-            ultrasonic = new Sr04UltrasonicModule(triggerPinNumber: 5, echoPinNumber: 6);
+            ultrasonic = new Sr04UltrasonicDistanceSensor(triggerPinNumber: 5, echoPinNumber: 6);
             ultrasonic.RaiseEventsOnUIThread = true;
             ultrasonic.DistanceChanged += ultrasonic_DistanceChanged;
 

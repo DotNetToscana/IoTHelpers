@@ -127,7 +127,7 @@
     <Compile Include="Gpio\Modules\Laser.cs" />
     <Compile Include="Gpio\Modules\MercurySwitch.cs" />
     <Compile Include="Gpio\Modules\MetalTouchSensor.cs" />
-    <Compile Include="Gpio\Modules\Sr04UltrasonicModule.cs" />
+    <Compile Include="Gpio\Modules\Sr04UltrasonicDistanceSensor.cs" />
     <Compile Include="Gpio\Modules\MulticolorLed.cs" />
     <Compile Include="Gpio\Modules\ObstacleAvoidanceSensor.cs" />
     <Compile Include="Gpio\Modules\PhotoInterrupter.cs" />

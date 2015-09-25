@@ -10,7 +10,7 @@ using Windows.Devices.Gpio;
 
 namespace IoTHelpers.Gpio.Modules
 {
-    public class Sr04UltrasonicModule : GpioModuleBase
+    public class Sr04UltrasonicDistanceSensor : GpioModuleBase
     {
         private readonly Timer timer;
 
@@ -23,7 +23,7 @@ namespace IoTHelpers.Gpio.Modules
 
         public event EventHandler DistanceChanged;
 
-        public Sr04UltrasonicModule(int triggerPinNumber, int echoPinNumber)
+        public Sr04UltrasonicDistanceSensor(int triggerPinNumber, int echoPinNumber)
         {
             triggerPin = new GpioModule(Controller, triggerPinNumber, GpioPinDriveMode.Output);
             echoPin = new GpioModule(Controller, echoPinNumber, GpioPinDriveMode.Input);
