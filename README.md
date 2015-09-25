@@ -13,7 +13,7 @@ The **IoTHelpers** library is available on [NuGet](http://www.nuget.org/packages
     
 **Usage**
 
-Refer to the [project documentation](https://github.com/Dot-and-Net/IoTHelpers/wiki/Home) to find examples about how to use this library. You can also find some code samples in the **Examples** folder.
+Refer to the [project documentation](https://github.com/Dot-and-Net/IoTHelpers/wiki/Home) to find examples about how to use this library. You can also find some code samples in the **Samples** folder.
 
 **Support**
 
