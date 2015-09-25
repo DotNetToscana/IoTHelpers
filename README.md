@@ -19,4 +19,4 @@ Refer to the [project documentation](https://github.com/Dot-and-Net/IoTHelpers/w
 
 GPIO features have been tested with modules available in the [SunFounder 37 modules Sensor Kit](http://www.amazon.it/gp/product/B00P66XRNK?psc=1&redirect=true&ref_=oh_aui_detailpage_o00_s00). If you try other modules and encounter some issues, please let us know and we'll fix the problem as soon as possible!
 
-Please keep in mind that Windows 10 IoT Core is currently in preview.
+We are also trying to integrate modules from other vendors.
