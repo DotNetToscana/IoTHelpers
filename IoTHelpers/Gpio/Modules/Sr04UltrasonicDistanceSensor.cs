@@ -28,9 +28,7 @@ namespace IoTHelpers.Gpio.Modules
             triggerPin = new GpioModule(Controller, triggerPinNumber, GpioPinDriveMode.Output);
             echoPin = new GpioModule(Controller, echoPinNumber, GpioPinDriveMode.Input);
 
-            triggerPin.Pin.Write(GpioPinValue.Low);
-
-            timer = new Timer(CheckState, null, 0, 1500);
+            timer = new Timer(CheckState, null, 0, 500);
         }
 
         private void CheckState(object state)
