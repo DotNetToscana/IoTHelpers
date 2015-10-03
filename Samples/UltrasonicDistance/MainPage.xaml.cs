@@ -26,7 +26,7 @@ namespace UltrasonicDistance
             this.InitializeComponent();
             Unloaded += MainPage_Unloaded;
 
-            ultrasonic = new Sr04UltrasonicDistanceSensor(triggerPinNumber: 5, echoPinNumber: 6);
+            ultrasonic = new Sr04UltrasonicDistanceSensor(triggerPinNumber: 12, echoPinNumber: 16);
             ultrasonic.RaiseEventsOnUIThread = true;
             ultrasonic.DistanceChanged += ultrasonic_DistanceChanged;
 

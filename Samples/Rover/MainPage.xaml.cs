@@ -28,11 +28,13 @@ namespace Rover
 
         private readonly Random rnd;
 
+        private readonly DispatcherTimer moveTimer;
         private volatile bool started;
 
-        private const int DISTANCE_THRESHOLD = 15;
-        private const int BACKWARD_TIME = 1000;
-        private const int ROTATE_TIME = 1250;
+        private const int DISTANCE_THRESHOLD_CM = 35;
+        private const int BACKWARD_TIME_MS = 1000;
+        private const int ROTATE_TIME_MS = 1250;
+        private const int MOVE_INTERVAL_SEC = 30;
 
         public MainPage()
         {
@@ -50,14 +52,88 @@ namespace Rover
             motors = motorDriver.AsLeftRightMotors();
 
             rnd = new Random(unchecked((int)(DateTime.Now.Ticks)));
+
+            moveTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(MOVE_INTERVAL_SEC) };
+            moveTimer.Tick += MoveTimer_Tick;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             led.TurnRed();
-            var loop = Task.Run(() => RobotLoop());
+            var loop = Task.Run(() => RoverLoop());
+
+            this.StartRover();
 
             base.OnNavigatedTo(e);
+        }
+
+        private async void StartRover()
+        {
+            Debug.WriteLine("Starting Rover...");
+
+            await Task.Delay(1000);
+
+            started = true;
+            moveTimer.Start();
+        }
+
+        private void StopRover()
+        {
+            Debug.WriteLine("Stopping Rover...");
+
+            started = false;
+            moveTimer.Stop();
+        }
+
+        private void Button_Click(object sender, EventArgs e)
+        {
+            if (!started)
+                this.StartRover();
+            else
+                this.StopRover();
+        }
+
+        private void MoveTimer_Tick(object sender, object e)
+        {
+            this.StopRover();
+        }
+
+        private async Task RoverLoop()
+        {
+            while (true)
+            {
+                if (!started)
+                {
+                    motors.Stop();
+                    led.TurnRed();
+
+                    Debug.WriteLine("Stopped.");
+                }
+                else
+                {
+                    if (distanceSensor.CurrentDistance < DISTANCE_THRESHOLD_CM)
+                    {
+                        Debug.WriteLine("Obstacle detected. Avoiding...");
+                        led.TurnBlue();
+
+                        await motors.MoveBackwardAsync(BACKWARD_TIME_MS);
+
+                        if (rnd.Next(0, 2) == 0)
+                            await motors.RotateLeftAsync(ROTATE_TIME_MS);
+                        else
+                            await motors.RotateRightAsync(ROTATE_TIME_MS);
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Moving forward...");
+
+                        motors.MoveForward();
+                        led.TurnGreen();
+                    }
+                }
+
+                await Task.Delay(100);
+            }
         }
 
         private void MainPage_Unloaded(object sender, RoutedEventArgs e)
@@ -78,48 +154,11 @@ namespace Rover
 
             if (motors != null)
                 motors.Dispose();
-        }
 
-        private void Button_Click(object sender, EventArgs e)
-        {
-            started = !started;
-        }
-
-        private async Task RobotLoop()
-        {
-            while (true)
+            if (moveTimer != null)
             {
-                if (!started)
-                {
-                    motors.Stop();
-                    led.TurnRed();
-
-                    Debug.WriteLine("Stopped.");
-                }
-                else
-                {
-                    if (distanceSensor.CurrentDistance < DISTANCE_THRESHOLD)
-                    {
-                        Debug.WriteLine("Obstacle detected. Avoiding...");
-                        led.TurnBlue();
-
-                        await motors.MoveBackwardAsync(BACKWARD_TIME);
-
-                        if (rnd.Next(0, 2) == 0)
-                            await motors.RotateLeftAsync(ROTATE_TIME);
-                        else
-                            await motors.RotateRightAsync(ROTATE_TIME);
-                    }
-                    else
-                    {
-                        Debug.WriteLine("Moving forward...");
-
-                        motors.MoveForward();
-                        led.TurnGreen();
-                    }
-                }
-
-                await Task.Delay(150);
+                moveTimer.Stop();
+                moveTimer.Tick -= MoveTimer_Tick;
             }
         }
     }

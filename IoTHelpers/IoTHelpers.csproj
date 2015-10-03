@@ -128,6 +128,7 @@
     <Compile Include="Gpio\Modules\L298nMotorDriver.cs" />
     <Compile Include="Gpio\Modules\Laser.cs" />
     <Compile Include="Gpio\Modules\MercurySwitch.cs" />
+    <Compile Include="Gpio\Modules\Dht11HumitureSensor.cs" />
     <Compile Include="Gpio\Modules\MetalTouchSensor.cs" />
     <Compile Include="Gpio\Modules\Sr04UltrasonicDistanceSensor.cs" />
     <Compile Include="Gpio\Modules\MulticolorLed.cs" />
@@ -154,6 +155,12 @@
     <SDKReference Include="WindowsIoT, Version=10.0.10240.0">
       <Name>Windows IoT Extensions for the UWP</Name>
     </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IoTHelpers.Runtime\IoTHelpers.Runtime.vcxproj">
+      <Project>{2cd70a4f-9eed-4cda-9e07-1a2bd33b4976}</Project>
+      <Name>IoTHelpers.Runtime</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

@@ -33,12 +33,6 @@ namespace IoTHelpers.Gpio.Modules
 
         private void CheckState(object state)
         {
-            this.GetDistance();
-            RaiseEventHelper.CheckRaiseEventOnUIThread(this, DistanceChanged, RaiseEventsOnUIThread);
-        }
-
-        public double? GetDistance()
-        {
             var mre = new ManualResetEvent(false);
             var pulseLength = new Stopwatch();
 
@@ -76,8 +70,6 @@ namespace IoTHelpers.Gpio.Modules
                 CurrentDistance = distance;
                 RaiseEventHelper.CheckRaiseEventOnUIThread(this, DistanceChanged, RaiseEventsOnUIThread);
             }
-
-            return distance;
         }
 
         public override void Dispose()
