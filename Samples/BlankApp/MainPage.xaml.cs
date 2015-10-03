@@ -30,7 +30,7 @@ namespace BlankApp
             connection = new RemoteConnection();
         }
 
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             //await connection.ConnectAsync();
 

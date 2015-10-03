@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>IoTHelpers</id>
-        <version>0.4.1</version>
+        <version>0.5.4</version>
         <title>IoT Helpers for Windows 10 IoT Core</title>
         <authors>Marco Minerva,Marco Dal Pino</authors>
         <owners>Marco Minerva</owners>
@@ -13,11 +13,18 @@
         <copyright>Marco Minerva, Marco Dal Pino - 2015</copyright>
         <tags>iot, windows10, raspberry, minnowboard</tags>
         <language>en-US</language>
+        <references>
+          <reference file="IoTHelpers.dll" />
+          <reference file="IoTHelpers.Runtime.winmd" />
+        </references>
     </metadata>
     <files>
       <file src="IoTHelpers\bin\ARM\Release\IoTHelpers.dll" target="lib\uap10.0\IoTHelpers.dll" />
       <file src="IoTHelpers\bin\ARM\Release\IoTHelpers.pdb" target="lib\uap10.0\IoTHelpers.pdb" />
       <file src="IoTHelpers\bin\ARM\Release\IoTHelpers.pri" target="lib\uap10.0\IoTHelpers.pri" />
       <file src="IoTHelpers\Properties\IoTHelpers.rd.xml" target="lib\uap10.0\IoTHelpers\Properties\IoTHelpers.rd.xml" />
+      <file src="IoTHelpers\ARM\Release\IoTHelpers.Runtime\IoTHelpers.Runtime.dll" target="lib\uap10.0\IoTHelpers.Runtime.dll" />
+      <file src="IoTHelpers\bin\ARM\Release\IoTHelpers.Runtime.winmd" target="lib\uap10.0\IoTHelpers.Runtime.winmd" />
+      <file src="IoTHelpers\bin\ARM\Release\IoTHelpers.Runtime.pri" target="lib\uap10.0\IoTHelpers.Runtime.pri" />
     </files>
 </package>
