@@ -1,6 +1,6 @@
 # IoT Helpers
 
-Windows 10 Core IoT Helpers to use with common sensors kit
+Windows 10 Core IoT Helpers
 ---------------------------------------------------------
 This library allows to easily interact with GPIO, I2C and SPI in Windows 10 IoT Core with boards like Raspberry Pi 2 and MinnowBoard Max.
 
@@ -10,13 +10,8 @@ The **IoTHelpers** library is available on [NuGet](http://www.nuget.org/packages
 
     Install-Package IoTHelpers
 
-    
+At this moment, the NuGet package contains the ARM version only, so if you want to use the library with MinnowBoard Max, you should fork the GitHub project andh use the source code directly.
+
 **Usage**
 
 Refer to the [project documentation](https://github.com/Dot-and-Net/IoTHelpers/wiki/Home) to find examples about how to use this library. You can also find some code samples in the **Samples** folder.
-
-**Support**
-
-GPIO features have been tested with modules available in the [SunFounder 37 modules Sensor Kit](http://www.amazon.it/gp/product/B00P66XRNK?psc=1&redirect=true&ref_=oh_aui_detailpage_o00_s00). If you try other modules and encounter some issues, please let us know and we'll fix the problem as soon as possible!
-
-We are also trying to integrate modules from other vendors.
