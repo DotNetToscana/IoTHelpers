@@ -93,6 +93,15 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\RemoteControl\Models\Humiture.cs">
+      <Link>Models\Humiture.cs</Link>
+    </Compile>
+    <Compile Include="..\RemoteControl\Models\Rgb.cs">
+      <Link>Models\Rgb.cs</Link>
+    </Compile>
+    <Compile Include="..\RemoteControl\RemoteConnection.cs">
+      <Link>RemoteConnection.cs</Link>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -137,6 +146,11 @@
       <Project>{0b764853-9f9d-4c13-b922-40d3899dc10a}</Project>
       <Name>IoTHelpers</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNet.SignalR.Client">
+      <HintPath>..\Microsoft.AspNet.SignalR.Client.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

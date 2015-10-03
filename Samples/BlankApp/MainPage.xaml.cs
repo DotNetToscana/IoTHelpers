@@ -1,4 +1,5 @@
 ﻿using IoTHelpers.Gpio.Modules;
+using RemoteControl;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,13 +21,19 @@ namespace BlankApp
 {
     public sealed partial class MainPage : Page
     {
+        private RemoteConnection connection;
+
         public MainPage()
         {
             this.InitializeComponent();
+
+            connection = new RemoteConnection();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
+            //await connection.ConnectAsync();
+
             base.OnNavigatedTo(e);
         }
     }

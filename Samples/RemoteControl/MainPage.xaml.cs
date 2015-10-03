@@ -23,8 +23,10 @@ namespace RemoteControl
     public sealed partial class MainPage : Page
     {
         private MulticolorLed led;
+        private Dht11HumitureSensor humitureSensor;
 
         private RemoteConnection connection;
+        private DispatcherTimer timer;
 
         public MainPage()
         {
@@ -34,7 +36,28 @@ namespace RemoteControl
             connection = new RemoteConnection();
             connection.OnLedEvent(LedEvent);
 
-            led = new MulticolorLed(redPinNumber: 27, greenPinNumber: 22, bluePinNumber: 23);
+            led = new MulticolorLed(redPinNumber: 18, greenPinNumber: 23, bluePinNumber: 24);
+
+            humitureSensor = new Dht11HumitureSensor(pinNumber: 4);
+
+            timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
+            timer.Tick += Timer_Tick;
+        }
+
+        private void Timer_Tick(object sender, object e)
+        {
+            this.SendHumiture();
+        }
+
+        private void HumitureSensor_ReadingChanged(object sender, EventArgs e)
+        {
+            this.SendHumiture();
+        }
+
+        private void SendHumiture()
+        {
+            connection.SendHumiture(humitureSensor.CurrentHumidity.GetValueOrDefault(),
+                humitureSensor.CurrentTemperature.GetValueOrDefault());
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -48,6 +71,7 @@ namespace RemoteControl
                 board.StatusLed.TurnOn();
             }
 
+            timer.Start();
             base.OnNavigatedTo(e);
         }
 
@@ -63,6 +87,18 @@ namespace RemoteControl
             // Cleanup
             if (led != null)
                 led.Dispose();
+
+            if (humitureSensor != null)
+            {
+                humitureSensor.ReadingChanged -= HumitureSensor_ReadingChanged; 
+                humitureSensor.Dispose();
+            }
+
+            if (timer != null)
+            {
+                timer.Tick -= Timer_Tick;
+                timer.Stop();
+            }
 
             if (connection != null)
                 connection.Dispose();

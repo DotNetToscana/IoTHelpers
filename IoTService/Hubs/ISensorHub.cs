@@ -9,5 +9,7 @@ namespace IoTService.Hubs
     public interface ISensorHub
     {
         void SetLed(Rgb rgb);
+
+        void HumitureChanged(Humiture humiture);
     }
 }

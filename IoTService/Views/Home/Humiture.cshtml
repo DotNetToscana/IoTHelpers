@@ -1,0 +1,49 @@
+﻿@{
+    ViewBag.Title = "Humidity / Temperature";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <h3><span class="glyphicon glyphicon-tint"></span> Humidity:</h3>
+    </div>
+    <div class="col-md-8">
+        <h3>
+            <span id="humidity"></span> % RH
+        </h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <h3><span class="glyphicon glyphicon-map-marker"></span> Temperature:</h3>
+    </div>
+    <div class="col-md-8">
+        <h3>
+            <span id="temperature"></span> °C
+        </h3>
+    </div>
+</div>
+
+@section scripts
+{
+    <!--SignalR script to update the orders.-->
+    <script>
+        $(function () {
+            // Reference the auto-generated proxy for the hub.
+            var sensorHub = $.connection.sensorHub;
+
+            sensorHub.client.humitureChanged = function (humiture) {
+                $("#humidity").html(humiture.Humidity);
+                $("#temperature").html(humiture.Temperature);
+            };
+
+            // Start the connection.
+            $.connection.hub.start();
+        });
+    </script>
+}
+
+
+
+

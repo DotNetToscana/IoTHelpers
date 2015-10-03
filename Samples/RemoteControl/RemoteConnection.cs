@@ -15,10 +15,13 @@ namespace RemoteControl
     public class RemoteConnection : IDisposable
     {
         private const string SERVICE_URL = "http://iotserviceweb.azurewebsites.net/";
+        //private const string SERVICE_URL = "http://localhost:37309/";
 
         private const string HUB_NAME = "SensorHub";
+
         private const string ADD_DEVICE_METHOD = "AddDevice";
-        public const string SET_LED_EVENT = "SetLed";
+        private const string SET_LED_EVENT = "SetLed";
+        private const string HUMITURE_CHANGED_EVENT = "HumitureChanged";
 
         private readonly HubConnection hubConnection;
         private readonly IHubProxy hubProxy;
@@ -30,10 +33,24 @@ namespace RemoteControl
             return this;
         }
 
+        public Task SendHumiture(double humidity, double temperature)
+        {
+            if (hubConnection.State == ConnectionState.Connected)
+            {
+                return hubProxy.Invoke(HUMITURE_CHANGED_EVENT, new Humiture
+                {
+                    Temperature = temperature,
+                    Humidity = humidity
+                });
+            }
+
+            return Task.FromResult<object>(null);
+        }
+
         public RemoteConnection()
         {
-			if (string.IsNullOrWhiteSpace(SERVICE_URL))
-				throw new Exception("Service URL not specified.");
+            if (string.IsNullOrWhiteSpace(SERVICE_URL))
+                throw new Exception("Service URL not specified.");
 
             hubConnection = new HubConnection(SERVICE_URL);
             hubProxy = hubConnection.CreateHubProxy(HUB_NAME);

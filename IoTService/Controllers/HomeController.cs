@@ -17,5 +17,10 @@ namespace IoTService.Controllers
         {
             return View();
         }
+
+        public ActionResult Humiture()
+        {
+            return View();
+        }
     }
 }

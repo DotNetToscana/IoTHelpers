@@ -15,5 +15,10 @@ namespace IoTService.Hubs
         {
             Groups.Add(Context.ConnectionId, DEVICES_GROUP);
         }
+
+        public void HumitureChanged(Humiture humiture)
+        {
+            Clients.Others.HumitureChanged(humiture);
+        }
     }
 }
