@@ -34,7 +34,7 @@ namespace Rover
         private const int DISTANCE_THRESHOLD_CM = 35;
         private const int BACKWARD_TIME_MS = 1000;
         private const int ROTATE_TIME_MS = 1250;
-        private const int MOVE_INTERVAL_SEC = 30;
+        private const int MOVE_INTERVAL_SEC = 20;
 
         public MainPage()
         {
