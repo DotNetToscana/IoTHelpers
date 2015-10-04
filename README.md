@@ -10,7 +10,7 @@ The **IoTHelpers** library is available on [NuGet](http://www.nuget.org/packages
 
     Install-Package IoTHelpers
 
-At this moment, the NuGet package contains the ARM version only, so if you want to use the library with MinnowBoard Max, you should fork the GitHub project andh use the source code directly.
+At this moment, the NuGet package contains the ARM version only, so if you want to use the library with MinnowBoard Max, you should fork the GitHub project and use the source code directly.
 
 **Usage**
 
