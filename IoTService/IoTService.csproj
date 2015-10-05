@@ -172,6 +172,7 @@
     <Compile Include="Hubs\SensorHub.cs" />
     <Compile Include="Models\Humiture.cs" />
     <Compile Include="Models\Rgb.cs" />
+    <Compile Include="Models\RoverMovement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -225,6 +226,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\MulticolorLed.cshtml" />
     <Content Include="Views\Home\Humiture.cshtml" />
+    <Content Include="Views\Home\Rover.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-2.1.4.min.map" />

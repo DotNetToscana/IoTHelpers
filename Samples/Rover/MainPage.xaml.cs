@@ -40,7 +40,7 @@ namespace Rover
         private const int ROTATE_MAX_TIME_MS = 1750;
 
         private const int START_DELAY_MS = 1500;
-        private const int MOVE_INTERVAL_SEC = 15;
+        private const int MOVE_INTERVAL_SEC = 20;
 
         public MainPage()
         {

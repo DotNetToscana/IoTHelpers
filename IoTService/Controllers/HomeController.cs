@@ -22,5 +22,10 @@ namespace IoTService.Controllers
         {
             return View();
         }
+
+        public ActionResult Rover()
+        {
+            return View();
+        }
     }
 }

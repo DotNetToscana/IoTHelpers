@@ -23,5 +23,13 @@ namespace IoTService.Api
             // Invia una notifica SignalR con i nuovi valori del LED.
             sensorHub.Value.Clients.Group(SensorHub.DEVICES_GROUP).SetLed(rgb);
         }
+
+        [Route("rover/move", Name = "MoveRover")]
+        [HttpPost]
+        public void MoveRemove(RoverMovement movement)
+        {
+            // Invia una notifica SignalR con il comando di movimento del Rover.
+            sensorHub.Value.Clients.Group(SensorHub.DEVICES_GROUP).MoveRover(movement);
+        }
     }
 }

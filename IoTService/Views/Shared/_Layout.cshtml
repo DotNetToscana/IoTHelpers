@@ -6,6 +6,12 @@
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+
+    <style>
+        .btn:focus {
+            outline: none;
+        }
+    </style>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -22,6 +28,7 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Multicolor Led", "MulticolorLed", "Home", new { area = "" }, null)</li>
                     <li>@Html.ActionLink("Humidity / Temperature", "Humiture", "Home", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("Rover", "Rover", "Home", new { area = "" }, null)</li>
                     <li><a href="/swagger">API</a></li>
                 </ul>
             </div>

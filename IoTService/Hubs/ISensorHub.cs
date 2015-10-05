@@ -11,5 +11,7 @@ namespace IoTService.Hubs
         void SetLed(Rgb rgb);
 
         void HumitureChanged(Humiture humiture);
+
+        void MoveRover(RoverMovement movement);
     }
 }
