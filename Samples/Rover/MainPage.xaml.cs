@@ -32,9 +32,15 @@ namespace Rover
         private volatile bool started;
 
         private const int DISTANCE_THRESHOLD_CM = 35;
-        private const int BACKWARD_TIME_MS = 1000;
-        private const int ROTATE_TIME_MS = 1250;
-        private const int MOVE_INTERVAL_SEC = 20;
+
+        private const int BACKWARD_MIN_TIME_MS = 1000;
+        private const int BACKWARD_MAX_TIME_MS = 1500;
+
+        private const int ROTATE_MIN_TIME_MS = 1250;
+        private const int ROTATE_MAX_TIME_MS = 1750;
+
+        private const int START_DELAY_MS = 1500;
+        private const int MOVE_INTERVAL_SEC = 15;
 
         public MainPage()
         {
@@ -44,6 +50,7 @@ namespace Rover
             led = new MulticolorLed(redPinNumber: 18, greenPinNumber: 23, bluePinNumber: 24);
 
             button = new PushButton(pinNumber: 26);
+            button.RaiseEventsOnUIThread = true;
             button.Click += Button_Click;
 
             distanceSensor = new Sr04UltrasonicDistanceSensor(triggerPinNumber: 12, echoPinNumber: 16);
@@ -71,7 +78,7 @@ namespace Rover
         {
             Debug.WriteLine("Starting Rover...");
 
-            await Task.Delay(1000);
+            await Task.Delay(START_DELAY_MS);
 
             started = true;
             moveTimer.Start();
@@ -104,10 +111,13 @@ namespace Rover
             {
                 if (!started)
                 {
-                    motors.Stop();
-                    led.TurnRed();
+                    if (motors.IsMoving)
+                    {
+                        motors.Stop();
+                        led.TurnRed();
 
-                    Debug.WriteLine("Stopped.");
+                        Debug.WriteLine("Stopped.");
+                    }
                 }
                 else
                 {
@@ -116,12 +126,12 @@ namespace Rover
                         Debug.WriteLine("Obstacle detected. Avoiding...");
                         led.TurnBlue();
 
-                        await motors.MoveBackwardAsync(BACKWARD_TIME_MS);
+                        await motors.MoveBackwardAsync(rnd.Next(BACKWARD_MIN_TIME_MS, BACKWARD_MAX_TIME_MS));
 
                         if (rnd.Next(0, 2) == 0)
-                            await motors.RotateLeftAsync(ROTATE_TIME_MS);
+                            await motors.RotateLeftAsync(rnd.Next(ROTATE_MIN_TIME_MS, ROTATE_MAX_TIME_MS));
                         else
-                            await motors.RotateRightAsync(ROTATE_TIME_MS);
+                            await motors.RotateRightAsync(rnd.Next(ROTATE_MIN_TIME_MS, ROTATE_MAX_TIME_MS));
                     }
                     else
                     {
