@@ -29,7 +29,7 @@ namespace MotionDetector
 
             led = new MulticolorLed(redPinNumber: 27, greenPinNumber: 22, bluePinNumber: 23);
 
-            pir = new Sr501PirMotionDetector(5);
+            pir = new Sr501PirMotionDetector(pinNumber: 5);
             pir.RaiseEventsOnUIThread = true;
             pir.MotionDetected += pir_MotionDetected;
             pir.MotionStopped += pir_MotionStopped;
