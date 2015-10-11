@@ -143,6 +143,7 @@
     <Compile Include="Gpio\Modules\TrackingSensor.cs" />
     <Compile Include="Gpio\Modules\TwoColorLed.cs" />
     <Compile Include="Gpio\SwitchGpioModule.cs" />
+    <Compile Include="Gpio\TimedModule.cs" />
     <Compile Include="Helpers\RaiseEventHelper.cs" />
     <Compile Include="Helpers\SynchronousWaiter.cs" />
     <Compile Include="I2c\Devices\Adxl345Accelerometer.cs" />

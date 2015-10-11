@@ -10,28 +10,39 @@ using Windows.Devices.Gpio;
 
 namespace IoTHelpers.Gpio.Modules
 {
-    public class Sr04UltrasonicDistanceSensor : GpioModuleBase
+    public class Sr04UltrasonicDistanceSensor : GpioTimedModuleBase
     {
-        private readonly Timer timer;
+        private const int TIMER_PERIOD = 500;
 
         private readonly GpioModule triggerPin;
         private readonly GpioModule echoPin;
 
         public bool RaiseEventsOnUIThread { get; set; } = false;
 
-        public double? CurrentDistance { get; private set; }
+        private double? currentDistance;
+        public double? CurrentDistance
+        {
+            get
+            {
+                if (Mode == ReadingMode.Manual)
+                    throw new NotSupportedException($"{nameof(CurrentDistance)} is available only when {nameof(Mode)} is set to {ReadingMode.Continuous}.");
+
+                return currentDistance;
+            }
+        }
 
         public event EventHandler DistanceChanged;
 
-        public Sr04UltrasonicDistanceSensor(int triggerPinNumber, int echoPinNumber)
+        public Sr04UltrasonicDistanceSensor(int triggerPinNumber, int echoPinNumber, ReadingMode mode = ReadingMode.Continuous)
+            : base(mode, TIMER_PERIOD)
         {
             triggerPin = new GpioModule(Controller, triggerPinNumber, GpioPinDriveMode.Output);
             echoPin = new GpioModule(Controller, echoPinNumber, GpioPinDriveMode.Input);
 
-            timer = new Timer(CheckState, null, 0, 500);
+            base.Initialize();
         }
 
-        private void CheckState(object state)
+        public double? GetDistance()
         {
             var mre = new ManualResetEvent(false);
             var pulseLength = new Stopwatch();
@@ -65,17 +76,22 @@ namespace IoTHelpers.Gpio.Modules
             Debug.WriteLine("Milliseconds: " + timeBetween.TotalMilliseconds);
             Debug.WriteLine("Distance: " + distance);
 
-            if (CurrentDistance != distance)
+            return distance;
+        }
+
+        protected override void OnTimer()
+        {
+            var distance = this.GetDistance();
+
+            if (currentDistance != distance)
             {
-                CurrentDistance = distance;
+                currentDistance = distance;
                 RaiseEventHelper.CheckRaiseEventOnUIThread(this, DistanceChanged, RaiseEventsOnUIThread);
             }
         }
 
         public override void Dispose()
         {
-            timer.Dispose();
-
             if (triggerPin != null)
                 triggerPin.Dispose();
 

@@ -1,4 +1,5 @@
-﻿using IoTHelpers.Gpio.Extensions;
+﻿using IoTHelpers.Gpio;
+using IoTHelpers.Gpio.Extensions;
 using IoTHelpers.Gpio.Modules;
 using System;
 using System.Collections.Generic;
@@ -53,7 +54,7 @@ namespace Rover
             button.RaiseEventsOnUIThread = true;
             button.Click += Button_Click;
 
-            distanceSensor = new Sr04UltrasonicDistanceSensor(triggerPinNumber: 12, echoPinNumber: 16);
+            distanceSensor = new Sr04UltrasonicDistanceSensor(triggerPinNumber: 12, echoPinNumber: 16, mode: ReadingMode.Manual);
 
             var motorDriver = new L298nMotorDriver(motor1Pin1: 27, motor1Pin2: 22, motor2Pin1: 5, motor2Pin2: 6);
             motors = motorDriver.AsLeftRightMotors();
@@ -100,10 +101,7 @@ namespace Rover
                 this.StopRover();
         }
 
-        private void MoveTimer_Tick(object sender, object e)
-        {
-            this.StopRover();
-        }
+        private void MoveTimer_Tick(object sender, object e) => this.StopRover();
 
         private async Task RoverLoop()
         {
@@ -121,7 +119,8 @@ namespace Rover
                 }
                 else
                 {
-                    if (distanceSensor.CurrentDistance < DISTANCE_THRESHOLD_CM)
+                    var distance = distanceSensor.GetDistance();
+                    if (distance < DISTANCE_THRESHOLD_CM) //if (distanceSensor.CurrentDistance < DISTANCE_THRESHOLD_CM)
                     {
                         Debug.WriteLine("Obstacle detected. Avoiding...");
                         led.TurnBlue();

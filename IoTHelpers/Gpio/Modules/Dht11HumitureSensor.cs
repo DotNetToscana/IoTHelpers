@@ -14,57 +14,98 @@ using System.Diagnostics;
 
 namespace IoTHelpers.Gpio.Modules
 {
-    public class Dht11HumitureSensor : IDisposable
+    public class Dht11HumitureSensor : TimedModule
     {
-        private readonly Timer timer;
+        private const int TIMER_PERIOD = 2000;
+        private const int DEFAULT_MAX_RETRIES = 20;
+
         private readonly Dht11 dht11;
 
-        public double? CurrentTemperature { get; private set; }
+        private double? currentTemperature;
+        public double? CurrentTemperature
+        {
+            get
+            {
+                if (Mode == ReadingMode.Manual)
+                    throw new NotSupportedException($"{nameof(CurrentTemperature)} is available only when {nameof(Mode)} is set to {ReadingMode.Continuous}.");
 
-        public double? CurrentHumidity { get; private set; }
+                return currentTemperature;
+            }
+        }
+
+        private double? currentHumidity;
+        public double? CurrentHumidity
+        {
+            get
+            {
+                if (Mode == ReadingMode.Manual)
+                    throw new NotSupportedException($"{nameof(CurrentHumidity)} is available only when {nameof(Mode)} is set to {ReadingMode.Continuous}.");
+
+                return currentHumidity;
+            }
+        }
 
         public event EventHandler ReadingChanged;
 
         public bool RaiseEventsOnUIThread { get; set; } = false;
 
-        public Dht11HumitureSensor(int pinNumber)
+        public Dht11HumitureSensor(int pinNumber, ReadingMode mode = ReadingMode.Continuous)
+            : base(mode, TIMER_PERIOD)
         {
             var gpio = GpioController.GetDefault();
             var pin = gpio.OpenPin(pinNumber);
 
             dht11 = new Dht11(pin);
 
-            timer = new Timer(CheckState, null, 0, 2000);
+            base.Initialize();
         }
 
-        private async void CheckState(object state)
+        public async Task<Humiture> GetHumitureAsync(int maxRetries = DEFAULT_MAX_RETRIES)
         {
-            var temperature = CurrentTemperature;
-            var humidity = CurrentHumidity;
+            var reading = await dht11.GetReadingAsync(DEFAULT_MAX_RETRIES);
+            var returnValue = new Humiture(reading);
 
-            var reading = await dht11.GetReadingAsync();
+            Debug.WriteLine("Temperature: " + returnValue.Temperature);
+            Debug.WriteLine("Humidity: " + returnValue.Humidity);
 
-            if (reading.IsValid)
+            return returnValue;
+        }
+
+        protected override async void OnTimer()
+        {
+            var humiture = await this.GetHumitureAsync();
+
+            if (CurrentTemperature != humiture.Temperature || CurrentHumidity != humiture.Humidity)
             {
-                temperature = reading.Temperature;
-                humidity = reading.Humidity;
-            }
-
-            Debug.WriteLine("Temperature: " + temperature);
-            Debug.WriteLine("Humidity: " + humidity);
-
-            if (CurrentTemperature != temperature || CurrentHumidity != humidity)
-            {
-                CurrentTemperature = temperature;
-                CurrentHumidity = humidity;
+                currentTemperature = humiture.Temperature;
+                currentHumidity = humiture.Humidity;
                 RaiseEventHelper.CheckRaiseEventOnUIThread(this, ReadingChanged, RaiseEventsOnUIThread);
             }
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
-            timer.Dispose();
             dht11.Dispose();
+            base.Dispose();
+        }
+    }
+
+    public class Humiture
+    {
+        public double? Humidity { get; }
+
+        public double? Temperature { get; }
+
+        public bool TimedOut { get; }
+
+        public int RetryCount { get; }
+
+        internal Humiture(Dht11Reading reading)
+        {
+            Humidity = reading.Humidity;
+            Temperature = reading.Temperature;
+            TimedOut = reading.TimedOut;
+            RetryCount = reading.RetryCount;
         }
     }
 }

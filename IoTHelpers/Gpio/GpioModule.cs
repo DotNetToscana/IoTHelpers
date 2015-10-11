@@ -13,6 +13,12 @@ namespace IoTHelpers.Gpio
         Negative
     }
 
+    public enum ReadingMode
+    {
+        Continuous,
+        Manual
+    }
+
     public class GpioModule : GpioModuleBase
     {
         public GpioPinValue ActualLowPinValue { get; set; }

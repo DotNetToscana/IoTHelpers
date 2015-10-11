@@ -28,6 +28,8 @@ namespace RoverRemoteControl
         private readonly LeftRightMotors motors;
         private readonly MulticolorLed led;
 
+        private readonly Dictionary<RoverMovementType, Action> movements;
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -40,43 +42,26 @@ namespace RoverRemoteControl
             motors = motorDriver.AsLeftRightMotors();
 
             led = new MulticolorLed(redPinNumber: 18, greenPinNumber: 23, bluePinNumber: 24);
+
+            movements = new Dictionary<RoverMovementType, Action>
+            {
+                [RoverMovementType.Forward] = () => motors.MoveForward(),
+                [RoverMovementType.Backward] = () => motors.MoveBackward(),
+                [RoverMovementType.TurnLeft] = () => motors.TurnLeft(),
+                [RoverMovementType.TurnRight] = () => motors.TurnRight(),
+                [RoverMovementType.RotateLeft] = () => motors.RotateLeft(),
+                [RoverMovementType.RotateRight] = () => motors.RotateRight(),
+                [RoverMovementType.Stop] = () => motors.Stop()
+            };
         }
 
         private void RoverMovementEvent(RoverMovement movementData)
         {
             Debug.WriteLine(movementData.Movement.ToString());
 
-            switch (movementData.Movement)
-            {
-                case RoverMovementType.Forward:                    
-                    motors.MoveForward();
-                    break;
-
-                case RoverMovementType.Backward:
-                    motors.MoveBackward();
-                    break;
-
-                case RoverMovementType.TurnLeft:
-                    motors.TurnLeft();
-                    break;
-
-                case RoverMovementType.TurnRight:
-                    motors.TurnRight();
-                    break;
-
-                case RoverMovementType.RotateLeft:
-                    motors.RotateLeft();
-                    break;
-
-                case RoverMovementType.RotateRight:
-                    motors.RotateRight();
-                    break;
-
-                case RoverMovementType.Stop:
-                default:
-                    motors.Stop();
-                    break;
-            }
+            Action movement;
+            if (movements.TryGetValue(movementData.Movement, out movement))
+                movement.Invoke();
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
