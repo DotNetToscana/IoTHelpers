@@ -21,7 +21,7 @@ namespace BlankApp
 {
     public sealed partial class MainPage : Page
     {
-        private RemoteConnection connection;
+        private readonly RemoteConnection connection;
 
         public MainPage()
         {
@@ -34,6 +34,7 @@ namespace BlankApp
         {
             //await connection.ConnectAsync();
 
+            Debug.WriteLine("Loaded.");
             base.OnNavigatedTo(e);
         }
     }
