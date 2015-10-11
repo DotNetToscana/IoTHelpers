@@ -75,7 +75,7 @@ namespace IoTHelpers.Gpio.Modules
         {
             var humiture = await this.GetHumitureAsync();
 
-            if (CurrentTemperature != humiture.Temperature || CurrentHumidity != humiture.Humidity)
+            if (humiture.IsValid && (CurrentTemperature != humiture.Temperature || CurrentHumidity != humiture.Humidity))
             {
                 currentTemperature = humiture.Temperature;
                 currentHumidity = humiture.Humidity;
@@ -98,12 +98,15 @@ namespace IoTHelpers.Gpio.Modules
 
         public bool TimedOut { get; }
 
+        public bool IsValid { get; }
+
         public int RetryCount { get; }
 
         internal Humiture(Dht11Reading reading)
         {
-            Humidity = reading.Humidity;
-            Temperature = reading.Temperature;
+            IsValid = reading.IsValid;
+            Humidity = reading.IsValid ? (double?)reading.Humidity : null;
+            Temperature = reading.IsValid ? (double?)reading.Temperature : null;
             TimedOut = reading.TimedOut;
             RetryCount = reading.RetryCount;
         }

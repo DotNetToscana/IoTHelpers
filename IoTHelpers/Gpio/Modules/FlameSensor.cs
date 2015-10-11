@@ -12,8 +12,6 @@ namespace IoTHelpers.Gpio.Modules
 {
     public class FlameSensor : GpioModule
     {
-        private readonly Timer timer;
-
         private GpioPinValue lastPinValue;
 
         public bool RaiseEventsOnUIThread { get; set; } = false;
@@ -27,10 +25,11 @@ namespace IoTHelpers.Gpio.Modules
         {
             lastPinValue = ActualLowPinValue;
 
-            timer = new Timer(CheckState, null, 0, 100);
+            Pin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
+            Pin.ValueChanged += Pin_ValueChanged;
         }
 
-        private void CheckState(object state)
+        private void Pin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
         {
             var currentPinValue = Pin.Read();
             //System.Diagnostics.Debug.WriteLine(currentPinValue);
@@ -56,7 +55,7 @@ namespace IoTHelpers.Gpio.Modules
 
         public override void Dispose()
         {
-            timer.Dispose();
+            Pin.ValueChanged -= Pin_ValueChanged;
             base.Dispose();
         }
     }

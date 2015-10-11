@@ -22,11 +22,17 @@ namespace RemoteControl
 {
     public sealed partial class MainPage : Page
     {
-        private MulticolorLed led;
-        private Dht11HumitureSensor humitureSensor;
+        private readonly MulticolorLed led;
+        private readonly Dht11HumitureSensor humitureSensor;
+        private readonly Relay relay;
+        private readonly Sr501PirMotionDetector motionDetector;
+        private readonly FlameSensor flameSensor;
 
-        private RemoteConnection connection;
-        private DispatcherTimer timer;
+        private readonly RemoteConnection connection;
+        private readonly DispatcherTimer timer;
+
+        private bool detectMovement;
+        private bool detectFlame;
 
         public MainPage()
         {
@@ -37,27 +43,86 @@ namespace RemoteControl
             connection.OnLedEvent(LedEvent);
 
             led = new MulticolorLed(redPinNumber: 18, greenPinNumber: 23, bluePinNumber: 24);
-
             humitureSensor = new Dht11HumitureSensor(pinNumber: 4);
+            relay = new Relay(pinNumber: 26);
 
-            timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
+            motionDetector = new Sr501PirMotionDetector(pinNumber: 16);
+            motionDetector.RaiseEventsOnUIThread = true;
+            motionDetector.MotionDetected += MotionDetector_MotionDetected;
+            motionDetector.MotionStopped += MotionDetector_MotionStopped;
+
+            flameSensor = new FlameSensor(pinNumber: 27);
+            flameSensor.RaiseEventsOnUIThread = true;
+            flameSensor.FlameDetected += FlameSensor_FlameDetected;
+            flameSensor.FlameExtinguished += FlameSensor_FlameExtinguished;
+
+            timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
             timer.Tick += Timer_Tick;
         }
 
         private void Timer_Tick(object sender, object e)
-        {
-            this.SendHumiture();
-        }
+            => this.SendHumiture();
 
         private void HumitureSensor_ReadingChanged(object sender, EventArgs e)
-        {
-            this.SendHumiture();
-        }
+            => this.SendHumiture();
 
         private void SendHumiture()
         {
+            temperatureTextBox.Text = $"{humitureSensor.CurrentTemperature}° C";
+            humidityTextBox.Text = $"{humitureSensor.CurrentHumidity}%";
+
             connection.SendHumiture(humitureSensor.CurrentHumidity.GetValueOrDefault(),
                 humitureSensor.CurrentTemperature.GetValueOrDefault());
+
+            this.AddEvents("Temperature sent to Azure");
+        }
+
+        private void relaySwitch_Toggled(object sender, RoutedEventArgs e)
+            => relay.IsOn = relaySwitch.IsOn;
+
+        private void motionDetectorSwitch_Toggled(object sender, RoutedEventArgs e)
+            => detectMovement = motionDetectorSwitch.IsOn;
+
+        private void flameSensorSwitch_Toggled(object sender, RoutedEventArgs e)
+            => detectFlame = flameSensorSwitch.IsOn;
+
+        private void MotionDetector_MotionStopped(object sender, EventArgs e)
+        {
+            this.AddEvents("Motion stopped");
+
+            led.TurnOff();
+            alarm.Stop();
+        }
+
+        private void MotionDetector_MotionDetected(object sender, EventArgs e)
+        {
+            this.AddEvents("Motion detected");
+
+            if (detectMovement)
+            {
+                led.TurnRed();
+                alarm.Play();
+            }
+        }
+
+        private void FlameSensor_FlameExtinguished(object sender, EventArgs e)
+        {
+            this.AddEvents("Flame extinguished");
+
+            led.TurnOff();
+            alarm.Stop();
+        }
+
+        private void FlameSensor_FlameDetected(object sender, EventArgs e)
+        {
+            this.AddEvents("Flame detected");
+
+            if (detectFlame)
+            {
+                alarm.Play();
+                led.TurnRed();
+
+            }
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -77,9 +142,17 @@ namespace RemoteControl
 
         private void LedEvent(Rgb rgb)
         {
+            this.AddEvents("Received Led Event from Azure.");
+
             led.Red = rgb.Red;
             led.Green = rgb.Green;
             led.Blue = rgb.Blue;
+        }
+
+        private void AddEvents(string message)
+        {
+            var dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time"));
+            eventListBox.Items.Insert(0, $"[{dateTime}] {message}");
         }
 
         private void MainPage_Unloaded(object sender, object args)
@@ -88,10 +161,27 @@ namespace RemoteControl
             if (led != null)
                 led.Dispose();
 
+            if (relay != null)
+                relay.Dispose();
+
             if (humitureSensor != null)
             {
-                humitureSensor.ReadingChanged -= HumitureSensor_ReadingChanged; 
+                humitureSensor.ReadingChanged -= HumitureSensor_ReadingChanged;
                 humitureSensor.Dispose();
+            }
+
+            if (motionDetector != null)
+            {
+                motionDetector.MotionDetected -= MotionDetector_MotionDetected;
+                motionDetector.MotionStopped -= MotionDetector_MotionStopped;
+                motionDetector.Dispose();
+            }
+
+            if (flameSensor != null)
+            {
+                flameSensor.FlameDetected -= FlameSensor_FlameDetected;
+                flameSensor.FlameDetected -= FlameSensor_FlameExtinguished;
+                flameSensor.Dispose();
             }
 
             if (timer != null)
