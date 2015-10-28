@@ -8,11 +8,11 @@
     <Application.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="FontSize" Value="48" />
+            <Setter Property="FontSize" Value="32" />
         </Style>
 
         <Style TargetType="ToggleSwitch">
-            <Setter Property="FontSize" Value="32" />
+            <Setter Property="FontSize" Value="24" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleSwitch">

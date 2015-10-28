@@ -39,6 +39,8 @@ namespace RemoteControl
             InitializeComponent();
             Unloaded += MainPage_Unloaded;
 
+            //Window.Current.CoreWindow.PointerCursor = null;
+
             connection = new RemoteConnection();
             connection.OnLedEvent(LedEvent);
 

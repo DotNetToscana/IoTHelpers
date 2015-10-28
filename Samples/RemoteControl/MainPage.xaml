@@ -25,20 +25,20 @@
             <Image Source="/Assets/Icons/Humidity.png" Height="120" Margin="8" />
             <TextBlock x:Name="humidityTextBox" Text="-" />
         </StackPanel>
-        <StackPanel Grid.Row="1" Margin="0,20,0,0">
+        <StackPanel Grid.Row="1" HorizontalAlignment="Center" Margin="0,20">
             <ToggleSwitch OffContent="Relay Off" OnContent="Relay On"
                           x:Name="relaySwitch" Toggled="relaySwitch_Toggled" />
-            <ToggleSwitch OffContent="Motion Detector Off" OnContent="Motion Detector On"
+            <ToggleSwitch OffContent="Motion Detector Off" OnContent="Motion Detector On" 
                           x:Name="motionDetectorSwitch" Toggled="motionDetectorSwitch_Toggled" />
             <ToggleSwitch OffContent="Flame Sensor Off" OnContent="Flame Sensor On"
                           x:Name="flameSensorSwitch" Toggled="flameSensorSwitch_Toggled" IsOn="True" />
         </StackPanel>
         <ListBox Grid.Row="1" Grid.Column="1" x:Name="eventListBox"
-                 Margin="0,25,0,46"
-                 ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollMode="Auto">
+                 HorizontalAlignment="Center" Margin="0,20"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding}" Margin="-5" FontSize="24" />
+                    <TextBlock Text="{Binding}" Margin="-5" FontSize="12" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

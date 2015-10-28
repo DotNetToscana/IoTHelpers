@@ -46,7 +46,7 @@ namespace IoTHelpers.Gpio.Modules
             }
             else if (currentPinValue == ActualLowPinValue)
             {
-                IsMotionDetected = true;
+                IsMotionDetected = false;
                 RaiseEventHelper.CheckRaiseEventOnUIThread(this, MotionStopped, RaiseEventsOnUIThread);
             }
 

@@ -26,7 +26,7 @@ namespace IoTService.Api
 
         [Route("rover/move", Name = "MoveRover")]
         [HttpPost]
-        public void MoveRemove(RoverMovement movement)
+        public void MoveRover(RoverMovement movement)
         {
             // Invia una notifica SignalR con il comando di movimento del Rover.
             sensorHub.Value.Clients.Group(SensorHub.DEVICES_GROUP).MoveRover(movement);
