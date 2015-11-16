@@ -1,0 +1,22 @@
+﻿<Page
+    x:Class="LedManager.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LedManager"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Margin="19,9.5,19,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="LED Manager" Style="{StaticResource HeaderTextBlockStyle}"/>
+        
+        <TextBlock x:Name="statusMessage" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"
+                   TextWrapping="Wrap" Style="{StaticResource BodyTextBlockStyle}"
+                   Text="Avvia l'app con Cortana per impostare i colori dei LED." />
+    </Grid>
+</Page>

@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<VoiceCommands xmlns="http://schemas.microsoft.com/voicecommands/1.1">
+  <CommandSet xml:lang="it-it" Name="italianCommands">
+
+    <CommandPrefix>LED</CommandPrefix>
+    <Example>LED accendi rosso</Example>
+
+    <Command Name="turnOn">
+      <Example>accendi rosso</Example>
+      <ListenFor>Accendi {colors}</ListenFor>
+      <Feedback>Accensione del {colors}...</Feedback>
+      <Navigate Target="MainPage.xaml" />
+    </Command>
+
+    <Command Name="turnOff">
+      <Example>spegni</Example>
+      <ListenFor>Spegni</ListenFor>
+      <Feedback>Spegnimento...</Feedback>
+      <Navigate Target="MainPage.xaml" />
+    </Command>
+
+    <PhraseList Label="colors">
+      <Item>rosso</Item>
+      <Item>verde</Item>
+      <Item>blu</Item>
+      <Item>bianco</Item>
+    </PhraseList>
+
+  </CommandSet>
+</VoiceCommands>
