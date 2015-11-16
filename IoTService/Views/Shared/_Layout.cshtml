@@ -22,13 +22,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("IoT Examples", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("IoT Samples", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Multicolor Led", "MulticolorLed", "Home", new { area = "" }, null)</li>
-                    <li>@Html.ActionLink("Humidity / Temperature", "Humiture", "Home", new { area = "" }, null)</li>
-                    <li>@Html.ActionLink("Rover", "Rover", "Home", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("Multicolor Led", "MulticolorLed", "Home")</li>
+                    <li>@Html.ActionLink("Humidity / Temperature", "Humiture", "Home")</li>
+                    <li>@Html.ActionLink("Rover", "Rover", "Home")</li>
+                    <li>@Html.ActionLink("Jukebox", "Jukebox", "Home")</li>
                     <li><a href="/swagger">API</a></li>
                 </ul>
             </div>

@@ -1,0 +1,82 @@
+﻿@{
+    ViewBag.Title = "JukeBox";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <ul class="list-group" id="audioFiles"></ul>
+</div>
+<div class="row">
+    <div class="col-xs-4">
+        <button id="play" class="btn btn-lg"><span class="glyphicon glyphicon-play"></span></button>
+    </div>
+    <div class="col-xs-4">
+        <button id="pause" class="btn btn-lg"><span class="glyphicon glyphicon-pause"></span></button>
+    </div>
+    <div class="col-xs-4">
+        <button id="stop" class="btn btn-lg"><span class="glyphicon glyphicon-stop"></span></button>
+    </div>
+</div>
+
+@section scripts
+{
+    <!--SignalR script to update the orders.-->
+    <script>
+        $(function () {
+            // Reference the auto-generated proxy for the hub.
+            var sensorHub = $.connection.sensorHub;
+
+            sensorHub.client.musicAvailable = function (audioFiles) {
+                $("#audioFiles").empty();
+                $.each(audioFiles, function (index, value) {
+                    $("#audioFiles").append('<li class="list-group-item">' + value + '</li>');
+                });
+            };
+
+            // Start the connection.
+            $.connection.hub.start().done(function ()
+            {
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.HttpRouteUrl("GetMusic", null)',
+                    cache: false
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $("#play").click(function (e) {
+                var file = $("li.active").text();
+
+                if (file != "") {
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.HttpRouteUrl("PlayMusic", null)?fileName=' + file,
+                        cache: false
+                    });
+                }
+            });
+
+            $("#pause").click(function (e) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.HttpRouteUrl("PauseMusic", null)',
+                    cache: false
+                });
+            });
+
+            $("#stop").click(function (e) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.HttpRouteUrl("StopMusic", null)',
+                    cache: false
+                });
+            });
+        });
+    </script>
+}
+
+
+
+

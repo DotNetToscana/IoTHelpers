@@ -22,7 +22,8 @@ namespace IoTService
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js",
-                      "~/Scripts/bootstrap-toggle.js"));
+                      "~/Scripts/bootstrap-toggle.js",
+                      "~/Scripts/listgroup.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

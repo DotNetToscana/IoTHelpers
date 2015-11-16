@@ -157,6 +157,7 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\JukeboxController.cs" />
     <Compile Include="Api\SensorController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -205,6 +206,8 @@
     <Content Include="Scripts\jquery-2.1.4.min.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
+    <Content Include="Scripts\listgroup.js" />
+    <Content Include="Scripts\listgroup.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
@@ -227,6 +230,7 @@
     <Content Include="Views\Home\MulticolorLed.cshtml" />
     <Content Include="Views\Home\Humiture.cshtml" />
     <Content Include="Views\Home\Rover.cshtml" />
+    <Content Include="Views\Home\Jukebox.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-2.1.4.min.map" />

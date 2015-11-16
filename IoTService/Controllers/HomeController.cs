@@ -8,24 +8,18 @@ namespace IoTService.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
-        {
-            return View();
-        }
+        public ActionResult Index() => View();
 
-        public ActionResult MulticolorLed()
-        {
-            return View();
-        }
+        [Route("led")]
+        public ActionResult MulticolorLed() => View();
 
-        public ActionResult Humiture()
-        {
-            return View();
-        }
+        [Route("humiture")]
+        public ActionResult Humiture() => View();
 
-        public ActionResult Rover()
-        {
-            return View();
-        }
+        [Route("rover")]
+        public ActionResult Rover() => View();
+
+        [Route("Jukebox")]
+        public ActionResult Jukebox() => View();
     }
 }
