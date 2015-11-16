@@ -20,8 +20,8 @@ namespace PushButtonLed
 {
     public sealed partial class MainPage : Page
     {
-        private MulticolorLed led;
-        private PushButton button;
+        private readonly MulticolorLed led;
+        private readonly PushButton button;
 
         private int ledStatus = 0;
 
@@ -30,9 +30,9 @@ namespace PushButtonLed
             this.InitializeComponent();
             Unloaded += MainPage_Unloaded;
 
-            led = new MulticolorLed(redPinNumber: 27, greenPinNumber: 22, bluePinNumber: 23);
+            led = new MulticolorLed(redPinNumber: 18, greenPinNumber: 23, bluePinNumber: 24);
 
-            button = new PushButton(5, type: ButtonType.PullDown);
+            button = new PushButton(5);
             button.Pressed += ButtonPressed;
             button.Click += ChangeColor;
             button.Released += ButtonReleased;
@@ -50,20 +50,14 @@ namespace PushButtonLed
             base.OnNavigatedTo(e);
         }
 
-        private void ButtonPressed(object sender, EventArgs e)
-        {
+        private void ButtonPressed(object sender, EventArgs e) =>
             Debug.WriteLine("Button pressed");
-        }
 
         private void ButtonReleased(object sender, EventArgs e)
-        {
-            Debug.WriteLine("Button released");
-        }
+            => Debug.WriteLine("Button released");
 
         private void ChangeColor(object sender, EventArgs e)
-        {
-            this.FlipLedColor();
-        }
+            => this.FlipLedColor();
 
         private void FlipLedColor()
         {
