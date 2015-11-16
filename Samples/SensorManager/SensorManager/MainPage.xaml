@@ -1,0 +1,103 @@
+﻿<Page
+    x:Class="SensorManager.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SensorManager"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="8" />
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="MinWidth" Value="70" />
+        </Style>
+    </Page.Resources>
+    
+    <Grid>
+        <Hub Margin="0,24,0,0">
+            <HubSection>
+                <HubSection.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="Rover" Style="{StaticResource SubheaderTextBlockStyle}" />
+                    </DataTemplate>
+                </HubSection.HeaderTemplate>
+                <DataTemplate>
+                    <Grid Width="340">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="moveForwardButton" Grid.Column="1"
+                                Click="moveForwardButton_Click" HorizontalAlignment="Center">
+                            <Image Source="/Assets/arrow.png" Height="32" />
+                        </Button>
+                        <Button x:Name="rotateLeftButton" Grid.Row="1" Grid.Column="0"
+                                Click="rotateLeftButton_Click" Width="10">
+                            <Image Source="/Assets/arrow.png" Height="32" RenderTransformOrigin="0.5 0.5">
+                                <Image.RenderTransform>
+                                    <RotateTransform Angle="270" />
+                                </Image.RenderTransform>
+                            </Image>
+                        </Button>
+                        <Button x:Name="rotateRightButton" Grid.Row="1" Grid.Column="2"
+                                Click="rotateRightButton_Click">
+                            <Image Source="/Assets/arrow.png" Height="32" RenderTransformOrigin="0.5 0.5">
+                                <Image.RenderTransform>
+                                    <RotateTransform Angle="90" />
+                                </Image.RenderTransform>
+                            </Image>
+                        </Button>
+                        <Button x:Name="moveBackwardButton" Grid.Row="2" Grid.Column="1"
+                                Click="moveBackwardButton_Click" HorizontalAlignment="Center">
+                            <Image Source="/Assets/arrow.png" Height="32" RenderTransformOrigin="0.5 0.5">
+                                <Image.RenderTransform>
+                                    <RotateTransform Angle="180" />
+                                </Image.RenderTransform>
+                            </Image>
+                        </Button>
+                        <Button x:Name="stopRoverButton" Grid.Row="3" Grid.Column="21"
+                                Margin="0,20,0,0"
+                                Click="stopRoverButton_Click">
+                            <Image Source="/Assets/stop.png" Height="32" RenderTransformOrigin="0.5 0.5">
+                                <Image.RenderTransform>
+                                    <RotateTransform Angle="180" />
+                                </Image.RenderTransform>
+                            </Image>
+                        </Button>
+                    </Grid>
+                </DataTemplate>
+            </HubSection>
+            
+            <HubSection>
+                <HubSection.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="Jukebox" Style="{StaticResource SubheaderTextBlockStyle}" />
+                    </DataTemplate>
+                </HubSection.HeaderTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <StackPanel>
+                            <Button x:Name="playMusicButton" Content="Play random music"
+                                    Click="playMusicButton_Click" />
+                            <Button x:Name="pauseMusicButton" Content="Pause music"
+                                    Click="pauseMusicButton_Click" />
+                            <Button x:Name="stopMusicButton" Content="Stop music"
+                                    Click="stopMusicButton_Click" />
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </HubSection>
+        </Hub>
+    </Grid>
+</Page>
