@@ -8,6 +8,9 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock x:Name="message" Text="" Style="{StaticResource HeaderTextBlockStyle}" FontWeight="Bold" />
+        </StackPanel>
         <MediaElement x:Name="mediaPlayer" Volume="1" />
     </Grid>
 </Page>

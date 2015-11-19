@@ -11,6 +11,7 @@ using Windows.Devices.Usb;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -30,6 +31,9 @@ namespace JukeBox
 
         private readonly RemoteConnection connection;
         private readonly Random random;
+
+        private const string CONNECT = "Connect an USB drive to the board";
+        private const string DRIVE_FOUND = "USB drive connected. Found {0} MP3 audio files";
 
         public MainPage()
         {
@@ -56,6 +60,8 @@ namespace JukeBox
         {
             await connection.ConnectAsync();
             deviceWatcher.Start();
+
+            message.Text = CONNECT;
 
             base.OnNavigatedTo(e);
         }
@@ -88,7 +94,12 @@ namespace JukeBox
                 }
 
                 if (audioFiles.Count > 0)
+                {
+                    await Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                        () => message.Text = string.Format(DRIVE_FOUND, audioFiles.Count));
+
                     await connection.SendAvailableMusicAsync(audioFiles.Keys);
+                }
 
                 isBusy = false;
             }
@@ -96,6 +107,9 @@ namespace JukeBox
 
         private async Task ClearAudioFilesAsync()
         {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () => message.Text = CONNECT);
+
             audioFiles.Clear();
             await connection.SendAvailableMusicAsync(audioFiles.Keys);
         }
