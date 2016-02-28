@@ -85,6 +85,7 @@ namespace RoverRemoteControl
             {
                 // Altrimenti, prima di eseguire il comando disattiva la modalità autopilota. 
                 autoPiloting = false;
+                led.TurnGreen();
 
                 Action movement;
                 if (movements.TryGetValue(movementData.Movement, out movement))
