@@ -9,7 +9,7 @@ using Windows.Devices.I2c;
 
 namespace IoTHelpers.I2c.Devices
 {
-    public class Tsl2561LuminositySensor : I2cDeviceBase
+    public class Tsl2561LuminositySensor : I2cTimedDevice
     {
         // TSL Address Constants 
         public const int DefaultI2cAddress = 0x39;      // default address  
@@ -30,34 +30,41 @@ namespace IoTHelpers.I2c.Devices
         private const int TSL2561_REG_DATA_0 = 0x0C;
         private const int TSL2561_REG_DATA_1 = 0x0E;
 
+        private static TimeSpan DEFAULT_READ_INTERVAL = TimeSpan.FromSeconds(3);
+
         // TSL Gain and MS Values
         private bool gain = false;
         private uint ms = 0;
 
-        private Timer timer;
-
-        private double lastLux;
-
-        public double CurrentLux { get; private set; }
-
-        public bool RaiseEventsOnUIThread { get; set; } = false;
-
-        private TimeSpan readInterval = TimeSpan.FromMilliseconds(3000);
-        public TimeSpan ReadInterval
+        private double currentLux;
+        public double CurrentLux
         {
-            get { return readInterval; }
-            set
+            get
             {
-                readInterval = value;
-                if (timer != null)
-                    timer.Change((int)readInterval.TotalMilliseconds, (int)readInterval.TotalMilliseconds);
+                if (Mode == ReadingMode.Manual)
+                    throw new NotSupportedException($"{nameof(CurrentLux)} is available only when {nameof(Mode)} is set to {ReadingMode.Continuous}.");
+
+                return currentLux;
             }
         }
 
+        public double CurrentLightLevel
+        {
+            get
+            {
+                if (Mode == ReadingMode.Manual)
+                    throw new NotSupportedException($"{nameof(CurrentLightLevel)} is available only when {nameof(Mode)} is set to {ReadingMode.Continuous}.");
+
+                return this.ConvertToLightLevel(currentLux);
+            }
+        }
+
+        public bool RaiseEventsOnUIThread { get; set; } = false;
+
         public event EventHandler LuxChanged;
 
-        public Tsl2561LuminositySensor(int slaveAddress = DefaultI2cAddress, I2cBusSpeed busSpeed = I2cBusSpeed.FastMode, I2cSharingMode sharingMode = I2cSharingMode.Shared, string i2cControllerName = RaspberryPiI2cControllerName)
-            : base(slaveAddress, busSpeed, sharingMode, i2cControllerName)
+        public Tsl2561LuminositySensor(int slaveAddress = DefaultI2cAddress, ReadingMode mode = ReadingMode.Continuous, I2cBusSpeed busSpeed = I2cBusSpeed.FastMode, I2cSharingMode sharingMode = I2cSharingMode.Shared, string i2cControllerName = RaspberryPiI2cControllerName)
+            : base(slaveAddress, mode, DEFAULT_READ_INTERVAL, busSpeed, sharingMode, i2cControllerName)
         { }
 
         protected override Task InitializeSensorAsync()
@@ -68,40 +75,30 @@ namespace IoTHelpers.I2c.Devices
             // Powerup the TSL sensor
             this.PowerUp();
 
-            timer = new Timer(ReadSensor, null, 0, (int)readInterval.TotalMilliseconds);
-
+            base.InitializeTimer();
             return Task.FromResult<object>(null);
         }
 
-        private void ReadSensor(object state)
+        protected override void OnTimer()
         {
             // Retrive luminosity value.
-            var data = this.GetData();
-            CurrentLux = this.GetLux(gain, ms, data[0], data[1]);
+            var lux = this.GetLux();
 
-            if (CurrentLux != lastLux)
+            if (currentLux != lux)
+            {
+                currentLux = lux;
                 RaiseEventHelper.CheckRaiseEventOnUIThread(this, LuxChanged, RaiseEventsOnUIThread);
-
-            lastLux = CurrentLux;
+            }
         }
 
         // TSL2561 Sensor Power up
-        private void PowerUp()
-        {
-            this.Write8(TSL2561_REG_CONTROL, 0x03);
-        }
+        private void PowerUp() => Write8(TSL2561_REG_CONTROL, 0x03);
 
         // TSL2561 Sensor Power down
-        private void PowerDown()
-        {
-            this.Write8(TSL2561_REG_CONTROL, 0x00);
-        }
+        private void PowerDown() => Write8(TSL2561_REG_CONTROL, 0x00);
 
         // Retrieve TSL ID
-        private byte GetId()
-        {
-            return this.Read8(TSL2561_REG_ID);
-        }
+        private byte GetId() => this.Read8(TSL2561_REG_ID);
 
         // Set TSL2561 Timing and return the MS
         private int SetTiming(bool gain, byte time)
@@ -189,6 +186,20 @@ namespace IoTHelpers.I2c.Devices
             return lux;
         }
 
+        public double GetLux()
+        {
+            var data = this.GetData();
+            var lux = this.GetLux(gain, ms, data[0], data[1]);
+
+            return lux;
+        }
+
+        public double GetLightLevel()
+        {
+            var lux = this.GetLux();
+            return this.ConvertToLightLevel(lux);
+        }
+
         // Write byte
         private void Write8(byte addr, byte cmd)
         {
@@ -216,13 +227,20 @@ namespace IoTHelpers.I2c.Devices
             return (ushort)((data[1] << 8) | (data[0]));
         }
 
+        private double ConvertToLightLevel(double lux)
+        {
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/dd319008(v=vs.85).aspx
+            var lightLevel = Math.Abs(Math.Log10(currentLux) / 5);
+            if (lightLevel == double.PositiveInfinity)
+                lightLevel = 0;
+
+            return lightLevel;
+        }
+
         public override void Dispose()
         {
             // Powerdown the TSL sensor
             this.PowerDown();
-
-            if (timer != null)
-                timer.Dispose();
 
             base.Dispose();
         }

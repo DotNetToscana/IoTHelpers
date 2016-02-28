@@ -11,7 +11,7 @@
     <AssemblyName>IoTHelpers</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.10240.0</TargetPlatformVersion>
+    <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -115,6 +115,7 @@
   <ItemGroup>
     <Compile Include="Boards\Board.cs" />
     <Compile Include="Boards\RaspberryPiBoard.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="Gpio\Extensions\GpioExtensions.cs" />
     <Compile Include="Gpio\Extensions\L298nMotorDriverExtensions.cs" />
     <Compile Include="Gpio\GpioModule.cs" />
@@ -150,19 +151,20 @@
     <Compile Include="I2c\Devices\Adxl345Accelerometer.cs" />
     <Compile Include="I2c\Devices\Tsl2561LuminositySensor.cs" />
     <Compile Include="I2c\I2cDeviceBase.cs" />
+    <Compile Include="I2c\I2cTimedDevice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Properties\IoTHelpers.rd.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <SDKReference Include="WindowsIoT, Version=10.0.10240.0">
-      <Name>Windows IoT Extensions for the UWP</Name>
-    </SDKReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IoTHelpers.Runtime\IoTHelpers.Runtime.vcxproj">
       <Project>{2cd70a4f-9eed-4cda-9e07-1a2bd33b4976}</Project>
       <Name>IoTHelpers.Runtime</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="WindowsIoT, Version=10.0.10586.0">
+      <Name>Windows IoT Extensions for the UWP</Name>
+    </SDKReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

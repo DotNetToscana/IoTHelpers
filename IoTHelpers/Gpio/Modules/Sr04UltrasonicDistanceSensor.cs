@@ -12,7 +12,7 @@ namespace IoTHelpers.Gpio.Modules
 {
     public class Sr04UltrasonicDistanceSensor : GpioTimedModuleBase
     {
-        private const int TIMER_PERIOD = 500;
+        private static TimeSpan DEFAULT_READ_INTERVAL = TimeSpan.FromMilliseconds(500);
 
         private readonly GpioModule triggerPin;
         private readonly GpioModule echoPin;
@@ -34,12 +34,12 @@ namespace IoTHelpers.Gpio.Modules
         public event EventHandler DistanceChanged;
 
         public Sr04UltrasonicDistanceSensor(int triggerPinNumber, int echoPinNumber, ReadingMode mode = ReadingMode.Continuous)
-            : base(mode, TIMER_PERIOD)
+            : base(mode, DEFAULT_READ_INTERVAL)
         {
             triggerPin = new GpioModule(Controller, triggerPinNumber, GpioPinDriveMode.Output);
             echoPin = new GpioModule(Controller, echoPinNumber, GpioPinDriveMode.Input);
 
-            base.Initialize();
+            base.InitializeTimer();
         }
 
         public double? GetDistance()

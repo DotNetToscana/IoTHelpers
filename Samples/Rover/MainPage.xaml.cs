@@ -1,4 +1,5 @@
-﻿using IoTHelpers.Gpio;
+﻿using IoTHelpers;
+using IoTHelpers.Gpio;
 using IoTHelpers.Gpio.Extensions;
 using IoTHelpers.Gpio.Modules;
 using System;

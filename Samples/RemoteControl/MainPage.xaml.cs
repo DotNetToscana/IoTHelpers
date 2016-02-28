@@ -76,7 +76,7 @@ namespace RemoteControl
             connection.SendHumiture(humitureSensor.CurrentHumidity.GetValueOrDefault(),
                 humitureSensor.CurrentTemperature.GetValueOrDefault());
 
-            this.AddEvents("Temperature sent to Azure");
+            this.AddEvents("Temperature and humidity sent to Azure");
         }
 
         private void relaySwitch_Toggled(object sender, RoutedEventArgs e)
@@ -123,7 +123,6 @@ namespace RemoteControl
             {
                 alarm.Play();
                 led.TurnRed();
-
             }
         }
 

@@ -18,7 +18,7 @@ namespace IoTHelpers.I2c.Devices
         public double Z { get; internal set; }
     };
 
-    public class Adxl345Accelerometer : I2cDeviceBase
+    public class Adxl345Accelerometer : I2cTimedDevice
     {
         // Address Constants 
         public const byte DefaultI2cAddress = 0x53;         /* 7-bit I2C address of the ADXL345 with SDO pulled low */
@@ -33,30 +33,26 @@ namespace IoTHelpers.I2c.Devices
         private const int ACCEL_DYN_RANGE_G = 8;                        /* The ADXL345 had a total dynamic range of 8G, since we're configuring it to +-4G */
         private const int UNITS_PER_G = ACCEL_RES / ACCEL_DYN_RANGE_G;  /* Ratio of raw int values to G units */
 
-        private Timer timer;
+        private static TimeSpan DEFAULT_READ_INTERVAL = TimeSpan.FromMilliseconds(100);
 
-        private Acceleration lastAcceleration = new Acceleration();
-
-        public Acceleration CurrentAcceleration { get; private set; } = new Acceleration();
-
-        public bool RaiseEventsOnUIThread { get; set; } = false;
-
-        private TimeSpan readInterval = TimeSpan.FromMilliseconds(100);
-        public TimeSpan ReadInterval
+        private Acceleration currentAcceleration = new Acceleration();
+        public Acceleration CurrentAcceleration
         {
-            get { return readInterval; }
-            set
+            get
             {
-                readInterval = value;
-                if (timer != null)
-                    timer.Change((int)readInterval.TotalMilliseconds, (int)readInterval.TotalMilliseconds);
+                if (Mode == ReadingMode.Manual)
+                    throw new NotSupportedException($"{nameof(CurrentAcceleration)} is available only when {nameof(Mode)} is set to {ReadingMode.Continuous}.");
+
+                return currentAcceleration;
             }
         }
 
+        public bool RaiseEventsOnUIThread { get; set; } = false;
+
         public event EventHandler AccelerationChanged;
 
-        public Adxl345Accelerometer(int slaveAddress = DefaultI2cAddress, I2cBusSpeed busSpeed = I2cBusSpeed.FastMode, I2cSharingMode sharingMode = I2cSharingMode.Shared, string i2cControllerName = RaspberryPiI2cControllerName)
-            : base(slaveAddress, busSpeed, sharingMode, i2cControllerName)
+        public Adxl345Accelerometer(int slaveAddress = DefaultI2cAddress, ReadingMode mode = ReadingMode.Continuous, I2cBusSpeed busSpeed = I2cBusSpeed.FastMode, I2cSharingMode sharingMode = I2cSharingMode.Shared, string i2cControllerName = RaspberryPiI2cControllerName)
+            : base(slaveAddress, mode, DEFAULT_READ_INTERVAL, busSpeed, sharingMode, i2cControllerName)
         { }
 
         protected override Task InitializeSensorAsync()
@@ -76,22 +72,23 @@ namespace IoTHelpers.I2c.Devices
             Device.Write(writeBuf_PowerControl);
 
             /* Now that everything is initialized, create a timer so we read data every 100mS */
-            timer = new Timer(ReadSensor, null, 0, (int)readInterval.TotalMilliseconds);
+            base.InitializeTimer();
 
             return Task.FromResult<object>(null);
         }
 
-        private void ReadSensor(object state)
+        protected override void OnTimer()
         {
-            CurrentAcceleration = this.ReadAcceleration();
+            var acceleration = this.ReadAcceleration();
 
-            if (CurrentAcceleration.X != lastAcceleration.X || CurrentAcceleration.Y != lastAcceleration.Y || CurrentAcceleration.Z != lastAcceleration.Z)
+            if (currentAcceleration.X != acceleration.X || currentAcceleration.Y != acceleration.Y || currentAcceleration.Z != acceleration.Z)
+            {
+                currentAcceleration = acceleration;
                 RaiseEventHelper.CheckRaiseEventOnUIThread(this, AccelerationChanged, RaiseEventsOnUIThread);
-
-            lastAcceleration = CurrentAcceleration;
+            }
         }
 
-        private Acceleration ReadAcceleration()
+        public Acceleration ReadAcceleration()
         {
             var regAddrBuf = new byte[] { ACCEL_REG_X };  /* Register address we want to read from                                         */
             var readBuf = new byte[6];                    /* We read 6 bytes sequentially to get all 3 two-byte axes registers in one read */
@@ -123,9 +120,6 @@ namespace IoTHelpers.I2c.Devices
 
         public override void Dispose()
         {
-            if (timer != null)
-                timer.Dispose();
-
             base.Dispose();
         }
     }

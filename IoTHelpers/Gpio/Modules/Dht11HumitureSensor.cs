@@ -16,7 +16,7 @@ namespace IoTHelpers.Gpio.Modules
 {
     public class Dht11HumitureSensor : TimedModule
     {
-        private const int TIMER_PERIOD = 2000;
+        private static TimeSpan DEFAULT_READ_INTERVAL = TimeSpan.FromSeconds(2);
         private const int DEFAULT_MAX_RETRIES = 20;
 
         private readonly Dht11 dht11;
@@ -50,14 +50,14 @@ namespace IoTHelpers.Gpio.Modules
         public bool RaiseEventsOnUIThread { get; set; } = false;
 
         public Dht11HumitureSensor(int pinNumber, ReadingMode mode = ReadingMode.Continuous)
-            : base(mode, TIMER_PERIOD)
+            : base(mode, DEFAULT_READ_INTERVAL)
         {
             var gpio = GpioController.GetDefault();
             var pin = gpio.OpenPin(pinNumber);
 
             dht11 = new Dht11(pin);
 
-            base.Initialize();
+            base.InitializeTimer();
         }
 
         public async Task<Humiture> GetHumitureAsync(int maxRetries = DEFAULT_MAX_RETRIES)

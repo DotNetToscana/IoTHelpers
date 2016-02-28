@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Devices.Gpio;
+using Windows.Devices.I2c;
 
-namespace IoTHelpers.Gpio
+namespace IoTHelpers.I2c
 {
-    public abstract class TimedModule : IDisposable
+    public abstract class I2cTimedDevice : I2cDeviceBase
     {
         private readonly Timer timer;
 
@@ -34,14 +34,16 @@ namespace IoTHelpers.Gpio
             }
         }
 
-        public TimedModule(ReadingMode mode, TimeSpan readInterval)
+        public I2cTimedDevice(int slaveAddress, ReadingMode mode, TimeSpan readInterval,
+            I2cBusSpeed busSpeed = I2cBusSpeed.FastMode, I2cSharingMode sharingMode = I2cSharingMode.Shared, string i2cControllerName = RaspberryPiI2cControllerName)
+            : base(slaveAddress, busSpeed, sharingMode, i2cControllerName)
         {
             this.readInterval = readInterval;
             this.mode = mode;
 
             timer = new Timer(CheckState, null, Timeout.Infinite, Timeout.Infinite);
         }
-
+        
         protected void InitializeTimer() => this.Initialize(mode);
 
         private void Initialize(ReadingMode newMode)
@@ -58,28 +60,10 @@ namespace IoTHelpers.Gpio
 
         protected abstract void OnTimer();
 
-        public virtual void Dispose()
+        public virtual new void Dispose()
         {
             timer.Dispose();
-        }
-    }
-
-    public abstract class GpioTimedModuleBase : TimedModule
-    {
-        protected GpioController Controller { get; }
-
-        public GpioTimedModuleBase(ReadingMode mode, TimeSpan readInterval)
-            : this(GpioController.GetDefault(), mode, readInterval)
-        { }
-
-        protected GpioTimedModuleBase(GpioController controller, ReadingMode mode, TimeSpan readInterval)
-            : base(mode, readInterval)
-        {
-            Controller = controller;
-
-            // Shows an error if there is no GPIO controller
-            if (Controller == null)
-                throw new ArgumentException("No GPIO controller found.");
+            base.Dispose();
         }
     }
 }
