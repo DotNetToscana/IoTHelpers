@@ -45,8 +45,7 @@ namespace IoTHelpers.I2c
 
         public virtual void Dispose()
         {
-            if (Device != null)
-                Device.Dispose();
+            Device?.Dispose();
         }
     }
 }

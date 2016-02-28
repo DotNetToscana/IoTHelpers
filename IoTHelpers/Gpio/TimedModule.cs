@@ -29,8 +29,7 @@ namespace IoTHelpers.Gpio
                     throw new NotSupportedException($"You cannot change {nameof(ReadInterval)} when {nameof(Mode)} is set to {ReadingMode.Manual}.");
 
                 readInterval = value;
-                if (timer != null)
-                    timer.Change(0, (int)readInterval.TotalMilliseconds);
+                timer?.Change(0, (int)readInterval.TotalMilliseconds);
             }
         }
 

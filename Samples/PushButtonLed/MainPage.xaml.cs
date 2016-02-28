@@ -86,8 +86,7 @@ namespace PushButtonLed
         private void MainPage_Unloaded(object sender, object args)
         {
             // Cleanup
-            if (led != null)
-                led.Dispose();
+            led?.Dispose();
 
             if (button != null)
             {

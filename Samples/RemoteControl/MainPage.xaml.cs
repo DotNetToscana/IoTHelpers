@@ -159,11 +159,8 @@ namespace RemoteControl
         private void MainPage_Unloaded(object sender, object args)
         {
             // Cleanup
-            if (led != null)
-                led.Dispose();
-
-            if (relay != null)
-                relay.Dispose();
+            led?.Dispose();
+            relay?.Dispose();
 
             if (humitureSensor != null)
             {
@@ -188,11 +185,10 @@ namespace RemoteControl
             if (timer != null)
             {
                 timer.Tick -= Timer_Tick;
-                timer.Stop();
+                timer.Stop();                
             }
 
-            if (connection != null)
-                connection.Dispose();
+            connection?.Dispose();
         }
     }
 }

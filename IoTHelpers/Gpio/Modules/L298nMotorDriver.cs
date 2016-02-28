@@ -21,7 +21,7 @@ namespace IoTHelpers.Gpio.Modules
         {
             this.Motor1 = motor1;
             this.Motor2 = motor2;
-        }        
+        }
 
         public void Dispose()
         {
@@ -90,11 +90,8 @@ namespace IoTHelpers.Gpio.Modules
 
         public void Dispose()
         {
-            if (motorGpioPinA != null)
-                motorGpioPinA.Dispose();
-
-            if (motorGpioPinB != null)
-                motorGpioPinB.Dispose();
+            motorGpioPinA?.Dispose();
+            motorGpioPinB?.Dispose();
         }
 
         private async Task WaitAndStopAsync(int milliseconds)

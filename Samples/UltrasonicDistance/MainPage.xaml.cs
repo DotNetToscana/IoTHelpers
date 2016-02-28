@@ -50,8 +50,7 @@ namespace UltrasonicDistance
                 ultrasonic.Dispose();
             }
 
-            if (led != null)
-                led.Dispose();
+            led?.Dispose();
         }
     }
 }

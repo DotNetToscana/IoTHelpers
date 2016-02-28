@@ -29,8 +29,7 @@ namespace IoTHelpers.I2c
                     throw new NotSupportedException($"You cannot change {nameof(ReadInterval)} when {nameof(Mode)} is set to {ReadingMode.Manual}.");
 
                 readInterval = value;
-                if (timer != null)
-                    timer.Change(0, (int)readInterval.TotalMilliseconds);
+                timer?.Change(0, (int)readInterval.TotalMilliseconds);
             }
         }
 
@@ -43,7 +42,7 @@ namespace IoTHelpers.I2c
 
             timer = new Timer(CheckState, null, Timeout.Infinite, Timeout.Infinite);
         }
-        
+
         protected void InitializeTimer() => this.Initialize(mode);
 
         private void Initialize(ReadingMode newMode)

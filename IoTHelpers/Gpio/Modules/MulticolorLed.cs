@@ -72,10 +72,10 @@ namespace IoTHelpers.Gpio.Modules
             greenPin.TurnOff();
             bluePin.TurnOn();
         }
-        
+
         public void SetColor(LedColor color)
         {
-            switch(color)
+            switch (color)
             {
                 case LedColor.Black:
                     redPin.TurnOff();
@@ -129,19 +129,14 @@ namespace IoTHelpers.Gpio.Modules
 
         public override void Dispose()
         {
-            if (redPin != null)
-                redPin.Dispose();
-
-            if (greenPin != null)
-                greenPin.Dispose();
-
-            if (bluePin != null)
-                bluePin.Dispose();
+            redPin?.Dispose();
+            greenPin?.Dispose();
+            bluePin?.Dispose();
 
             base.Dispose();
         }
     }
-    
+
     public enum LedColor
     {
         Black,

@@ -52,11 +52,8 @@ namespace IoTHelpers.Gpio.Modules
 
         public override void Dispose()
         {
-            if (color1Pin != null)
-                color1Pin.Dispose();
-
-            if (color2Pin != null)
-                color2Pin.Dispose();
+            color1Pin?.Dispose();
+            color2Pin?.Dispose();
 
             base.Dispose();
         }

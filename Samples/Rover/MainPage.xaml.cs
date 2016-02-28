@@ -156,14 +156,9 @@ namespace Rover
                 button.Dispose();
             }
 
-            if (distanceSensor != null)
-                distanceSensor.Dispose();
-
-            if (led != null)
-                led.Dispose();
-
-            if (motors != null)
-                motors.Dispose();
+            distanceSensor?.Dispose();
+            led?.Dispose();
+            motors?.Dispose();
 
             if (moveTimer != null)
             {

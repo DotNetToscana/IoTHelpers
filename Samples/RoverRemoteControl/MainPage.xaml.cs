@@ -1,4 +1,5 @@
-﻿using IoTHelpers.Boards;
+﻿using IoTHelpers;
+using IoTHelpers.Boards;
 using IoTHelpers.Gpio.Extensions;
 using IoTHelpers.Gpio.Modules;
 using RemoteControl;
@@ -9,6 +10,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -25,8 +27,20 @@ namespace RoverRemoteControl
     {
         private RemoteConnection connection;
 
+        private readonly Sr04UltrasonicDistanceSensor distanceSensor;
         private readonly LeftRightMotors motors;
         private readonly MulticolorLed led;
+
+        private readonly Random rnd;
+        private volatile bool autoPiloting;
+
+        private const int DISTANCE_THRESHOLD_CM = 35;
+
+        private const int BACKWARD_MIN_TIME_MS = 1000;
+        private const int BACKWARD_MAX_TIME_MS = 1500;
+
+        private const int ROTATE_MIN_TIME_MS = 1250;
+        private const int ROTATE_MAX_TIME_MS = 1750;
 
         private readonly Dictionary<RoverMovementType, Action> movements;
 
@@ -51,17 +65,31 @@ namespace RoverRemoteControl
                 [RoverMovementType.TurnRight] = () => motors.TurnRight(),
                 [RoverMovementType.RotateLeft] = () => motors.RotateLeft(),
                 [RoverMovementType.RotateRight] = () => motors.RotateRight(),
-                [RoverMovementType.Stop] = () => motors.Stop()
+                [RoverMovementType.Stop] = () => motors.Stop(),
             };
+
+            distanceSensor = new Sr04UltrasonicDistanceSensor(triggerPinNumber: 12, echoPinNumber: 16, mode: ReadingMode.Manual);
+            rnd = new Random(unchecked((int)(DateTime.Now.Ticks)));
         }
 
         private void RoverMovementEvent(RoverMovement movementData)
         {
             Debug.WriteLine(movementData.Movement.ToString());
 
-            Action movement;
-            if (movements.TryGetValue(movementData.Movement, out movement))
-                movement.Invoke();
+            if (movementData.Movement == RoverMovementType.Autopilot)
+            {
+                // Attiva la modalità autopilota. 
+                autoPiloting = true;
+            }
+            else
+            {
+                // Altrimenti, prima di eseguire il comando disattiva la modalità autopilota. 
+                autoPiloting = false;
+
+                Action movement;
+                if (movements.TryGetValue(movementData.Movement, out movement))
+                    movement?.Invoke();
+            }
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -76,20 +104,50 @@ namespace RoverRemoteControl
             }
 
             led.TurnGreen();
+            var loop = Task.Run(() => RoverLoop());
+
             base.OnNavigatedTo(e);
+        }
+
+        private async Task RoverLoop()
+        {
+            while (true)
+            {
+                while (autoPiloting)
+                {
+                    var distance = distanceSensor.GetDistance();
+                    if (distance < DISTANCE_THRESHOLD_CM)
+                    {
+                        Debug.WriteLine("Obstacle detected. Avoiding...");
+                        led.TurnBlue();
+
+                        await motors.MoveBackwardAsync(rnd.Next(BACKWARD_MIN_TIME_MS, BACKWARD_MAX_TIME_MS));
+
+                        if (rnd.Next(0, 2) == 0)
+                            await motors.RotateLeftAsync(rnd.Next(ROTATE_MIN_TIME_MS, ROTATE_MAX_TIME_MS));
+                        else
+                            await motors.RotateRightAsync(rnd.Next(ROTATE_MIN_TIME_MS, ROTATE_MAX_TIME_MS));
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Moving forward...");
+
+                        motors.MoveForward();
+                        led.TurnGreen();
+                    }
+                }
+
+                await Task.Delay(100);
+            }
         }
 
         private void MainPage_Unloaded(object sender, object args)
         {
             // Cleanup
-            if (motors != null)
-                motors.Dispose();
-
-            if (led != null)
-                led.Dispose();
-
-            if (connection != null)
-                connection.Dispose();
+            motors?.Dispose();
+            led?.Dispose();
+            distanceSensor?.Dispose();
+            connection?.Dispose();
         }
     }
 }

@@ -14,11 +14,14 @@ namespace RoverRemoteControl.Models
         TurnRight = 4,
         RotateLeft = 5,
         RotateRight = 6,
-        Stop = 7
+        Autopilot = 7,
+        Stop = 8
     }
 
     public class RoverMovement
     {
         public RoverMovementType Movement { get; set; }
+
+        public override string ToString() => Movement.ToString();
     }
 }
