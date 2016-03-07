@@ -2,15 +2,15 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>IoTHelpers</id>
-        <version>0.6.0</version>
+        <version>0.7.0</version>
         <title>IoT Helpers for Windows 10 IoT Core</title>
         <authors>Marco Minerva,Marco Dal Pino</authors>
         <owners>Marco Minerva</owners>
         <licenseUrl>http://opensource.org/licenses/MS-PL</licenseUrl>
         <projectUrl>https://github.com/Dot-and-Net/IoTHelpers</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>This library allows to easily interact with GPIOs in Windows 10 IoT Core with boards like Raspberry Pi 2 and MinnowBoard Max.</description>
-        <copyright>Marco Minerva, Marco Dal Pino - 2015</copyright>
+        <description>This library allows to easily interact with GPIOs in Windows 10 IoT Core with boards.</description>
+        <copyright>Marco Minerva, Marco Dal Pino - 2016</copyright>
         <tags>iot, windows10, raspberry, minnowboard</tags>
         <language>en-US</language>
         <references>

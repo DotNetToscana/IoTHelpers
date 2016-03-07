@@ -46,6 +46,7 @@ namespace RemoteControl
 
             led = new MulticolorLed(redPinNumber: 18, greenPinNumber: 23, bluePinNumber: 24);
             humitureSensor = new Dht11HumitureSensor(pinNumber: 4);
+            humitureSensor.ReadingChanged += HumitureSensor_ReadingChanged;
             relay = new Relay(pinNumber: 16);
 
             motionDetector = new Sr501PirMotionDetector(pinNumber: 12);
