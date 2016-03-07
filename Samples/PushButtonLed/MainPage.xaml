@@ -2,12 +2,16 @@
     x:Class="PushButtonLed.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:PushButtonLed"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:PushButtonLed"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    FontSize="48"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+        <TextBlock
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Text="PushButtonLed Sample" />
     </Grid>
 </Page>
