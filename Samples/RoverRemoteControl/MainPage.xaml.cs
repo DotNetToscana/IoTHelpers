@@ -49,14 +49,6 @@ namespace RoverRemoteControl
             this.InitializeComponent();
             Unloaded += MainPage_Unloaded;
 
-            connection = new RemoteConnection();
-            connection.OnRoverMovementEvent(RoverMovementEvent);
-
-            var motorDriver = new L298nMotorDriver(motor1Pin1: 27, motor1Pin2: 22, motor2Pin1: 5, motor2Pin2: 6);
-            motors = motorDriver.AsLeftRightMotors();
-
-            led = new MulticolorLed(redPinNumber: 18, greenPinNumber: 23, bluePinNumber: 24);
-
             movements = new Dictionary<RoverMovementType, Action>
             {
                 [RoverMovementType.Forward] = () => motors.MoveForward(),
@@ -68,7 +60,15 @@ namespace RoverRemoteControl
                 [RoverMovementType.Stop] = () => motors.Stop(),
             };
 
-            distanceSensor = new Sr04UltrasonicDistanceSensor(triggerPinNumber: 12, echoPinNumber: 16, mode: ReadingMode.Manual);
+            connection = new RemoteConnection();
+            connection.OnRoverMovementEvent(RoverMovementEvent);
+
+            var motorDriver = new L298nMotorDriver(motor1Pin1: 27, motor1Pin2: 22, motor2Pin1: 5, motor2Pin2: 6);
+            motors = motorDriver.AsLeftRightMotors();
+
+            led = new MulticolorLed(redPinNumber: 18, greenPinNumber: 23, bluePinNumber: 24);
+            distanceSensor = new Sr04UltrasonicDistanceSensor(triggerPinNumber: 12, echoPinNumber: 16, mode: ReadingMode.Continuous);
+
             rnd = new Random(unchecked((int)(DateTime.Now.Ticks)));
         }
 
@@ -116,8 +116,7 @@ namespace RoverRemoteControl
             {
                 while (autoPiloting)
                 {
-                    var distance = distanceSensor.GetDistance();
-                    if (distance < DISTANCE_THRESHOLD_CM)
+                    if (distanceSensor.CurrentDistance < DISTANCE_THRESHOLD_CM)
                     {
                         Debug.WriteLine("Obstacle detected. Avoiding...");
                         led.TurnBlue();
@@ -138,7 +137,7 @@ namespace RoverRemoteControl
                     }
                 }
 
-                await Task.Delay(100);
+                await Task.Delay(500);
             }
         }
 

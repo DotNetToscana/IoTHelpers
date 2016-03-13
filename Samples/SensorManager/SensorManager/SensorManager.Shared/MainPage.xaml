@@ -79,7 +79,7 @@
                 </DataTemplate>
             </HubSection>
             
-            <HubSection>
+            <!--<HubSection>
                 <HubSection.HeaderTemplate>
                     <DataTemplate>
                         <TextBlock Text="Jukebox" Style="{StaticResource SubheaderTextBlockStyle}" />
@@ -97,7 +97,7 @@
                         </StackPanel>
                     </Grid>
                 </DataTemplate>
-            </HubSection>
+            </HubSection>-->
         </Hub>
     </Grid>
 </Page>

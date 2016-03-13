@@ -19,8 +19,8 @@ namespace IoTHelpers.Gpio.Modules
 
         public bool RaiseEventsOnUIThread { get; set; } = false;
 
-        private double? currentDistance;
-        public double? CurrentDistance
+        private double currentDistance;
+        public double CurrentDistance
         {
             get
             {
@@ -42,38 +42,62 @@ namespace IoTHelpers.Gpio.Modules
             base.InitializeTimer();
         }
 
-        public double? GetDistance()
-        {
-            var mre = new ManualResetEvent(false);
-            var pulseLength = new Stopwatch();
+        //public double? GetDistance()
+        //{
+        //    var mre = new ManualResetEvent(false);
+        //    var pulseLength = new Stopwatch();
 
-            //Send pulse
+        //    //Send pulse
+        //    triggerPin.Pin.Write(GpioPinValue.High);
+        //    mre.WaitOne(TimeSpan.FromMilliseconds(0.01));
+        //    triggerPin.Pin.Write(GpioPinValue.Low);
+
+        //    //Recieve pusle
+        //    while (echoPin.Pin.Read() == GpioPinValue.Low) ;
+
+        //    pulseLength.Start();
+
+        //    while (echoPin.Pin.Read() == GpioPinValue.High) ;
+
+        //    pulseLength.Stop();
+
+        //    /* Calculating distance.
+        //       If you take 340 m/sec (approximate speed of sound through air) and convert to cm/sec you get 34000 cm/sec.
+        //       For pulse-echo, the sound travels twice the measured distance so you need to divide the conversion factor 
+        //       by 2 so you get 17000 cm/sec. When you multiply by the measured time, you get distance from the transducer to the object in cm.
+        //    */
+        //    var timeBetween = pulseLength.Elapsed;
+        //    double? distance = timeBetween.TotalSeconds * 17000;
+
+        //    // Check whether distance is out of range.
+        //    if (timeBetween.TotalMilliseconds < 0.16 || timeBetween.TotalMilliseconds > 38)
+        //        distance = null;
+
+        //    Debug.WriteLine("Milliseconds: " + timeBetween.TotalMilliseconds);
+        //    Debug.WriteLine("Distance: " + distance);
+
+        //    return distance;
+        //}
+
+        public double GetDistance()
+        {
+            var mre = new ManualResetEventSlim(false);
+
+            //Send a 10µs pulse to start the measurement
             triggerPin.Pin.Write(GpioPinValue.High);
-            mre.WaitOne(TimeSpan.FromMilliseconds(0.01));
+            mre.Wait(TimeSpan.FromMilliseconds(0.01));
             triggerPin.Pin.Write(GpioPinValue.Low);
 
-            //Recieve pusle
-            while (echoPin.Pin.Read() == GpioPinValue.Low) ;
-
-            pulseLength.Start();
-
-            while (echoPin.Pin.Read() == GpioPinValue.High) ;
-
-            pulseLength.Stop();
+            var time = this.PulseIn(echoPin.Pin, GpioPinValue.High, 500);
 
             /* Calculating distance.
                If you take 340 m/sec (approximate speed of sound through air) and convert to cm/sec you get 34000 cm/sec.
                For pulse-echo, the sound travels twice the measured distance so you need to divide the conversion factor 
                by 2 so you get 17000 cm/sec. When you multiply by the measured time, you get distance from the transducer to the object in cm.
             */
-            var timeBetween = pulseLength.Elapsed;
-            double? distance = timeBetween.TotalSeconds * 17000;
+            var distance = time * 17000;
 
-            // Check whether distance is out of range.
-            if (timeBetween.TotalMilliseconds < 0.16 || timeBetween.TotalMilliseconds > 38)
-                distance = null;
-
-            Debug.WriteLine("Milliseconds: " + timeBetween.TotalMilliseconds);
+            Debug.WriteLine("Milliseconds: " + time);
             Debug.WriteLine("Distance: " + distance);
 
             return distance;
@@ -88,6 +112,34 @@ namespace IoTHelpers.Gpio.Modules
                 currentDistance = distance;
                 RaiseEventHelper.CheckRaiseEventOnUIThread(this, DistanceChanged, RaiseEventsOnUIThread);
             }
+        }
+
+        private double PulseIn(GpioPin pin, GpioPinValue value, ushort timeout)
+        {
+            var sw = new Stopwatch();
+            var swTimeout = new Stopwatch();
+
+            swTimeout.Start();
+
+            // Waits for pulse.
+            while (pin.Read() != value)
+            {
+                if (swTimeout.ElapsedMilliseconds > timeout)
+                    return 3.5;
+            }
+
+            sw.Start();
+
+            // Waits for pulse end.
+            while (pin.Read() == value)
+            {
+                if (swTimeout.ElapsedMilliseconds > timeout)
+                    return 3.4;
+            }
+
+            sw.Stop();
+
+            return sw.Elapsed.TotalSeconds;
         }
 
         public override void Dispose()

@@ -247,7 +247,7 @@ namespace SensorManager
             foreach (var t in tiles)
                 await bandClient.TileManager.RemoveTileAsync(t);
 
-            await this.CreateJukeboxTileAsync();
+            //await this.CreateJukeboxTileAsync();
             await this.CreateRoverTileAsync();
 
             // Subscribe to events
