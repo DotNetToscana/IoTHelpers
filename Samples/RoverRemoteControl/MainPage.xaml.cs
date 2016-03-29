@@ -30,6 +30,7 @@ namespace RoverRemoteControl
         private readonly Sr04UltrasonicDistanceSensor distanceSensor;
         private readonly LeftRightMotors motors;
         private readonly MulticolorLed led;
+        private readonly PushButton button;
 
         private readonly Random rnd;
         private volatile bool autoPiloting;
@@ -68,6 +69,9 @@ namespace RoverRemoteControl
 
             led = new MulticolorLed(redPinNumber: 18, greenPinNumber: 23, bluePinNumber: 24);
             distanceSensor = new Sr04UltrasonicDistanceSensor(triggerPinNumber: 12, echoPinNumber: 16, mode: ReadingMode.Continuous);
+
+            button = new PushButton(pinNumber: 26);
+            button.Click += Button_Click;
 
             rnd = new Random(unchecked((int)(DateTime.Now.Ticks)));
         }
@@ -141,12 +145,21 @@ namespace RoverRemoteControl
             }
         }
 
+        private void Button_Click(object sender, EventArgs e)
+        {
+            // The emergency stop button has been pressed.
+            autoPiloting = false;
+            motors.Stop();
+            led.TurnGreen();
+        }
+
         private void MainPage_Unloaded(object sender, object args)
         {
             // Cleanup
             motors?.Dispose();
             led?.Dispose();
             distanceSensor?.Dispose();
+            button?.Dispose();
             connection?.Dispose();
         }
     }

@@ -259,6 +259,8 @@ namespace SensorManager
 
         private async void TileManager_TileButtonPressed(object sender, BandTileEventArgs<IBandTileButtonPressedEvent> e)
         {
+            Debug.WriteLine((TilePageElementId)e.TileEvent.ElementId);
+
             switch ((TilePageElementId)e.TileEvent.ElementId)
             {
                 case TilePageElementId.Jukebox_PlayRandom:

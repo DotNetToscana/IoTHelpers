@@ -149,6 +149,7 @@
     <Compile Include="Helpers\RaiseEventHelper.cs" />
     <Compile Include="Helpers\SynchronousWaiter.cs" />
     <Compile Include="I2c\Devices\Adxl345Accelerometer.cs" />
+    <Compile Include="I2c\Devices\Bmp180BarometricSensor.cs" />
     <Compile Include="I2c\Devices\Tsl2561LuminositySensor.cs" />
     <Compile Include="I2c\I2cDeviceBase.cs" />
     <Compile Include="I2c\I2cTimedDevice.cs" />
