@@ -10,7 +10,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 
-namespace RemoteControl
+namespace RoverRemoteControl.Services
 {
     public class RemoteConnection : IDisposable
     {

@@ -2,8 +2,8 @@
 using IoTHelpers.Boards;
 using IoTHelpers.Gpio.Extensions;
 using IoTHelpers.Gpio.Modules;
-using RemoteControl;
 using RoverRemoteControl.Models;
+using RoverRemoteControl.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -25,7 +25,8 @@ namespace RoverRemoteControl
 {
     public sealed partial class MainPage : Page
     {
-        private RemoteConnection connection;
+        private readonly RemoteConnection connection;
+        private readonly StreamingService streamingService;
 
         private readonly Sr04UltrasonicDistanceSensor distanceSensor;
         private readonly LeftRightMotors motors;
@@ -60,6 +61,8 @@ namespace RoverRemoteControl
                 [RoverMovementType.RotateRight] = () => motors.RotateRight(),
                 [RoverMovementType.Stop] = () => motors.Stop(),
             };
+
+            streamingService = new StreamingService();
 
             connection = new RemoteConnection();
             connection.OnRoverMovementEvent(RoverMovementEvent);
@@ -108,6 +111,9 @@ namespace RoverRemoteControl
                 board.StatusLed.TurnOn();
             }
 
+            await streamingService.InitializeAsync();
+            await streamingService.StartStreamingAsync(CameraPanel.Back, video);
+
             led.TurnGreen();
             var loop = Task.Run(() => RoverLoop());
 
@@ -153,9 +159,11 @@ namespace RoverRemoteControl
             led.TurnGreen();
         }
 
-        private void MainPage_Unloaded(object sender, object args)
+        private async void MainPage_Unloaded(object sender, object args)
         {
             // Cleanup
+            await streamingService.CleanupAsync();
+
             motors?.Dispose();
             led?.Dispose();
             distanceSensor?.Dispose();

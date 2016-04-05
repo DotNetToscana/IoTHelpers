@@ -8,6 +8,6 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+        <CaptureElement Name="video" Stretch="UniformToFill" Margin="0" />
     </Grid>
 </Page>
