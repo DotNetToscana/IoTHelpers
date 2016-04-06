@@ -5,9 +5,11 @@
     xmlns:local="using:RoverRemoteControl"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    RequestedTheme="Dark">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <CaptureElement Name="video" Stretch="UniformToFill" Margin="0" />
+        <CaptureElement Name="video" Stretch="UniformToFill" Margin="0" 
+                       Width="800" Height="600" />
     </Grid>
 </Page>

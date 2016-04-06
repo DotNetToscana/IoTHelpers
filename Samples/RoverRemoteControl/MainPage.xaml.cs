@@ -79,18 +79,43 @@ namespace RoverRemoteControl
             rnd = new Random(unchecked((int)(DateTime.Now.Ticks)));
         }
 
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            try
+            {
+                await streamingService.InitializeAsync();
+                await streamingService.StartStreamingAsync(CameraPanel.Back, video);
+            }
+            catch { }
+
+            try
+            {
+                await connection.ConnectAsync();
+                led.TurnGreen();
+            }
+            catch
+            {
+                // There are connection problems.
+                led.TurnRed();
+            }
+
+            var loop = Task.Run(() => RoverLoop());
+
+            base.OnNavigatedTo(e);
+        }
+
         private void RoverMovementEvent(RoverMovement movementData)
         {
             Debug.WriteLine(movementData.Movement.ToString());
 
             if (movementData.Movement == RoverMovementType.Autopilot)
             {
-                // Attiva la modalità autopilota. 
+                // Enters autopiloting mode.
                 autoPiloting = true;
             }
             else
             {
-                // Altrimenti, prima di eseguire il comando disattiva la modalità autopilota. 
+                // Otherwise, if necessary stops the autopiloting. 
                 autoPiloting = false;
                 led.TurnGreen();
 
@@ -98,26 +123,6 @@ namespace RoverRemoteControl
                 if (movements.TryGetValue(movementData.Movement, out movement))
                     movement?.Invoke();
             }
-        }
-
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            await connection.ConnectAsync();
-
-            var board = RaspberryPiBoard.GetDefault();
-            if (board != null)
-            {
-                board.PowerLed.TurnOff();
-                board.StatusLed.TurnOn();
-            }
-
-            await streamingService.InitializeAsync();
-            await streamingService.StartStreamingAsync(CameraPanel.Back, video);
-
-            led.TurnGreen();
-            var loop = Task.Run(() => RoverLoop());
-
-            base.OnNavigatedTo(e);
         }
 
         private async Task RoverLoop()
@@ -153,22 +158,34 @@ namespace RoverRemoteControl
 
         private void Button_Click(object sender, EventArgs e)
         {
-            // The emergency stop button has been pressed.
-            autoPiloting = false;
-            motors.Stop();
-            led.TurnGreen();
+            if (!motors.IsMoving)
+            {
+                // Forces the autopitoling mode.
+                autoPiloting = true;
+            }
+            else
+            {
+                // The emergency stop button has been pressed.
+                autoPiloting = false;
+                motors.Stop();
+                led.TurnGreen();
+            }
         }
 
         private async void MainPage_Unloaded(object sender, object args)
         {
-            // Cleanup
-            await streamingService.CleanupAsync();
+            try
+            {
+                // Cleanup
+                await streamingService.CleanupAsync();
 
-            motors?.Dispose();
-            led?.Dispose();
-            distanceSensor?.Dispose();
-            button?.Dispose();
-            connection?.Dispose();
+                motors?.Dispose();
+                led?.Dispose();
+                distanceSensor?.Dispose();
+                button?.Dispose();
+                connection?.Dispose();
+            }
+            catch { }
         }
     }
 }
