@@ -356,24 +356,13 @@ namespace RoverRemoteControl.Services
 
             try
             {
-                // Create a VideoFrame object specifying the pixel format we want our capture image to be.
-                // GetPreviewFrame will convert the native webcam frame into this format.
-                const BitmapPixelFormat InputPixelFormat = BitmapPixelFormat.Bgra8;
-                using (var previewFrame = new VideoFrame(InputPixelFormat, 320, 240))   // (int)this.videoProperties.Width, (int)this.videoProperties.Height)
-                {
-                    await this.mediaCapture.GetPreviewFrameAsync(previewFrame);
+                var stream = new InMemoryRandomAccessStream();
+                await mediaCapture.CapturePhotoToStreamAsync(ImageEncodingProperties.CreateJpeg(), stream);
 
-                    // Create a WritableBitmap for our visualization display; copy the original bitmap pixels to wb's buffer.
-                    using (var convertedSource = SoftwareBitmap.Convert(previewFrame.SoftwareBitmap, BitmapPixelFormat.Bgra8))
-                    {
-                        var displaySource = new WriteableBitmap(convertedSource.PixelWidth, convertedSource.PixelHeight);
-                        convertedSource.CopyToBuffer(displaySource.PixelBuffer);
-
-                        return await this.ConvertToStreamAsync(displaySource);
-                    }
-                }
+                stream.Seek(0);
+                return stream.AsStream();
             }
-            catch (Exception)
+            catch 
             { }
             finally
             {
@@ -381,29 +370,6 @@ namespace RoverRemoteControl.Services
             }
 
             return null;
-        }
-
-        private async Task<Stream> ConvertToStreamAsync(WriteableBitmap bitmap)
-        {
-            var stream = new InMemoryRandomAccessStream();
-            var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
-
-            // Get pixels of the WriteableBitmap object 
-            var pixelStream = bitmap.PixelBuffer.AsStream();
-            var pixels = new byte[pixelStream.Length];
-            await pixelStream.ReadAsync(pixels, 0, pixels.Length);
-
-            // Save the image file with jpg extension 
-            encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)bitmap.PixelWidth, (uint)bitmap.PixelHeight, 96.0, 96.0, pixels);
-
-            var photoOrientation = this.ConvertOrientationToPhotoOrientation(this.GetCameraOrientation());
-            var properties = new BitmapPropertySet { { "System.Photo.Orientation", new BitmapTypedValue(photoOrientation, PropertyType.UInt16) } };
-            await encoder.BitmapProperties.SetPropertiesAsync(properties);
-
-            await encoder.FlushAsync();
-
-            stream.Seek(0);
-            return stream.AsStreamForRead();
         }
 
         /// <summary>

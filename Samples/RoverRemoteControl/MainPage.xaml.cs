@@ -27,6 +27,7 @@ namespace RoverRemoteControl
     {
         private readonly RemoteConnection connection;
         private readonly StreamingService streamingService;
+        private readonly HttpServer httpServer;
 
         private readonly Sr04UltrasonicDistanceSensor distanceSensor;
         private readonly LeftRightMotors motors;
@@ -64,6 +65,9 @@ namespace RoverRemoteControl
 
             streamingService = new StreamingService();
 
+            httpServer = new HttpServer(1337);
+            httpServer.OnRequestEventAsync(RequestEventAsync);
+
             connection = new RemoteConnection();
             connection.OnRoverMovementEvent(RoverMovementEvent);
 
@@ -85,8 +89,14 @@ namespace RoverRemoteControl
             {
                 await streamingService.InitializeAsync();
                 await streamingService.StartStreamingAsync(CameraPanel.Back, video);
+
+                Debug.WriteLine("Camera streaming successfully started.");
+
+                await httpServer.StartServerAsync();
+                Debug.WriteLine("Web server sucsessfully started.");
             }
-            catch { }
+            catch
+            { }
 
             try
             {
@@ -122,6 +132,16 @@ namespace RoverRemoteControl
                 Action movement;
                 if (movements.TryGetValue(movementData.Movement, out movement))
                     movement?.Invoke();
+            }
+        }
+
+        private async Task<byte[]> RequestEventAsync()
+        {
+            var stream = await streamingService.GetCurrentFrameAsync();
+            using (var ms = new MemoryStream())
+            {
+                await stream.CopyToAsync(ms);
+                return ms.ToArray();
             }
         }
 
@@ -178,12 +198,13 @@ namespace RoverRemoteControl
             {
                 // Cleanup
                 await streamingService.CleanupAsync();
+                httpServer.Dispose();
+                connection.Dispose();
 
-                motors?.Dispose();
-                led?.Dispose();
-                distanceSensor?.Dispose();
-                button?.Dispose();
-                connection?.Dispose();
+                motors.Dispose();
+                led.Dispose();
+                distanceSensor.Dispose();
+                button.Dispose();
             }
             catch { }
         }
