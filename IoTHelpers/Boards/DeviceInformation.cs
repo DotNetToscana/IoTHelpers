@@ -14,6 +14,7 @@ namespace IoTHelpers.Boards
         RaspberryPi3,
         MinnowBoardMax,
         DragonBoard410c,
+        Colibri,
         GenericBoard,
         Unknown
     };
@@ -50,6 +51,10 @@ namespace IoTHelpers.Boards
             else if (ProductName == "SBC")
             {
                 Type = DeviceType.DragonBoard410c;
+            }
+            else if (ProductName.IndexOf("Cardhu", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                Type = DeviceType.Colibri;
             }
             else
             {
