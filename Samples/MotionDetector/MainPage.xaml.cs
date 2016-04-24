@@ -37,7 +37,7 @@ namespace MotionDetector
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            var board = RaspberryPiBoard.GetDefault();
+            var board = RaspberryPi2Board.GetDefault();
             if (board != null)
             {
                 board.PowerLed.TurnOff();

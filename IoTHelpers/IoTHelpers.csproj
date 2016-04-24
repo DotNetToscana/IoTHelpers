@@ -114,7 +114,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Boards\Board.cs" />
-    <Compile Include="Boards\RaspberryPiBoard.cs" />
+    <Compile Include="Boards\DeviceInformation.cs" />
+    <Compile Include="Boards\RaspberryPi2Board.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Gpio\Extensions\GpioExtensions.cs" />
     <Compile Include="Gpio\Extensions\L298nMotorDriverExtensions.cs" />

@@ -131,7 +131,7 @@ namespace RemoteControl
         {
             await connection.ConnectAsync();
 
-            var board = RaspberryPiBoard.GetDefault();
+            var board = RaspberryPi2Board.GetDefault();
             if (board != null)
             {
                 board.PowerLed.TurnOff();

@@ -236,7 +236,7 @@ namespace RoverRemoteControl.Services
                 return;
 
             // Calculate which way and how far to rotate the preview
-            int rotationDegrees = ConvertDisplayOrientationToDegrees(displayOrientation);
+            var rotationDegrees = ConvertDisplayOrientationToDegrees(displayOrientation);
 
             // The rotation direction needs to be inverted if the preview is being mirrored
             if (mirroringPreview)
@@ -264,9 +264,9 @@ namespace RoverRemoteControl.Services
                         // Allow the device screen to sleep now that the preview is stopped
                         displayRequest.RequestRelease();
                     }
-                    catch (Exception)
+                    catch
                     {
-                        ;   // Since we're going to destroy the MediaCapture object there's nothing to do here
+                           // Since we're going to destroy the MediaCapture object there's nothing to do here
                     }
                 }
 
@@ -386,7 +386,7 @@ namespace RoverRemoteControl.Services
             var desiredDevice = allVideoDevices.FirstOrDefault(x => x.EnclosureLocation?.Panel == desiredPanel);
 
             // If there is no device mounted on the desired panel, return the first device found
-            return desiredDevice ?? allVideoDevices.LastOrDefault();
+            return desiredDevice ?? allVideoDevices.FirstOrDefault();
         }
 
         #region Panel helpers

@@ -27,6 +27,9 @@ namespace IoTHelpers.Gpio.Extensions
             Motor2.MoveForward();
         }
 
+        public Task MoveForwardAsync(TimeSpan interval) 
+            => this.MoveForwardAsync((int)interval.TotalMilliseconds);
+
         public async Task MoveForwardAsync(int milliseconds)
         {
             this.MoveForward();
@@ -38,6 +41,9 @@ namespace IoTHelpers.Gpio.Extensions
             Motor1.MoveBackward();
             Motor2.MoveBackward();
         }
+
+        public Task MoveBackwardAsync(TimeSpan interval) 
+            => this.MoveBackwardAsync((int)interval.TotalMilliseconds);
 
         public async Task MoveBackwardAsync(int milliseconds)
         {
@@ -51,6 +57,9 @@ namespace IoTHelpers.Gpio.Extensions
             Motor1.MoveForward();
         }
 
+        public Task TurnRightAsync(TimeSpan interval) 
+            => this.TurnRightAsync((int)interval.TotalMilliseconds);
+
         public async Task TurnRightAsync(int milliseconds)
         {
             this.TurnRight();
@@ -62,6 +71,9 @@ namespace IoTHelpers.Gpio.Extensions
             Motor1.Stop();
             Motor2.MoveForward();
         }
+
+        public Task TurnLeftAsync(TimeSpan interval) 
+            => this.TurnLeftAsync((int)interval.TotalMilliseconds);        
 
         public async Task TurnLeftAsync(int milliseconds)
         {
@@ -75,6 +87,9 @@ namespace IoTHelpers.Gpio.Extensions
             Motor2.MoveBackward();
         }
 
+        public Task RotateRightAsync(TimeSpan interval) 
+            => this.RotateRightAsync((int)interval.TotalMilliseconds);        
+
         public async Task RotateRightAsync(int milliseconds)
         {
             this.RotateRight();
@@ -86,6 +101,9 @@ namespace IoTHelpers.Gpio.Extensions
             Motor1.MoveBackward();
             Motor2.MoveForward();
         }
+
+        public Task RotateLeftAsync(TimeSpan interval) 
+            => this.RotateLeftAsync((int)interval.TotalMilliseconds);
 
         public async Task RotateLeftAsync(int milliseconds)
         {
