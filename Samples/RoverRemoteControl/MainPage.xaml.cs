@@ -70,14 +70,45 @@ namespace RoverRemoteControl
 
             connection = new RemoteConnection();
             connection.OnRoverMovementEvent(RoverMovementEvent);
+            var deviceType = DeviceInformation.Type;
+            // For each diferent type of board we use set of PIN (obviously)
+            if (deviceType == DeviceType.RaspberryPi2 || deviceType == DeviceType.RaspberryPi3)
+            {
+                var motorDriver = new L298nMotorDriver(motor1Pin1: 27, motor1Pin2: 22, motor2Pin1: 5, motor2Pin2: 6);
+                motors = motorDriver.AsLeftRightMotors();
+                led = new MulticolorLed(redPinNumber: 18, greenPinNumber: 23, bluePinNumber: 24);
+                distanceSensor = new Sr04UltrasonicDistanceSensor(triggerPinNumber: 12, echoPinNumber: 16, mode: ReadingMode.Continuous);
 
-            var motorDriver = new L298nMotorDriver(motor1Pin1: 27, motor1Pin2: 22, motor2Pin1: 5, motor2Pin2: 6);
-            motors = motorDriver.AsLeftRightMotors();
+                button = new PushButton(pinNumber: 26);
+            }
+            else if (deviceType == DeviceType.MinnowBoardMax)
+            {
+                var motorDriver = new L298nMotorDriver(motor1Pin1: 0, motor1Pin2: 1, motor2Pin1: 2, motor2Pin2: 3);
+                motors = motorDriver.AsLeftRightMotors();
+                led = new MulticolorLed(redPinNumber: 4, greenPinNumber: 5, bluePinNumber: 6);
+                distanceSensor = new Sr04UltrasonicDistanceSensor(triggerPinNumber: 7, echoPinNumber: 8, mode: ReadingMode.Continuous);
 
-            led = new MulticolorLed(redPinNumber: 18, greenPinNumber: 23, bluePinNumber: 24);
-            distanceSensor = new Sr04UltrasonicDistanceSensor(triggerPinNumber: 12, echoPinNumber: 16, mode: ReadingMode.Continuous);
+                button = new PushButton(pinNumber: 9);
+            }
+            else if (deviceType == DeviceType.Colibri)
+            {
+                var motorDriver = new L298nMotorDriver(motor1Pin1: 98, motor1Pin2: 103, motor2Pin1: 97, motor2Pin2: 79);
+                motors = motorDriver.AsLeftRightMotors();
+                //There's not enough PIN on to be used only via GPIO
+             //   led = new MulticolorLed(redPinNumber: 18, greenPinNumber: 23, bluePinNumber: 24);
+                distanceSensor = new Sr04UltrasonicDistanceSensor(triggerPinNumber: 133, echoPinNumber: 101, mode: ReadingMode.Continuous);
 
-            button = new PushButton(pinNumber: 26);
+                button = new PushButton(pinNumber: 85);
+            }
+            else //AS RaspBerry is default
+            {
+                var motorDriver = new L298nMotorDriver(motor1Pin1: 27, motor1Pin2: 22, motor2Pin1: 5, motor2Pin2: 6);
+                motors = motorDriver.AsLeftRightMotors();
+                led = new MulticolorLed(redPinNumber: 18, greenPinNumber: 23, bluePinNumber: 24);
+                distanceSensor = new Sr04UltrasonicDistanceSensor(triggerPinNumber: 12, echoPinNumber: 16, mode: ReadingMode.Continuous);
+
+                button = new PushButton(pinNumber: 26);
+            }
             button.Click += Button_Click;
 
             rnd = new Random(unchecked((int)(DateTime.Now.Ticks)));
