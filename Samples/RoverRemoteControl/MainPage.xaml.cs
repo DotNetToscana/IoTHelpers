@@ -34,16 +34,16 @@ namespace RoverRemoteControl
         private readonly MulticolorLed led;
         private readonly PushButton button;
 
-        private readonly Random rnd;
+        private readonly Random random;
         private volatile bool autoPiloting;
 
         private const int DISTANCE_THRESHOLD_CM = 35;
 
-        private const int BACKWARD_MIN_TIME_MS = 1000;
-        private const int BACKWARD_MAX_TIME_MS = 1500;
+        private const int BACKWARD_MIN_TIME = 1000;
+        private const int BACKWARD_MAX_TIME = 1500;
 
-        private const int ROTATE_MIN_TIME_MS = 1250;
-        private const int ROTATE_MAX_TIME_MS = 1750;
+        private const int ROTATE_MIN_TIME = 1250;
+        private const int ROTATE_MAX_TIME = 1750;
 
         private readonly Dictionary<RoverMovementType, Action> movements;
 
@@ -66,52 +66,77 @@ namespace RoverRemoteControl
             streamingService = new StreamingService();
 
             httpServer = new HttpServer(1337);
-            httpServer.OnRequestEventAsync(RequestEventAsync);
+            httpServer.OnRequestDataAsync(RequestDataAsync);
 
             connection = new RemoteConnection();
             connection.OnRoverMovementEvent(RoverMovementEvent);
-            var deviceType = DeviceInformation.Type;
-            // For each diferent type of board we use set of PIN (obviously)
-            if (deviceType == DeviceType.RaspberryPi2 || deviceType == DeviceType.RaspberryPi3)
-            {
-                var motorDriver = new L298nMotorDriver(motor1Pin1: 27, motor1Pin2: 22, motor2Pin1: 5, motor2Pin2: 6);
-                motors = motorDriver.AsLeftRightMotors();
-                led = new MulticolorLed(redPinNumber: 18, greenPinNumber: 23, bluePinNumber: 24);
-                distanceSensor = new Sr04UltrasonicDistanceSensor(triggerPinNumber: 12, echoPinNumber: 16, mode: ReadingMode.Continuous);
 
-                button = new PushButton(pinNumber: 26);
-            }
-            else if (deviceType == DeviceType.MinnowBoardMax)
-            {
-                var motorDriver = new L298nMotorDriver(motor1Pin1: 0, motor1Pin2: 1, motor2Pin1: 2, motor2Pin2: 3);
-                motors = motorDriver.AsLeftRightMotors();
-                led = new MulticolorLed(redPinNumber: 4, greenPinNumber: 5, bluePinNumber: 6);
-                distanceSensor = new Sr04UltrasonicDistanceSensor(triggerPinNumber: 7, echoPinNumber: 8, mode: ReadingMode.Continuous);
+            int motor1Pin1Number, motor1Pin2Number, motor2Pin1Number, motor2Pin2Number;
+            int redPinNumber, greenPinNumber, bluePinNumber;
+            int triggerPinNumber, echoPinNumber;
+            int buttonPinNumber;
 
-                button = new PushButton(pinNumber: 9);
-            }
-            else if (deviceType == DeviceType.Colibri)
+            switch (DeviceInformation.Type)
             {
-                var motorDriver = new L298nMotorDriver(motor1Pin1: 98, motor1Pin2: 103, motor2Pin1: 97, motor2Pin2: 79);
-                motors = motorDriver.AsLeftRightMotors();
-                //There's not enough PIN on to be used only via GPIO
-             //   led = new MulticolorLed(redPinNumber: 18, greenPinNumber: 23, bluePinNumber: 24);
-                distanceSensor = new Sr04UltrasonicDistanceSensor(triggerPinNumber: 133, echoPinNumber: 101, mode: ReadingMode.Continuous);
+                case DeviceType.MinnowBoardMax:
+                    motor1Pin1Number = 0;
+                    motor1Pin2Number = 1;
+                    motor2Pin1Number = 2;
+                    motor2Pin2Number = 3;
+                    redPinNumber = 4;
+                    greenPinNumber = 5;
+                    bluePinNumber = 6;
+                    triggerPinNumber = 7;
+                    echoPinNumber = 8;
+                    buttonPinNumber = 9;
 
-                button = new PushButton(pinNumber: 85);
-            }
-            else //AS RaspBerry is default
-            {
-                var motorDriver = new L298nMotorDriver(motor1Pin1: 27, motor1Pin2: 22, motor2Pin1: 5, motor2Pin2: 6);
-                motors = motorDriver.AsLeftRightMotors();
-                led = new MulticolorLed(redPinNumber: 18, greenPinNumber: 23, bluePinNumber: 24);
-                distanceSensor = new Sr04UltrasonicDistanceSensor(triggerPinNumber: 12, echoPinNumber: 16, mode: ReadingMode.Continuous);
+                    break;
 
-                button = new PushButton(pinNumber: 26);
+                case DeviceType.Colibri:
+                    motor1Pin1Number = 98;
+                    motor1Pin2Number = 103;
+                    motor2Pin1Number = 97;
+                    motor2Pin2Number = 79;
+
+                    // On Colibri there's not enough Pin on to be used only via GPIO: don't use Multicolor LED.
+                    redPinNumber = greenPinNumber = bluePinNumber = -1;
+
+                    triggerPinNumber = 133;
+                    echoPinNumber = 101;
+                    buttonPinNumber = 85;
+
+                    break;
+
+                case DeviceType.RaspberryPi2:
+                case DeviceType.RaspberryPi3:
+                default:
+                    motor1Pin1Number = 27;
+                    motor1Pin2Number = 22;
+                    motor2Pin1Number = 5;
+                    motor2Pin2Number = 6;
+                    redPinNumber = 18;
+                    greenPinNumber = 23;
+                    bluePinNumber = 24;
+                    triggerPinNumber = 12;
+                    echoPinNumber = 16;
+                    buttonPinNumber = 26;
+
+                    break;
             }
+
+            var motorDriver = new L298nMotorDriver(motor1Pin1Number, motor1Pin2Number, motor2Pin1Number, motor2Pin2Number);
+            motors = motorDriver.AsLeftRightMotors();
+
+            distanceSensor = new Sr04UltrasonicDistanceSensor(triggerPinNumber, echoPinNumber, mode: ReadingMode.Continuous);
+
+            button = new PushButton(buttonPinNumber);
             button.Click += Button_Click;
 
-            rnd = new Random(unchecked((int)(DateTime.Now.Ticks)));
+            // Checks whether the Pin number for Multicolor LED has been specified.
+            if (redPinNumber > 0)
+                led = new MulticolorLed(redPinNumber, greenPinNumber, bluePinNumber);
+
+            random = new Random(unchecked((int)(DateTime.Now.Ticks)));
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -132,12 +157,12 @@ namespace RoverRemoteControl
             try
             {
                 await connection.ConnectAsync();
-                led.TurnGreen();
+                led?.TurnGreen();
             }
             catch
             {
                 // There are connection problems.
-                led.TurnRed();
+                led?.TurnRed();
             }
 
             var loop = Task.Run(() => RoverLoop());
@@ -158,7 +183,7 @@ namespace RoverRemoteControl
             {
                 // Otherwise, if necessary stops the autopiloting. 
                 autoPiloting = false;
-                led.TurnGreen();
+                led?.TurnGreen();
 
                 Action movement;
                 if (movements.TryGetValue(movementData.Movement, out movement))
@@ -166,7 +191,7 @@ namespace RoverRemoteControl
             }
         }
 
-        private async Task<byte[]> RequestEventAsync()
+        private async Task<byte[]> RequestDataAsync()
         {
             var stream = await streamingService.GetCurrentFrameAsync();
             using (var ms = new MemoryStream())
@@ -185,21 +210,21 @@ namespace RoverRemoteControl
                     if (distanceSensor.CurrentDistance < DISTANCE_THRESHOLD_CM)
                     {
                         Debug.WriteLine("Obstacle detected. Avoiding...");
-                        led.TurnBlue();
+                        led?.TurnBlue();
 
-                        await motors.MoveBackwardAsync(rnd.Next(BACKWARD_MIN_TIME_MS, BACKWARD_MAX_TIME_MS));
+                        await motors.MoveBackwardAsync(random.Next(BACKWARD_MIN_TIME, BACKWARD_MAX_TIME));
 
-                        if (rnd.Next(0, 2) == 0)
-                            await motors.RotateLeftAsync(rnd.Next(ROTATE_MIN_TIME_MS, ROTATE_MAX_TIME_MS));
+                        if (random.Next(0, 2) == 0)
+                            await motors.RotateLeftAsync(random.Next(ROTATE_MIN_TIME, ROTATE_MAX_TIME));
                         else
-                            await motors.RotateRightAsync(rnd.Next(ROTATE_MIN_TIME_MS, ROTATE_MAX_TIME_MS));
+                            await motors.RotateRightAsync(random.Next(ROTATE_MIN_TIME, ROTATE_MAX_TIME));
                     }
                     else
                     {
                         Debug.WriteLine("Moving forward...");
 
                         motors.MoveForward();
-                        led.TurnGreen();
+                        led?.TurnGreen();
                     }
                 }
 
@@ -219,7 +244,7 @@ namespace RoverRemoteControl
                 // The emergency stop button has been pressed.
                 autoPiloting = false;
                 motors.Stop();
-                led.TurnGreen();
+                led?.TurnGreen();
             }
         }
 
@@ -233,7 +258,7 @@ namespace RoverRemoteControl
                 connection.Dispose();
 
                 motors.Dispose();
-                led.Dispose();
+                led?.Dispose();
                 distanceSensor.Dispose();
                 button.Dispose();
             }

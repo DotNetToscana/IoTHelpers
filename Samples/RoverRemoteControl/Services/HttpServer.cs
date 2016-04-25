@@ -18,10 +18,10 @@ namespace RoverRemoteControl.Services
         private readonly int port;
         private readonly StreamSocketListener listener;
 
-        private Func<Task<byte[]>> onRequestEventAsync;
-        public HttpServer OnRequestEventAsync(Func<Task<byte[]>> action)
+        private Func<Task<byte[]>> onRequestDataAsync;
+        public HttpServer OnRequestDataAsync(Func<Task<byte[]>> action)
         {
-            onRequestEventAsync = action;
+            onRequestDataAsync = action;
             return this;
         }
 
@@ -41,7 +41,7 @@ namespace RoverRemoteControl.Services
 
         private async Task ProcessRequestAsync(StreamSocket socket)
         {
-            var content = await onRequestEventAsync.Invoke();
+            var content = await onRequestDataAsync.Invoke();
             var base64 = Convert.ToBase64String(content);
 
             var html = string.Format(htmlString, base64);
