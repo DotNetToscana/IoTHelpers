@@ -6,24 +6,25 @@
 
 <h2>@ViewBag.Title</h2>
 
-<div class="row">
-    <div class="col-xs-4"></div>
-    <div class="col-xs-4"><button class="btn btn-lg" data-movement="@((int)RoverMovementType.Forward)"><span class="glyphicon glyphicon-arrow-up"></span></button></div>
-    <div class="col-xs-4"></div>
+<div class="row margin-top">
+    <div class="col-xs-4"><button class="btn btn-lg" data-movement="@((int)RoverMovementType.ForwardLeft)"><i class="fa fa-arrow-up fa-rotate-45-neg" aria-hidden="true"></i></button></div>
+    <div class="col-xs-4"><button class="btn btn-lg" data-movement="@((int)RoverMovementType.Forward)"><i class="fa fa-arrow-up" aria-hidden="true"></i></button></div>
+    <div class="col-xs-4"><button class="btn btn-lg" data-movement="@((int)RoverMovementType.ForwardRight)"><i class="fa fa-arrow-up fa-rotate-45" aria-hidden="true"></i></button></div>
 </div>
-<div class="row">
-    <div class="col-xs-4"><button class="btn btn-lg" data-movement="@((int)RoverMovementType.RotateLeft)"><span class="glyphicon glyphicon-arrow-left"></span></button></div>
+<div class="row margin-top-xs">
+    <div class="col-xs-4"><button class="btn btn-lg" data-movement="@((int)RoverMovementType.RotateLeft)"><i class="fa fa-arrow-left" aria-hidden="true"></i></button></div>
     <div class="col-xs-4"></div>
-    <div class="col-xs-4"><button class="btn btn-lg" data-movement="@((int)RoverMovementType.RotateRight)"><span class="glyphicon glyphicon-arrow-right"></span></button></div>
+    <div class="col-xs-4"><button class="btn btn-lg" data-movement="@((int)RoverMovementType.RotateRight)"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></div>
 </div>
-<div class="row">
-    <div class="col-xs-4"></div>
-    <div class="col-xs-4"><button class="btn btn-lg" data-movement="@((int)RoverMovementType.Backward)"><span class="glyphicon glyphicon-arrow-down"></span></button></div>
-    <div class="col-xs-4"></div>
+<div class="row margin-top-xs">
+    <div class="col-xs-4"><button class="btn btn-lg" data-movement="@((int)RoverMovementType.BackwardLeft)"><i class="fa fa-arrow-down fa-rotate-45" aria-hidden="true"></i></button></div>
+    <div class="col-xs-4"><button class="btn btn-lg" data-movement="@((int)RoverMovementType.Backward)"><i class="fa fa-arrow-down" aria-hidden="true"></i></button></div>
+    <div class="col-xs-4"><button class="btn btn-lg" data-movement="@((int)RoverMovementType.BackwardRight)"><i class="fa fa-arrow-down fa-rotate-45-neg" aria-hidden="true"></i></button></div>
 </div>
+<div class="row margin-top-lg"></div>
 <div class="row">
-    <div class="col-xs-6"><button class="btn btn-lg" data-movement="@((int)RoverMovementType.Autopilot)"><span class="glyphicon glyphicon-plane"></span></button></div>
-    <div class="col-lg-12 pull-right"><button class="btn btn-lg" data-movement="@((int)RoverMovementType.Stop)"><span class="glyphicon glyphicon-ban-circle"></span></button></div>
+    <div class="col-xs-4"><button class="btn btn-lg" data-movement="@((int)RoverMovementType.Autopilot)"><span class="glyphicon glyphicon-plane"></span></button></div>
+    <div class="col-xs-4 pull-right"><button class="btn btn-lg" data-movement="@((int)RoverMovementType.Stop)"><i class="fa fa-stop" aria-hidden="true"></i></button></div>
 </div>
 
 @section scripts

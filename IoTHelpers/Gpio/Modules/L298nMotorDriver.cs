@@ -25,11 +25,8 @@ namespace IoTHelpers.Gpio.Modules
 
         public void Dispose()
         {
-            if (Motor1 != null)
-                Motor1.Dispose();
-
-            if (Motor2 != null)
-                Motor2.Dispose();
+            Motor1?.Dispose();
+            Motor2?.Dispose();
         }
     }
 
@@ -39,6 +36,8 @@ namespace IoTHelpers.Gpio.Modules
         private readonly GpioPin motorGpioPinB;
 
         public bool IsMoving { get; private set; }
+
+        public MotorDirection Direction { get; private set; }
 
         public Motor(int pin1, int pin2)
         {
@@ -55,10 +54,14 @@ namespace IoTHelpers.Gpio.Modules
         public void MoveForward()
         {
             IsMoving = true;
+            Direction = MotorDirection.Forward;
 
             motorGpioPinA.Write(GpioPinValue.Low);
             motorGpioPinB.Write(GpioPinValue.High);
         }
+
+        public Task MoveForwardAsync(TimeSpan interval)
+            => this.MoveForwardAsync((int)interval.TotalMilliseconds);
 
         public async Task MoveForwardAsync(int milliseconds)
         {
@@ -69,10 +72,14 @@ namespace IoTHelpers.Gpio.Modules
         public void MoveBackward()
         {
             IsMoving = true;
+            Direction = MotorDirection.Backward;
 
             motorGpioPinA.Write(GpioPinValue.High);
             motorGpioPinB.Write(GpioPinValue.Low);
         }
+
+        public Task MoveBackwardAsync(TimeSpan interval)
+            => this.MoveBackwardAsync((int)interval.TotalMilliseconds);
 
         public async Task MoveBackwardAsync(int milliseconds)
         {
@@ -83,6 +90,7 @@ namespace IoTHelpers.Gpio.Modules
         public void Stop()
         {
             IsMoving = false;
+            Direction = MotorDirection.None;
 
             motorGpioPinA.Write(GpioPinValue.Low);
             motorGpioPinB.Write(GpioPinValue.Low);
@@ -99,5 +107,12 @@ namespace IoTHelpers.Gpio.Modules
             await Task.Delay(milliseconds);
             this.Stop();
         }
+    }
+
+    public enum MotorDirection
+    {
+        None,
+        Forward,
+        Backward
     }
 }

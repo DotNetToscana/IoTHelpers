@@ -55,9 +55,11 @@ namespace RoverRemoteControl
             movements = new Dictionary<RoverMovementType, Action>
             {
                 [RoverMovementType.Forward] = () => motors.MoveForward(),
+                [RoverMovementType.ForwardLeft] = () => motors.MoveForwardLeft(),
+                [RoverMovementType.ForwardRight] = () => motors.MoveForwardRight(),
                 [RoverMovementType.Backward] = () => motors.MoveBackward(),
-                [RoverMovementType.TurnLeft] = () => motors.TurnLeft(),
-                [RoverMovementType.TurnRight] = () => motors.TurnRight(),
+                [RoverMovementType.BackwardLeft] = () => motors.MoveBackwardLeft(),
+                [RoverMovementType.BackwardRight] = () => motors.MoveBackwardRight(),
                 [RoverMovementType.RotateLeft] = () => motors.RotateLeft(),
                 [RoverMovementType.RotateRight] = () => motors.RotateRight(),
                 [RoverMovementType.Stop] = () => motors.Stop(),
@@ -158,11 +160,15 @@ namespace RoverRemoteControl
             {
                 await connection.ConnectAsync();
                 led?.TurnGreen();
+
+                Debug.WriteLine("Successfully connected to SignalR endpoint.");
             }
-            catch
+            catch(Exception ex)
             {
                 // There are connection problems.
                 led?.TurnRed();
+
+                Debug.WriteLine($"A connection problem occoured: {ex.Message}");
             }
 
             var loop = Task.Run(() => RoverLoop());

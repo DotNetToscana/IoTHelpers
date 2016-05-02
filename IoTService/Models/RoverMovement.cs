@@ -9,19 +9,21 @@ namespace IoTService.Models
     public enum RoverMovementType
     {
         Forward = 1,
-        Backward = 2,
-        TurnLeft = 3,
-        TurnRight = 4,
-        RotateLeft = 5,
-        RotateRight = 6,
-        Autopilot = 7,
-        Stop = 8
+        ForwardLeft = 2,
+        ForwardRight = 3,
+        Backward = 4,
+        BackwardLeft = 5,
+        BackwardRight = 6,
+        RotateLeft = 7,
+        RotateRight = 8,
+        Autopilot = 9,
+        Stop = 10
     }
 
     public class RoverMovement
     {
         public RoverMovementType Movement { get; set; }
 
-        public override string ToString() => Movement.ToString();        
+        public override string ToString() => Movement.ToString();
     }
 }

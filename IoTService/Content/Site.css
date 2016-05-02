@@ -12,3 +12,29 @@
 .margin-right {
     margin-right: 10px;
 }
+
+.margin-top-xs {
+    margin-top: 10px;
+}
+
+.margin-top {
+    margin-top: 30px;
+}
+
+.margin-top-lg {
+    margin-top: 60px;
+}
+
+.fa-rotate-45 {
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=5);
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.fa-rotate-45-neg {
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=6);
+  -webkit-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}

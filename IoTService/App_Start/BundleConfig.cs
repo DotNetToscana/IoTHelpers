@@ -28,6 +28,7 @@ namespace IoTService
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/bootstrap-toggle.css",
+                      "~/Content/font-awesome.css",
                       "~/Content/site.css"));
 
             BundleTable.EnableOptimizations = true;
