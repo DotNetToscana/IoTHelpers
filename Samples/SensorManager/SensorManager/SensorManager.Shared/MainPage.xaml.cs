@@ -53,6 +53,8 @@ namespace SensorManager
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
+            #region Band client
+
             try
             {
                 var pairedBands = await BandClientManager.Instance.GetBandsAsync();
@@ -62,8 +64,12 @@ namespace SensorManager
             }
             catch { }
 
+            #endregion
+
             base.OnNavigatedTo(e);
         }
+
+        #region Band client
 
         private async Task CreateJukeboxTileAsync()
         {
@@ -296,6 +302,8 @@ namespace SensorManager
                     break;
             }
         }
+
+        #endregion
 
         #region Jukebox
 

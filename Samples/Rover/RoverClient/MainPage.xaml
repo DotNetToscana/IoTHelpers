@@ -1,0 +1,147 @@
+﻿<Page
+    x:Class="RoverClient.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:RoverClient"
+    xmlns:controls="using:Template10.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <controls:PageHeader Frame="{x:Bind Frame}" Text="Rover Client">
+            <controls:PageHeader.PrimaryCommands>
+                <AppBarButton x:Name="connectButton"
+                    Click="connectButton_Click"
+                    IsEnabled="False"
+                    Icon="Remote"
+                    Label="Connect" />
+                <AppBarButton x:Name="disconnectButton"
+                    Click="disconnectButton_Click"
+                    Icon="Clear"
+                    Label="Disconnect"
+                    Visibility="Collapsed" />
+            </controls:PageHeader.PrimaryCommands>
+        </controls:PageHeader>
+
+        <TextBox Grid.Row="1" x:Name="RoverAddressTextBox" Margin="20" Width="400" 
+                 PlaceholderText="Rover address..." 
+                 TextChanged="RoverAddressTextBox_TextChanged" />
+
+        <Grid x:Name="roverControl" Margin="10" Grid.Row="2" 
+              HorizontalAlignment="Center"
+              Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button Padding="40" Margin="20" Tag="ForwardLeft" Click="movementButton_Click">
+                <Button.Content>
+                    <SymbolIcon Symbol="Up" RenderTransformOrigin=".5 .5">
+                        <SymbolIcon.RenderTransform>
+                            <CompositeTransform Rotation="-45" ScaleX="2" ScaleY="2" />
+                        </SymbolIcon.RenderTransform>
+                    </SymbolIcon>
+                </Button.Content>
+            </Button>
+            <Button Padding="40" Grid.Column="1" Margin="20" Tag="Forward" Click="movementButton_Click">
+                <Button.Content>
+                    <SymbolIcon Symbol="Up" RenderTransformOrigin=".5 .5">
+                        <SymbolIcon.RenderTransform>
+                            <CompositeTransform ScaleX="2" ScaleY="2" />
+                        </SymbolIcon.RenderTransform>
+                    </SymbolIcon>
+                </Button.Content>
+            </Button>
+            <Button Padding="40" Grid.Column="2" Margin="20" Tag="ForwardRight" Click="movementButton_Click">
+                <Button.Content>
+                    <SymbolIcon Symbol="Up" RenderTransformOrigin=".5 .5">
+                        <SymbolIcon.RenderTransform>
+                            <CompositeTransform Rotation="45" ScaleX="2" ScaleY="2" />
+                        </SymbolIcon.RenderTransform>
+                    </SymbolIcon>
+                </Button.Content>
+            </Button>
+
+            <Button Padding="40" Margin="20" Grid.Row="1" Tag="RotateLeft" Click="movementButton_Click">
+                <Button.Content>
+                    <SymbolIcon Symbol="Back" RenderTransformOrigin=".5 .5">
+                        <SymbolIcon.RenderTransform>
+                            <CompositeTransform ScaleX="2" ScaleY="2" />
+                        </SymbolIcon.RenderTransform>
+                    </SymbolIcon>
+                </Button.Content>
+            </Button>
+            <Button Padding="40" Grid.Row="1" Grid.Column="2" Margin="20" Tag="RotateRight" Click="movementButton_Click">
+                <Button.Content>
+                    <SymbolIcon Symbol="Forward" RenderTransformOrigin=".5 .5">
+                        <SymbolIcon.RenderTransform>
+                            <CompositeTransform ScaleX="2" ScaleY="2" />
+                        </SymbolIcon.RenderTransform>
+                    </SymbolIcon>
+                </Button.Content>
+            </Button>
+
+            <Button Padding="40" Grid.Row="2" Margin="20" Tag="BackwardLeft" Click="movementButton_Click">
+                <Button.Content>
+                    <SymbolIcon Symbol="Up" RenderTransformOrigin=".5 .5">
+                        <SymbolIcon.RenderTransform>
+                            <CompositeTransform Rotation="225" ScaleX="2" ScaleY="2" />
+                        </SymbolIcon.RenderTransform>
+                    </SymbolIcon>
+                </Button.Content>
+            </Button>
+            <Button Padding="40" Grid.Row="2" Grid.Column="1" Margin="20" Tag="Backward" Click="movementButton_Click">
+                <Button.Content>
+                    <SymbolIcon Symbol="Up" RenderTransformOrigin=".5 .5">
+                        <SymbolIcon.RenderTransform>
+                            <CompositeTransform Rotation="180" ScaleX="2" ScaleY="2" />
+                        </SymbolIcon.RenderTransform>
+                    </SymbolIcon>
+                </Button.Content>
+            </Button>
+            <Button Padding="40" Grid.Row="2" Grid.Column="2" Margin="20" Tag="BackwardRight" Click="movementButton_Click">
+                <Button.Content>
+                    <SymbolIcon Symbol="Up" RenderTransformOrigin=".5 .5">
+                        <SymbolIcon.RenderTransform>
+                            <CompositeTransform Rotation="135" ScaleX="2" ScaleY="2" />
+                        </SymbolIcon.RenderTransform>
+                    </SymbolIcon>
+                </Button.Content>
+            </Button>
+
+            <Button Padding="40" Margin="20,40,20,20" Grid.Row="3" Tag="Autopilot" Click="movementButton_Click">
+                <Button.Content>
+                    <SymbolIcon Symbol="Send" RenderTransformOrigin=".5 .5">
+                        <SymbolIcon.RenderTransform>
+                            <CompositeTransform ScaleX="2" ScaleY="2" />
+                        </SymbolIcon.RenderTransform>
+                    </SymbolIcon>
+                </Button.Content>
+            </Button>
+            <Button Padding="40" Grid.Row="3" Grid.Column="2" Margin="20,40,20,20" Tag="Stop" Click="movementButton_Click">
+                <Button.Content>
+                    <SymbolIcon Symbol="Clear" RenderTransformOrigin=".5 .5">
+                        <SymbolIcon.RenderTransform>
+                            <CompositeTransform ScaleX="2" ScaleY="2" />
+                        </SymbolIcon.RenderTransform>
+                    </SymbolIcon>
+                </Button.Content>
+            </Button>
+        </Grid>
+    </Grid>
+</Page>
