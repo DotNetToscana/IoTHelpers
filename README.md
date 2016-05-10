@@ -15,3 +15,7 @@ At this moment, the NuGet package contains the ARM version only, so if you want 
 **Usage**
 
 Refer to the [project documentation](https://github.com/Dot-and-Net/IoTHelpers/wiki/Home) to find examples about how to use this library. You can also find some code samples in the [Samples](https://github.com/Dot-and-Net/IoTHelpers/Samples) folder.
+
+**Credits**
+
+Icon by [Samat Odedara](https://www.iconfinder.com/samatodedara) under the [Creative Commons (Attribution 3.0 Unported) license](http://creativecommons.org/licenses/by/3.0)
