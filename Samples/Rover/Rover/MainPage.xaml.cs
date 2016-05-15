@@ -43,8 +43,11 @@ namespace Rover
         private const int BACKWARD_MIN_TIME = 1000;
         private const int BACKWARD_MAX_TIME = 1500;
 
-        private const int ROTATE_MIN_TIME = 1250;
-        private const int ROTATE_MAX_TIME = 1750;
+        private const int ROTATE_MIN_TIME = 750;
+        private const int ROTATE_MAX_TIME = 950;
+
+        private const int AUTOPILOTING_TICK = 100;
+        private const int DEFAULT_TICK = 500;
 
         private readonly Dictionary<RoverMovementType, Action> movements;
 
@@ -224,10 +227,11 @@ namespace Rover
 
                         await motors.MoveBackwardAsync(random.Next(BACKWARD_MIN_TIME, BACKWARD_MAX_TIME));
 
-                        if (random.Next(0, 2) == 0)
-                            await motors.RotateLeftAsync(random.Next(ROTATE_MIN_TIME, ROTATE_MAX_TIME));
+                        var movementInterval = random.Next(ROTATE_MIN_TIME, ROTATE_MAX_TIME);
+                        if ((random.Next(0, 11) % 2) == 0)
+                            await motors.RotateLeftAsync(movementInterval);
                         else
-                            await motors.RotateRightAsync(random.Next(ROTATE_MIN_TIME, ROTATE_MAX_TIME));
+                            await motors.RotateRightAsync(movementInterval);
                     }
                     else
                     {
@@ -237,11 +241,11 @@ namespace Rover
                         led?.TurnGreen();
                     }
 
-                    await Task.Delay(100);
+                    await Task.Delay(AUTOPILOTING_TICK);
                 }
                 else
                 {
-                    await Task.Delay(500);
+                    await Task.Delay(DEFAULT_TICK);
                 }
             }
         }

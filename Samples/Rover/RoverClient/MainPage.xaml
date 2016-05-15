@@ -30,7 +30,7 @@
             </controls:PageHeader.PrimaryCommands>
         </controls:PageHeader>
 
-        <TextBox Grid.Row="1" x:Name="RoverAddressTextBox" Margin="20" Width="400" 
+        <TextBox Grid.Row="1" x:Name="RoverAddressTextBox" Margin="20" Width="300" 
                  PlaceholderText="Rover address..." 
                  TextChanged="RoverAddressTextBox_TextChanged" />
 
@@ -49,95 +49,95 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button Padding="40" Margin="20" Tag="ForwardLeft" Click="movementButton_Click">
+            <Button Padding="20" Margin="20,20,20,0" Tag="ForwardLeft" Click="movementButton_Click">
                 <Button.Content>
                     <SymbolIcon Symbol="Up" RenderTransformOrigin=".5 .5">
                         <SymbolIcon.RenderTransform>
-                            <CompositeTransform Rotation="-45" ScaleX="2" ScaleY="2" />
+                            <CompositeTransform Rotation="-45" ScaleX="1.5" ScaleY="1.5" />
                         </SymbolIcon.RenderTransform>
                     </SymbolIcon>
                 </Button.Content>
             </Button>
-            <Button Padding="40" Grid.Column="1" Margin="20" Tag="Forward" Click="movementButton_Click">
+            <Button Padding="20" Grid.Column="1" Margin="20,20,20,0" Tag="Forward" Click="movementButton_Click">
                 <Button.Content>
                     <SymbolIcon Symbol="Up" RenderTransformOrigin=".5 .5">
                         <SymbolIcon.RenderTransform>
-                            <CompositeTransform ScaleX="2" ScaleY="2" />
+                            <CompositeTransform ScaleX="1.5" ScaleY="1.5" />
                         </SymbolIcon.RenderTransform>
                     </SymbolIcon>
                 </Button.Content>
             </Button>
-            <Button Padding="40" Grid.Column="2" Margin="20" Tag="ForwardRight" Click="movementButton_Click">
+            <Button Padding="20" Grid.Column="2" Margin="20,20,20,0" Tag="ForwardRight" Click="movementButton_Click">
                 <Button.Content>
                     <SymbolIcon Symbol="Up" RenderTransformOrigin=".5 .5">
                         <SymbolIcon.RenderTransform>
-                            <CompositeTransform Rotation="45" ScaleX="2" ScaleY="2" />
+                            <CompositeTransform Rotation="45" ScaleX="1.5" ScaleY="1.5" />
                         </SymbolIcon.RenderTransform>
                     </SymbolIcon>
                 </Button.Content>
             </Button>
 
-            <Button Padding="40" Margin="20" Grid.Row="1" Tag="RotateLeft" Click="movementButton_Click">
+            <Button Padding="20" Margin="20" Grid.Row="1" Tag="RotateLeft" Click="movementButton_Click">
                 <Button.Content>
                     <SymbolIcon Symbol="Back" RenderTransformOrigin=".5 .5">
                         <SymbolIcon.RenderTransform>
-                            <CompositeTransform ScaleX="2" ScaleY="2" />
+                            <CompositeTransform ScaleX="1.5" ScaleY="1.5" />
                         </SymbolIcon.RenderTransform>
                     </SymbolIcon>
                 </Button.Content>
             </Button>
-            <Button Padding="40" Grid.Row="1" Grid.Column="2" Margin="20" Tag="RotateRight" Click="movementButton_Click">
+            <Button Padding="20" Grid.Row="1" Grid.Column="2" Margin="20" Tag="RotateRight" Click="movementButton_Click">
                 <Button.Content>
                     <SymbolIcon Symbol="Forward" RenderTransformOrigin=".5 .5">
                         <SymbolIcon.RenderTransform>
-                            <CompositeTransform ScaleX="2" ScaleY="2" />
+                            <CompositeTransform ScaleX="1.5" ScaleY="1.5" />
                         </SymbolIcon.RenderTransform>
                     </SymbolIcon>
                 </Button.Content>
             </Button>
 
-            <Button Padding="40" Grid.Row="2" Margin="20" Tag="BackwardLeft" Click="movementButton_Click">
+            <Button Padding="20" Grid.Row="2" Margin="20,0,20,20" Tag="BackwardLeft" Click="movementButton_Click">
                 <Button.Content>
                     <SymbolIcon Symbol="Up" RenderTransformOrigin=".5 .5">
                         <SymbolIcon.RenderTransform>
-                            <CompositeTransform Rotation="225" ScaleX="2" ScaleY="2" />
+                            <CompositeTransform Rotation="225" ScaleX="1.5" ScaleY="1.5" />
                         </SymbolIcon.RenderTransform>
                     </SymbolIcon>
                 </Button.Content>
             </Button>
-            <Button Padding="40" Grid.Row="2" Grid.Column="1" Margin="20" Tag="Backward" Click="movementButton_Click">
+            <Button Padding="20" Grid.Row="2" Grid.Column="1" Margin="20,0,20,20" Tag="Backward" Click="movementButton_Click">
                 <Button.Content>
                     <SymbolIcon Symbol="Up" RenderTransformOrigin=".5 .5">
                         <SymbolIcon.RenderTransform>
-                            <CompositeTransform Rotation="180" ScaleX="2" ScaleY="2" />
+                            <CompositeTransform Rotation="180" ScaleX="1.5" ScaleY="1.5" />
                         </SymbolIcon.RenderTransform>
                     </SymbolIcon>
                 </Button.Content>
             </Button>
-            <Button Padding="40" Grid.Row="2" Grid.Column="2" Margin="20" Tag="BackwardRight" Click="movementButton_Click">
+            <Button Padding="20" Grid.Row="2" Grid.Column="2" Margin="20,0,20,20" Tag="BackwardRight" Click="movementButton_Click">
                 <Button.Content>
                     <SymbolIcon Symbol="Up" RenderTransformOrigin=".5 .5">
                         <SymbolIcon.RenderTransform>
-                            <CompositeTransform Rotation="135" ScaleX="2" ScaleY="2" />
+                            <CompositeTransform Rotation="135" ScaleX="1.5" ScaleY="1.5" />
                         </SymbolIcon.RenderTransform>
                     </SymbolIcon>
                 </Button.Content>
             </Button>
 
-            <Button Padding="40" Margin="20,40,20,20" Grid.Row="3" Tag="Autopilot" Click="movementButton_Click">
+            <Button Padding="20" Margin="20,20,20,20" Grid.Row="3" Tag="Autopilot" Click="movementButton_Click">
                 <Button.Content>
                     <SymbolIcon Symbol="Send" RenderTransformOrigin=".5 .5">
                         <SymbolIcon.RenderTransform>
-                            <CompositeTransform ScaleX="2" ScaleY="2" />
+                            <CompositeTransform ScaleX="1.5" ScaleY="1.5" />
                         </SymbolIcon.RenderTransform>
                     </SymbolIcon>
                 </Button.Content>
             </Button>
-            <Button Padding="40" Grid.Row="3" Grid.Column="2" Margin="20,40,20,20" Tag="Stop" Click="movementButton_Click">
+            <Button Padding="20" Grid.Row="3" Grid.Column="2" Margin="20,20,20,20" Tag="Stop" Click="movementButton_Click">
                 <Button.Content>
                     <SymbolIcon Symbol="Clear" RenderTransformOrigin=".5 .5">
                         <SymbolIcon.RenderTransform>
-                            <CompositeTransform ScaleX="2" ScaleY="2" />
+                            <CompositeTransform ScaleX="1.5" ScaleY="1.5" />
                         </SymbolIcon.RenderTransform>
                     </SymbolIcon>
                 </Button.Content>
