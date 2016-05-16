@@ -30,31 +30,15 @@ namespace RoverClient.Services
 
         public async Task ConnectAsync(string hostName)
         {
-            try
-            {
-                await socket.ConnectAsync(new HostName(hostName), REMOTE_PORT.ToString());
-                writer = new DataWriter(socket.OutputStream);
-            }
-            catch (Exception ex) when (SocketError.GetStatus(ex.HResult) != SocketErrorStatus.Unknown)
-            {
-                // If this is an unknown status it means that the error is fatal and retry will likely fail.
-                var msg = ex.Message;
-            }
+            await socket.ConnectAsync(new HostName(hostName), REMOTE_PORT.ToString());
+            writer = new DataWriter(socket.OutputStream);
         }
 
         public async Task SendAsync(string message)
         {
-            try
-            {
-                writer.WriteUInt32(writer.MeasureString(message));
-                writer.WriteString(message);
-                await writer.StoreAsync();
-            }
-            catch (Exception ex) when (SocketError.GetStatus(ex.HResult) != SocketErrorStatus.Unknown)
-            {
-                // If this is an unknown status it means that the error is fatal and retry will likely fail.
-                var msg = ex.Message;
-            }
+            writer.WriteUInt32(writer.MeasureString(message));
+            writer.WriteString(message);
+            await writer.StoreAsync();
         }
 
         public async Task CloseAsync()

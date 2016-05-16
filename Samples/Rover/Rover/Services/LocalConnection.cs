@@ -91,9 +91,9 @@ namespace Rover.Services
                 // The connection has been stopped.
                 movementEvent?.Invoke(new RoverMovement(RoverMovementType.Stop));
             }
-            catch (Exception ex) when (SocketError.GetStatus(ex.HResult) != SocketErrorStatus.Unknown)
+            catch
             {
-                // If this is an unknown status it means that the error is fatal and retry will likely fail.
+                // Exception: sends the stop command.
                 movementEvent?.Invoke(new RoverMovement(RoverMovementType.Stop));
             }
         }

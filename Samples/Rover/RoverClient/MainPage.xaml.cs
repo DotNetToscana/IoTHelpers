@@ -24,7 +24,8 @@ namespace RoverClient
 {
     public sealed partial class MainPage : Page
     {
-        private readonly SocketConnection connection;
+        private SocketConnection connection;
+
         private readonly IPropertySet settings;
         private readonly DispatcherTimer dispatcherTimer;
 
@@ -37,7 +38,6 @@ namespace RoverClient
         {
             this.InitializeComponent();
 
-            connection = new SocketConnection();
             settings = ApplicationData.Current.RoamingSettings.Values;
 
             dispatcherTimer = new DispatcherTimer();
@@ -57,6 +57,17 @@ namespace RoverClient
             base.OnNavigatedTo(e);
         }
 
+        protected override async void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            try
+            {
+                await this.DisconnectAsync();
+            }
+            catch { }
+
+            base.OnNavigatedFrom(e);
+        }
+
         private void RoverAddressTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             connectButton.IsEnabled = !string.IsNullOrWhiteSpace(RoverAddressTextBox.Text);
@@ -66,13 +77,16 @@ namespace RoverClient
         {
             try
             {
+                RoverAddressTextBox.IsEnabled = false;
+
+                connection = new SocketConnection();
                 await connection.ConnectAsync(RoverAddressTextBox.Text.Trim());
+
                 GamepadService.Autopiloting = false;
                 dispatcherTimer.Start();
 
                 settings[ROVER_ADDRESS] = RoverAddressTextBox.Text.Trim();
 
-                RoverAddressTextBox.IsEnabled = false;
                 connectButton.Visibility = Visibility.Collapsed;
                 disconnectButton.Visibility = Visibility.Visible;
                 roverControl.Visibility = Visibility.Visible;
@@ -80,6 +94,8 @@ namespace RoverClient
             catch (Exception ex)
             {
                 await new MessageDialog(ex.Message).ShowAsync();
+                RoverAddressTextBox.IsEnabled = true;
+                connection = null;
             }
         }
 
@@ -87,14 +103,7 @@ namespace RoverClient
         {
             try
             {
-                dispatcherTimer.Stop();
-                GamepadService.Autopiloting = false;
-                await connection.CloseAsync();
-
-                RoverAddressTextBox.IsEnabled = true;
-                connectButton.Visibility = Visibility.Visible;
-                disconnectButton.Visibility = Visibility.Collapsed;
-                roverControl.Visibility = Visibility.Collapsed;
+                await this.DisconnectAsync();
             }
             catch (Exception ex)
             {
@@ -133,6 +142,24 @@ namespace RoverClient
             catch (Exception ex)
             {
                 await new MessageDialog(ex.Message).ShowAsync();
+            }
+        }
+
+        private async Task DisconnectAsync()
+        {
+            if (connection != null)
+            {
+                dispatcherTimer.Stop();
+                GamepadService.Autopiloting = false;
+
+                await connection.SendAsync("Stop");
+                await connection.CloseAsync();
+                connection = null;
+
+                RoverAddressTextBox.IsEnabled = true;
+                connectButton.Visibility = Visibility.Visible;
+                disconnectButton.Visibility = Visibility.Collapsed;
+                roverControl.Visibility = Visibility.Collapsed;
             }
         }
     }
