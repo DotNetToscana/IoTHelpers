@@ -143,8 +143,8 @@ namespace IoTHelpers.I2c.Devices
         {
             get
             {
-                if (Mode == ReadingMode.Manual)
-                    throw new NotSupportedException($"{nameof(CurrentTemperature)} is available only when {nameof(Mode)} is set to {ReadingMode.Continuous}.");
+                if (ReadingMode == ReadingMode.Manual)
+                    throw new NotSupportedException($"{nameof(CurrentTemperature)} is available only when {nameof(ReadingMode)} is set to {ReadingMode.Continuous}.");
 
                 return currentTemperature;
             }
@@ -155,8 +155,8 @@ namespace IoTHelpers.I2c.Devices
         {
             get
             {
-                if (Mode == ReadingMode.Manual)
-                    throw new NotSupportedException($"{nameof(CurrentPressure)} is available only when {nameof(Mode)} is set to {ReadingMode.Continuous}.");
+                if (ReadingMode == ReadingMode.Manual)
+                    throw new NotSupportedException($"{nameof(CurrentPressure)} is available only when {nameof(ReadingMode)} is set to {ReadingMode.Continuous}.");
 
                 return currentPressure;
             }

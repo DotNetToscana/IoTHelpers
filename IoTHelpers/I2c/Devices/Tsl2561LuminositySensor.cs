@@ -41,8 +41,8 @@ namespace IoTHelpers.I2c.Devices
         {
             get
             {
-                if (Mode == ReadingMode.Manual)
-                    throw new NotSupportedException($"{nameof(CurrentLux)} is available only when {nameof(Mode)} is set to {ReadingMode.Continuous}.");
+                if (ReadingMode == ReadingMode.Manual)
+                    throw new NotSupportedException($"{nameof(CurrentLux)} is available only when {nameof(ReadingMode)} is set to {ReadingMode.Continuous}.");
 
                 return currentLux;
             }
@@ -52,8 +52,8 @@ namespace IoTHelpers.I2c.Devices
         {
             get
             {
-                if (Mode == ReadingMode.Manual)
-                    throw new NotSupportedException($"{nameof(CurrentLightLevel)} is available only when {nameof(Mode)} is set to {ReadingMode.Continuous}.");
+                if (ReadingMode == ReadingMode.Manual)
+                    throw new NotSupportedException($"{nameof(CurrentLightLevel)} is available only when {nameof(ReadingMode)} is set to {ReadingMode.Continuous}.");
 
                 return this.ConvertToLightLevel(currentLux);
             }

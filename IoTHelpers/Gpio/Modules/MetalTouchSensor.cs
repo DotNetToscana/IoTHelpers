@@ -1,6 +1,7 @@
 ﻿using IoTHelpers.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -14,7 +15,7 @@ namespace IoTHelpers.Gpio.Modules
 {
     public class MetalTouchSensor : GpioModule
     {
-        private readonly Timer timer;
+        private GpioPinValue lastPinValue;
 
         public bool IsInContact { get; private set; } = false;
 
@@ -23,48 +24,39 @@ namespace IoTHelpers.Gpio.Modules
 
         public bool RaiseEventsOnUIThread { get; set; } = false;
 
-        private List<GpioPinValue> reads = new List<GpioPinValue>(10);
-
         public MetalTouchSensor(int pinNumber, LogicValue logicValue = LogicValue.Positive) : base(pinNumber, GpioPinDriveMode.Input, logicValue)
         {
             Pin.DebounceTimeout = TimeSpan.FromMilliseconds(10);
-
-            timer = new Timer(CheckState, null, 0, 20);
+            Pin.ValueChanged += Pin_ValueChanged;
         }
 
-        private void CheckState(object state)
+        private void Pin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
         {
             var currentPinValue = Pin.Read();
-            //System.Diagnostics.Debug.WriteLine(currentPinValue);
+            //Debug.WriteLine(currentPinValue);
 
-            if (reads.Count == 10)
+            // If same value of last read, exits. 
+            if (currentPinValue == lastPinValue)
+                return;
+
+            // Checks the pin value.
+            if (currentPinValue == ActualHighPinValue)
             {
-                if (reads.Contains(ActualHighPinValue))
-                {
-                    if (!IsInContact)
-                        RaiseEventHelper.CheckRaiseEventOnUIThread(this, TouchDetected, RaiseEventsOnUIThread);
-
-                    IsInContact = true;
-                }
-                else if (reads.Count(r => r == ActualLowPinValue) > 6)
-                {
-                    if (IsInContact)
-                        RaiseEventHelper.CheckRaiseEventOnUIThread(this, TouchRemoved, RaiseEventsOnUIThread);
-
-                    IsInContact = false;
-                }
-
-                reads.Clear();
+                IsInContact = true;
+                RaiseEventHelper.CheckRaiseEventOnUIThread(this, TouchDetected, RaiseEventsOnUIThread);
             }
-            else
+            else if (currentPinValue == ActualLowPinValue)
             {
-                reads.Add(currentPinValue);
+                IsInContact = false;
+                RaiseEventHelper.CheckRaiseEventOnUIThread(this, TouchRemoved, RaiseEventsOnUIThread);
             }
+
+            lastPinValue = currentPinValue;
         }
 
         public override void Dispose()
         {
-            timer.Dispose();
+            Pin.ValueChanged -= Pin_ValueChanged;
             base.Dispose();
         }
     }

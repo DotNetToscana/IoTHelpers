@@ -12,10 +12,10 @@ namespace IoTHelpers.Gpio
     {
         private readonly Timer timer;
 
-        private ReadingMode mode;
-        public ReadingMode Mode
+        private ReadingMode readingMode;
+        public ReadingMode ReadingMode
         {
-            get { return mode; }
+            get { return readingMode; }
             set { this.Initialize(value); }
         }
 
@@ -25,8 +25,8 @@ namespace IoTHelpers.Gpio
             get { return readInterval; }
             set
             {
-                if (Mode == ReadingMode.Manual)
-                    throw new NotSupportedException($"You cannot change {nameof(ReadInterval)} when {nameof(Mode)} is set to {ReadingMode.Manual}.");
+                if (ReadingMode == ReadingMode.Manual)
+                    throw new NotSupportedException($"You cannot change {nameof(ReadInterval)} when {nameof(ReadingMode)} is set to {ReadingMode.Manual}.");
 
                 readInterval = value;
                 timer?.Change(0, (int)readInterval.TotalMilliseconds);
@@ -36,18 +36,18 @@ namespace IoTHelpers.Gpio
         public TimedModule(ReadingMode mode, TimeSpan readInterval)
         {
             this.readInterval = readInterval;
-            this.mode = mode;
+            this.readingMode = mode;
 
             timer = new Timer(CheckState, null, Timeout.Infinite, Timeout.Infinite);
         }
 
-        protected void InitializeTimer() => this.Initialize(mode);
+        protected void InitializeTimer() => this.Initialize(readingMode);
 
         private void Initialize(ReadingMode newMode)
         {
-            this.mode = newMode;
+            this.readingMode = newMode;
 
-            if (mode == ReadingMode.Continuous)
+            if (readingMode == ReadingMode.Continuous)
                 timer.Change(0, (int)readInterval.TotalMilliseconds);
             else
                 timer.Change(Timeout.Infinite, Timeout.Infinite);

@@ -30,8 +30,10 @@
                           x:Name="relaySwitch" Toggled="relaySwitch_Toggled" />
             <ToggleSwitch OffContent="Motion Detector Off" OnContent="Motion Detector On" 
                           x:Name="motionDetectorSwitch" Toggled="motionDetectorSwitch_Toggled" />
+            <ToggleSwitch OffContent="Touch Sensor Off" OnContent="Touch Sensor On"
+                          x:Name="touchSensorSwitch" Toggled="touchSensorSwitch_Toggled" IsOn="True" />
             <ToggleSwitch OffContent="Flame Sensor Off" OnContent="Flame Sensor On"
-                          x:Name="flameSensorSwitch" Toggled="flameSensorSwitch_Toggled" IsOn="True" />
+                          x:Name="flameSensorSwitch" Toggled="flameSensorSwitch_Toggled" />
         </StackPanel>
         <ListBox Grid.Row="1" Grid.Column="1" x:Name="eventListBox"
                  HorizontalAlignment="Center" Margin="0,20"

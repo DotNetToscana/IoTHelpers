@@ -40,8 +40,8 @@ namespace IoTHelpers.I2c.Devices
         {
             get
             {
-                if (Mode == ReadingMode.Manual)
-                    throw new NotSupportedException($"{nameof(CurrentAcceleration)} is available only when {nameof(Mode)} is set to {ReadingMode.Continuous}.");
+                if (ReadingMode == ReadingMode.Manual)
+                    throw new NotSupportedException($"{nameof(CurrentAcceleration)} is available only when {nameof(ReadingMode)} is set to {ReadingMode.Continuous}.");
 
                 return currentAcceleration;
             }

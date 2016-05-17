@@ -24,8 +24,8 @@ namespace IoTHelpers.Gpio.Modules
         {
             get
             {
-                if (Mode == ReadingMode.Manual)
-                    throw new NotSupportedException($"{nameof(CurrentDistance)} is available only when {nameof(Mode)} is set to {ReadingMode.Continuous}.");
+                if (ReadingMode == ReadingMode.Manual)
+                    throw new NotSupportedException($"{nameof(CurrentDistance)} is available only when {nameof(ReadingMode)} is set to {ReadingMode.Continuous}.");
 
                 return currentDistance;
             }

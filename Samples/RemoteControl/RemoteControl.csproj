@@ -100,7 +100,9 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Humiture.cs" />
+    <Compile Include="Models\Position.cs" />
     <Compile Include="Models\Rgb.cs" />
+    <Compile Include="Models\TelemetryData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteConnection.cs" />
   </ItemGroup>
