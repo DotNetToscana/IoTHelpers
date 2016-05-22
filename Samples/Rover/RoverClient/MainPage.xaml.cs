@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Gaming.Input;
+using Windows.Networking.Sockets;
 using Windows.Storage;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -93,7 +94,7 @@ namespace RoverClient
             }
             catch (Exception ex)
             {
-                await new MessageDialog(ex.Message).ShowAsync();
+                await this.ShowErrorAsync(ex);
                 RoverAddressTextBox.IsEnabled = true;
                 connection = null;
             }
@@ -107,7 +108,7 @@ namespace RoverClient
             }
             catch (Exception ex)
             {
-                await new MessageDialog(ex.Message).ShowAsync();
+                await this.ShowErrorAsync(ex);
             }
         }
 
@@ -117,31 +118,48 @@ namespace RoverClient
             await this.SendCommandAsync(command);
         }
 
-        private void dispatcherTimer_Tick(object sender, object args)
+        private async void dispatcherTimer_Tick(object sender, object args)
         {
-            var command = GamepadService.GetCurrentCommand();
-
-            if (command != null)
+            if (connection != null)
             {
-                if (lastCommand != command)
+                try
                 {
-                    Debug.WriteLine(command);
-                    lastCommand = command.Value;
-                }
+                    var command = GamepadService.GetCurrentCommand();
 
-                var task = this.SendCommandAsync(command.ToString());
+                    if (command != null)
+                    {
+                        if (lastCommand != command)
+                        {
+                            Debug.WriteLine(command);
+                            lastCommand = command.Value;
+                        }
+
+                        var task = this.SendCommandAsync(command.ToString());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await this.ShowErrorAsync(ex);
+                }
             }
         }
 
         private async Task SendCommandAsync(string command)
         {
-            try
+            if (connection != null)
             {
-                await connection.SendAsync(command);
-            }
-            catch (Exception ex)
-            {
-                await new MessageDialog(ex.Message).ShowAsync();
+                try
+                {
+                    await connection.SendAsync(command);
+                }
+                catch (Exception ex)
+                {
+                    var error = SocketError.GetStatus(ex.HResult);
+                    if (error == SocketErrorStatus.ConnectionResetByPeer)
+                        await DisconnectAsync();
+
+                    await this.ShowErrorAsync(ex);
+                }
             }
         }
 
@@ -149,11 +167,16 @@ namespace RoverClient
         {
             if (connection != null)
             {
-                dispatcherTimer.Stop();
-                GamepadService.Autopiloting = false;
+                try
+                {
+                    dispatcherTimer.Stop();
+                    GamepadService.Autopiloting = false;
 
-                await connection.SendAsync("Stop");
-                await connection.CloseAsync();
+                    await connection.SendAsync("Stop");
+                    await connection.CloseAsync();
+                }
+                catch { }
+
                 connection = null;
 
                 RoverAddressTextBox.IsEnabled = true;
@@ -161,6 +184,16 @@ namespace RoverClient
                 disconnectButton.Visibility = Visibility.Collapsed;
                 roverControl.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private Task ShowErrorAsync(Exception error)
+        {
+            var message = error.Message;
+#if DEBUG
+            message += $"{message} ({error.StackTrace})";
+#endif
+            return new MessageDialog(message).ShowAsync().AsTask();
+
         }
     }
 }
