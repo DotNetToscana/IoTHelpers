@@ -14,8 +14,7 @@ namespace RemoteControl
 {
     public class RemoteConnection : IDisposable
     {
-        private const string SERVICE_URL = "http://iotserviceweb.azurewebsites.net/";
-        //private const string SERVICE_URL = "http://localhost:37309/";
+        private const string SERVICE_URL = "http://localhost:37309/";
 
         private const string HUB_NAME = "SensorHub";
 

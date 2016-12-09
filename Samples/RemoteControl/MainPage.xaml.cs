@@ -38,9 +38,9 @@ namespace RemoteControl
 
         private static DeviceClient deviceClient;
 
-        private const string deviceName = "";
-        private const string iotHubUri = "";
-        private const string deviceKey = "";
+        private const string deviceName = "MARCO-RPI2-02";
+        private const string iotHubUri = "marcominervaiothub.azure-devices.net";
+        private const string deviceKey = "QnSfmX9WneWnCDOn1hYwNIpFhan2ex3PU5VNdetV9n0=";
 
         private Geolocator geolocator;
         private Geocoordinate position;
@@ -129,8 +129,8 @@ namespace RemoteControl
                     LightLevel = Math.Round(lightLevel, 6),
                     Position = new Position
                     {
-                        Latitude = position.Latitude,
-                        Longitude = position.Longitude,
+                        Latitude = position.Point.Position.Latitude,
+                        Longitude = position.Point.Position.Longitude,
                         Accuracy = position.Accuracy,
                         Timestamp = position.Timestamp
                     }
