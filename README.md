@@ -2,7 +2,7 @@
 
 Windows 10 IoT Core IoT Helpers
 ---------------------------------------------------------
-This library allows to easily interact with GPIO, I2C and SPI in Windows 10 IoT Core with boards like Raspberry Pi 2, Raspberry Pi 3, MinnowBoard Max and Toradex Colibri. It comes with a rich set of [samples](https://github.com/Dot-and-Net/IoTHelpers/Samples) that show how to use it in different scenarios.
+A library that allows to easily interact with Windows 10 IoT Core features like GPIO, I2C and SPI devices. It comes with a rich set of [samples](https://github.com/Dot-and-Net/IoTHelpers/Samples) that show how to use it in different scenarios.
 
 **Installation**
 
