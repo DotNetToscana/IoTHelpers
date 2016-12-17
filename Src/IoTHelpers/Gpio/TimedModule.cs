@@ -62,23 +62,4 @@ namespace IoTHelpers.Gpio
             timer.Dispose();
         }
     }
-
-    public abstract class GpioTimedModuleBase : TimedModule
-    {
-        protected GpioController Controller { get; }
-
-        public GpioTimedModuleBase(ReadingMode mode, TimeSpan readInterval)
-            : this(GpioController.GetDefault(), mode, readInterval)
-        { }
-
-        protected GpioTimedModuleBase(GpioController controller, ReadingMode mode, TimeSpan readInterval)
-            : base(mode, readInterval)
-        {
-            Controller = controller;
-
-            // Shows an error if there is no GPIO controller
-            if (Controller == null)
-                throw new ArgumentException("No GPIO controller found.");
-        }
-    }
 }

@@ -116,11 +116,13 @@
     <Compile Include="Boards\Board.cs" />
     <Compile Include="Boards\DeviceInformation.cs" />
     <Compile Include="Boards\RaspberryPi2Board.cs" />
+    <Compile Include="Boards\ShutdownManager.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Gpio\Extensions\GpioExtensions.cs" />
     <Compile Include="Gpio\Extensions\L298nMotorDriverExtensions.cs" />
     <Compile Include="Gpio\GpioModule.cs" />
     <Compile Include="Gpio\GpioModuleBase.cs" />
+    <Compile Include="Gpio\GpioTimedModule.cs" />
     <Compile Include="Gpio\Modules\ActiveBuzzer.cs" />
     <Compile Include="Gpio\Modules\FlameSensor.cs" />
     <Compile Include="Gpio\Modules\HallSensor.cs" />

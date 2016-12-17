@@ -113,7 +113,6 @@ namespace IoTHelpers.Gpio.Extensions
             await this.WaitAndStopAsync(milliseconds);
         }
 
-
         public void MoveBackwardLeft()
         {
             Motor1.Stop();
@@ -172,7 +171,7 @@ namespace IoTHelpers.Gpio.Extensions
         {
             this.RotateRight();
             await this.WaitAndStopAsync(milliseconds);
-        }        
+        }
 
         public void Stop()
         {

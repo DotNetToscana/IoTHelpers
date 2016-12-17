@@ -5,17 +5,22 @@
     xmlns:local="using:DeviceInfo"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    FontSize="26">
+    mc:Ignorable="d">
 
     <Page.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="Margin" Value="10" />
+            <Setter Property="FontSize" Value="26" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="FontSize" Value="26" />
         </Style>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="50">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -37,5 +42,10 @@
         <TextBlock x:Name="deviceTypeTextBlock" Grid.Row="3" Grid.Column="1" />
         <TextBlock Text="IP Address" Grid.Row="4" />
         <TextBlock x:Name="ipAddressTextBlock" Grid.Row="4" Grid.Column="1" />
+
+        <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Margin="0,50,0,0" Orientation="Horizontal">
+            <Button Content="Shutdown" x:Name="shutdownButton" Click="shutdownButton_Click" />
+            <Button Content="Restart" x:Name="restartButton" Click="restartButton_Click" />
+        </StackPanel>
     </Grid>
 </Page>
