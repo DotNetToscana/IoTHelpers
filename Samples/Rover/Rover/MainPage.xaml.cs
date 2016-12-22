@@ -111,7 +111,18 @@ namespace Rover
                     echoPinNumber = 101;
 
                     break;
+                case DeviceType.Joule:
+                    motor1Pin1Number = 0;
+                    motor1Pin2Number = 1;
+                    motor2Pin1Number = 2;
+                    motor2Pin2Number = 3;
+                    redPinNumber = greenPinNumber = bluePinNumber = -1;
 
+
+                    triggerPinNumber = 4;
+                    echoPinNumber = 5;
+
+                    break;
                 case DeviceType.RaspberryPi2:
                 case DeviceType.RaspberryPi3:
                 default:

@@ -15,6 +15,7 @@ namespace IoTHelpers.Boards
         MinnowBoardMax,
         DragonBoard410c,
         Colibri,
+        Joule,
         GenericBoard,
         Unknown
     };
@@ -55,6 +56,10 @@ namespace IoTHelpers.Boards
             else if (ProductName.IndexOf("Cardhu", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 Type = DeviceType.Colibri;
+            }
+            else if (ProductName.IndexOf("Broxton M", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                Type = DeviceType.Joule;
             }
             else
             {
