@@ -52,7 +52,7 @@ namespace Rover.Services
             Debug.WriteLine("Socket connection established.");
 
             var stopped = false;
-            var reader = new DataReader(args.Socket.InputStream);           
+            var reader = new DataReader(args.Socket.InputStream);
 
             try
             {
@@ -100,7 +100,7 @@ namespace Rover.Services
 
         public void Dispose()
         {
-            var task = this.StopServerAsync();
+            var task = StopServerAsync();
             listener.Dispose();
         }
     }

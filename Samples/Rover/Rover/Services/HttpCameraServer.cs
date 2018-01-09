@@ -49,7 +49,7 @@ namespace Rover.Services
             var html = string.Format(htmlString, base64);
             var bodyArray = Encoding.UTF8.GetBytes(html);
 
-            // Shows the html 
+            // Shows the html
             using (var outputStream = socket.OutputStream)
             {
                 using (var response = outputStream.AsStreamForWrite())
@@ -60,7 +60,7 @@ namespace Rover.Services
                                             $"Content-Length: {stream.Length}\r\n" +
                                             "Connection-Type: text/html\r\n" +
                                             "Connection: close\r\n\r\n";
-                                            
+
                         var headerArray = Encoding.UTF8.GetBytes(header);
                         response.Write(headerArray, 0, headerArray.Length);
                         stream.CopyTo(response);
@@ -72,7 +72,7 @@ namespace Rover.Services
 
         public void Dispose()
         {
-            var task = this.StopServerAsync();
+            var task = StopServerAsync();
             listener.Dispose();
         }
     }

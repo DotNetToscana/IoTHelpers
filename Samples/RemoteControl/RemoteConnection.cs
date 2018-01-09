@@ -26,6 +26,7 @@ namespace RemoteControl
         private readonly IHubProxy hubProxy;
 
         private Action<Rgb> ledEvent;
+
         public RemoteConnection OnLedEvent(Action<Rgb> action)
         {
             ledEvent = action;
@@ -43,13 +44,15 @@ namespace RemoteControl
                 });
             }
 
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         public RemoteConnection()
         {
             if (string.IsNullOrWhiteSpace(SERVICE_URL))
-                throw new Exception("Service URL not specified.");
+            {
+                throw new ArgumentNullException("Service URL not specified.");
+            }
 
             hubConnection = new HubConnection(SERVICE_URL);
             hubProxy = hubConnection.CreateHubProxy(HUB_NAME);
@@ -67,9 +70,13 @@ namespace RemoteControl
                 {
                     var dispatcher = CoreApplication.MainView?.CoreWindow?.Dispatcher;
                     if (dispatcher != null)
+                    {
                         await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => ledEvent?.Invoke(rgb));
+                    }
                     else
+                    {
                         ledEvent?.Invoke(rgb);
+                    }
                 });
         }
 

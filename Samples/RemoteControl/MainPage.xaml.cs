@@ -97,7 +97,7 @@ namespace RemoteControl
         }
 
         private void HumitureSensor_ReadingChanged(object sender, EventArgs e)
-            => this.SendHumiture();
+            => SendHumiture();
 
         private void SendHumiture()
         {
@@ -109,7 +109,7 @@ namespace RemoteControl
 
             connection.SendHumiture(humidity, temperature);
 
-            this.AddEvents("Temperature and humidity sent to Azure");
+            AddEvents("Temperature and humidity sent to Azure");
         }
 
         private async void SendDeviceToCloudMessagesAsync(double temperature, double humidity, double lightLevel)
@@ -117,7 +117,7 @@ namespace RemoteControl
             if (deviceClient == null || position == null)
                 return;
 
-            this.AddEvents("Sending telemetry data...");
+            AddEvents("Sending telemetry data...");
 
             try
             {
@@ -141,11 +141,11 @@ namespace RemoteControl
 
                 await deviceClient.SendEventAsync(message);
 
-                this.AddEvents("Telemetry data successfully sent.");
+                AddEvents("Telemetry data successfully sent.");
             }
             catch (Exception ex)
             {
-                this.AddEvents($"An error occured while sending data: {ex.Message}");
+                AddEvents($"An error occured while sending data: {ex.Message}");
             }
         }
 
@@ -163,7 +163,7 @@ namespace RemoteControl
 
         private void MotionDetector_MotionDetected(object sender, EventArgs e)
         {
-            this.AddEvents("Motion detected");
+            AddEvents("Motion detected");
 
             if (detectMovement)
             {
@@ -174,7 +174,7 @@ namespace RemoteControl
 
         private void MotionDetector_MotionStopped(object sender, EventArgs e)
         {
-            this.AddEvents("Motion stopped");
+            AddEvents("Motion stopped");
 
             if (detectMovement)
             {
@@ -185,7 +185,7 @@ namespace RemoteControl
 
         private void MetalTouchSensor_TouchDetected(object sender, EventArgs e)
         {
-            this.AddEvents("Touch detected");
+            AddEvents("Touch detected");
 
             if (detectTouch)
             {
@@ -196,7 +196,7 @@ namespace RemoteControl
 
         private void MetalTouchSensor_TouchRemoved(object sender, EventArgs e)
         {
-            this.AddEvents("Touch removed");
+            AddEvents("Touch removed");
 
             if (detectTouch)
             {
@@ -207,7 +207,7 @@ namespace RemoteControl
 
         private void FlameSensor_FlameDetected(object sender, EventArgs e)
         {
-            this.AddEvents("Flame detected");
+            AddEvents("Flame detected");
 
             if (detectFlame)
             {
@@ -218,7 +218,7 @@ namespace RemoteControl
 
         private void FlameSensor_FlameExtinguished(object sender, EventArgs e)
         {
-            this.AddEvents("Flame extinguished");
+            AddEvents("Flame extinguished");
 
             if (detectFlame)
             {
@@ -253,7 +253,7 @@ namespace RemoteControl
 
         private void LedEvent(Rgb rgb)
         {
-            this.AddEvents("Received Led Event from Azure.");
+            AddEvents("Received Led Event from Azure.");
 
             led.Red = rgb.Red;
             led.Green = rgb.Green;

@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNet.SignalR.Client;
-using Rover.Models;
+﻿using Humiture.Models;
+using Microsoft.AspNet.SignalR.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 
-namespace Rover.Services
+namespace Humiture
 {
     public class RemoteConnection : IDisposable
     {
@@ -19,17 +19,23 @@ namespace Rover.Services
         private const string HUB_NAME = "SensorHub";
 
         private const string ADD_DEVICE_METHOD = "AddDevice";
-        private const string ROVER_MOVE_EVENT = "MoveRover";
+        private const string HUMITURE_CHANGED_EVENT = "HumitureChanged";
 
         private readonly HubConnection hubConnection;
         private readonly IHubProxy hubProxy;
 
-        private Action<RoverMovement> movementEvent;
-
-        public RemoteConnection OnRoverMovementEvent(Action<RoverMovement> action)
+        public Task SendHumiture(double humidity, double temperature)
         {
-            movementEvent = action;
-            return this;
+            if (hubConnection.State == ConnectionState.Connected)
+            {
+                return hubProxy.Invoke(HUMITURE_CHANGED_EVENT, new HumitureData
+                {
+                    Temperature = temperature,
+                    Humidity = humidity
+                });
+            }
+
+            return Task.CompletedTask;
         }
 
         public RemoteConnection()
@@ -49,20 +55,6 @@ namespace Rover.Services
 
             // Register the device.
             await hubProxy.Invoke(ADD_DEVICE_METHOD);
-
-            // Register SignalR events.
-            hubProxy.On<RoverMovement>(ROVER_MOVE_EVENT, async (movement) =>
-                {
-                    var dispatcher = CoreApplication.MainView?.CoreWindow?.Dispatcher;
-                    if (dispatcher != null)
-                    {
-                        await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => movementEvent?.Invoke(movement));
-                    }
-                    else
-                    {
-                        movementEvent?.Invoke(movement);
-                    }
-                });
         }
 
         public void Dispose()

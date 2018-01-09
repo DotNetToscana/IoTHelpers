@@ -12,7 +12,7 @@ namespace IoTService.Hubs
         public const string DEVICES_GROUP = "device";
 
         public void AddDevice()
-            => Groups.Add(Context.ConnectionId, DEVICES_GROUP);        
+            => Groups.Add(Context.ConnectionId, DEVICES_GROUP);
 
         public void HumitureChanged(Humiture humiture)
             => Clients.Others.HumitureChanged(humiture);

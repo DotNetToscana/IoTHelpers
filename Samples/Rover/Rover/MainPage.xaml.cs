@@ -111,6 +111,7 @@ namespace Rover
                     echoPinNumber = 101;
 
                     break;
+
                 case DeviceType.Joule:
                     motor1Pin1Number = 0;
                     motor1Pin2Number = 1;
@@ -118,11 +119,11 @@ namespace Rover
                     motor2Pin2Number = 3;
                     redPinNumber = greenPinNumber = bluePinNumber = -1;
 
-
                     triggerPinNumber = 4;
                     echoPinNumber = 5;
 
                     break;
+
                 case DeviceType.RaspberryPi2:
                 case DeviceType.RaspberryPi3:
                 default:
@@ -205,13 +206,14 @@ namespace Rover
             }
             else
             {
-                // Otherwise, if necessary stops the autopiloting. 
+                // Otherwise, if necessary stops the autopiloting.
                 autoPiloting = false;
                 led?.TurnGreen();
 
-                Action movement;
-                if (movements.TryGetValue(movementData.Movement, out movement))
+                if (movements.TryGetValue(movementData.Movement, out Action movement))
+                {
                     movement?.Invoke();
+                }
             }
         }
 
@@ -275,7 +277,9 @@ namespace Rover
                 led?.Dispose();
                 distanceSensor.Dispose();
             }
-            catch { }
+            catch
+            {
+            }
         }
     }
 }
